@@ -1,0 +1,39 @@
+# Firebase App Hosting configuration for the Lesson Plan Builder.
+# https://firebase.google.com/docs/app-hosting/configure
+
+runConfig:
+  # One instance keeps the on-disk analysis resume-cache (.analysis-cache/)
+  # and the in-process job runner coherent. Scale up only after moving the
+  # cache to a shared store.
+  maxInstances: 1
+  minInstances: 0
+  concurrency: 80
+  cpu: 1
+  memoryMiB: 1024
+
+env:
+  # Public Firebase web config (client-exposed by design; same project as
+  # Scripture Studio so one Google account works across both tools).
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: AIzaSyBoqZc03qKVVTlLkbw_XK0huwEIWArYoaM
+    availability: [BUILD, RUNTIME]
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: scripture-studio-df955.firebaseapp.com
+    availability: [BUILD, RUNTIME]
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: scripture-studio-df955
+    availability: [BUILD, RUNTIME]
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: 1:895331506499:web:6f7f82879e6b72b5f037f6
+    availability: [BUILD, RUNTIME]
+  - variable: FIREBASE_PROJECT_ID
+    value: scripture-studio-df955
+    availability: [RUNTIME]
+  - variable: PUBLISH_ALLOWED_DOMAIN
+    value: biblica.com
+    availability: [RUNTIME]
+  - variable: ANTHROPIC_API_KEY
+    secret: ANTHROPIC_API_KEY
+    availability: [RUNTIME]
+  # GOOGLE_APPLICATION_CREDENTIALS is intentionally absent — the runtime's
+  # Application Default Credentials cover Firestore, Storage, and TTS.

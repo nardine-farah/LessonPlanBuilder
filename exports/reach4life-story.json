@@ -1,0 +1,2874 @@
+{
+  "planId": "reach4life-story",
+  "title": "Reach4Life: The Choice Is Yours",
+  "subtitle": "Devotional · Discovering your identity and God's story",
+  "summary": "A youth-friendly journey from the hardest question — 'Who am I really?' — into God's own story of love, betrayal, sacrifice and reunion, ending with a first-steps guide for new followers of Jesus.",
+  "language": "en",
+  "translation": "NIV",
+  "match": {
+    "faithLevel": [
+      "seekers",
+      "new_to_faith",
+      "believers"
+    ],
+    "audience": [
+      "teens",
+      "adults"
+    ],
+    "focus": [
+      "devotional",
+      "discipleship",
+      "bible_study"
+    ],
+    "lengthBand": "open",
+    "resources": [
+      "reading",
+      "audio"
+    ]
+  },
+  "lessonCount": 55,
+  "span": "55 sessions",
+  "status": "draft",
+  "reviewedBy": "Adapted from \"ukEng_R4L_v4_READER_2026.05.18.pdf\" via Lesson Plan Builder — pending review",
+  "lessons": [
+    {
+      "n": 1,
+      "title": "Who am I? The hardest question",
+      "ref": "Genesis 1:27",
+      "verseUsfm": "GEN.1.27",
+      "keyVerseRef": "Genesis 1:27",
+      "teaching": [
+        "Almost every day we face questions about ourselves. The hardest are usually 'Who am I really?' and 'How can I be true to myself and still fit in?' Many people search in the wrong places — trying to live up to others' expectations, chasing whatever is trending, or believing the lies they've been told about being ugly, stupid or worthless.",
+        "When you don't know who you are and have no plan for your life, you stop valuing yourself. Life feels empty, so you look for something to fill the hole — a drink, a relationship, a risk — because at least it feels good for a moment. The excuses ('everyone else is doing it') never lead anywhere good.",
+        "There is a much better way to find out who you are: ask the One who made you. Scripture says God created human beings in his own likeness. You were designed on purpose, to love and be loved."
+      ],
+      "keyIdea": "You are not a mistake or an accident. God made you in his own image, on purpose, to be loved by him and to love others.",
+      "reflectionScript": "Take a slow breath and picture yourself as you really are — not the version you show your friends, not the version in the mirror you don't like. Just you. Now imagine the One who made you looking at that same person with love, not disappointment. He wasn't surprised by how you turned out. He chose to make you. Let that settle for a moment. You are known, and you are wanted.",
+      "supportingScriptures": [
+        {
+          "ref": "Jeremiah 29:11",
+          "usfm": "JER.29.11"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to this session, where is the best place to discover who you really are?",
+          "options": [
+            {
+              "id": "a",
+              "text": "By living up to what your friends expect of you"
+            },
+            {
+              "id": "b",
+              "text": "By asking the One who made you",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "By copying whatever is trending right now"
+            },
+            {
+              "id": "d",
+              "text": "By trying to look cool and pretending you don't care"
+            }
+          ],
+          "good": "Right. Because God created you, he is the one who can tell you who you truly are and what you were made for.",
+          "bad": "Not quite. The session says all those other options are responses to peer pressure and lies — the real answer is to ask the God who made you."
+        },
+        "reflectPrompt": "When you look at yourself honestly, what lies about your worth have you been tempted to believe? What might change if you took God's view of you seriously?"
+      },
+      "prayer": "God, you made me and you know me. Help me to stop believing the lies about who I am, and to hear the truth that I was created and loved by you. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 2,
+      "title": "Identity in God",
+      "ref": "Jeremiah 29:11",
+      "verseUsfm": "JER.29.11",
+      "keyVerseRef": "Jeremiah 29:11",
+      "teaching": [
+        "You are not on your own in the search for who you are, where you belong and what your purpose is. God built identity and purpose into you from the start. He wants more than anything to restore you to the blessing he created you for, and he says he has plans to give you hope and a future.",
+        "The Bible tells us that God is love, so we were made for loving relationships — with God, with other people, with the world around us, and even a healthy relationship with ourselves. Jesus summed up the whole will of God in two rules: love God with everything you are, and love your neighbour as you love yourself.",
+        "Notice that loving yourself in a healthy way isn't selfish — Jesus assumes it. When you truly value yourself, you'll do all you can to become the person God created you to be."
+      ],
+      "keyIdea": "God has a built-in identity, purpose and hope-filled future for you. His whole law comes down to loving him and loving people.",
+      "reflectionScript": "Think of the future for a moment — not with dread, but with the idea that Someone good is already there, planning for your welfare. You don't have to invent your worth or manufacture a purpose. It was placed in you. Rest in the thought that you were made to be loved and to love, and that this is not too late for you.",
+      "supportingScriptures": [
+        {
+          "ref": "1 John 4:16",
+          "usfm": "1JN.4.16"
+        },
+        {
+          "ref": "Luke 10:27",
+          "usfm": "LUK.10.27"
+        },
+        {
+          "ref": "Genesis 1:27",
+          "usfm": "GEN.1.27"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "How did Jesus sum up the whole will of God?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Keep every rule perfectly and never fail"
+            },
+            {
+              "id": "b",
+              "text": "Love God with all you are, and love your neighbour as yourself",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Look after yourself first and ignore everyone else"
+            },
+            {
+              "id": "d",
+              "text": "Fit in with whatever the crowd is doing"
+            }
+          ],
+          "good": "Exactly. Love for God and love for others — that's the heart of it.",
+          "bad": "Look again. Jesus said the whole law is summed up as loving God with everything and loving your neighbour as you love yourself."
+        },
+        "reflectPrompt": "Which of the relationships in your life — with God, others, or yourself — feels most in need of God's healing right now?"
+      },
+      "prayer": "Father, thank you that you know the plans you have for me, plans for hope and not for harm. Teach me to love you, to love others, and to value the person you made me to be. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 3,
+      "title": "Jesus at the centre",
+      "ref": "Colossians 1:16-17",
+      "verseUsfm": "COL.1.16-17",
+      "keyVerseRef": "Colossians 1:16-17",
+      "teaching": [
+        "God created many good things that can turn destructive when used the wrong way. Your ego — what you think of yourself, your relationship with yourself — is one of them. Loving yourself is healthy, but it doesn't mean thinking you are the centre of the universe.",
+        "If you don't know your priorities, you'll be pulled in every direction, chasing the next shiny thing like a distracted bird. One way to sort priorities is a pyramid, ranking things from most to least important. But a better picture is a circle: write all the things that matter in your life around the outside, and put Jesus in the small circle at the centre.",
+        "That way you don't have to choose one good thing over another. Family, friends, school, dreams — all of them can stay important, and Jesus holds them all together at the centre. Scripture says everything was created by him and for him, and he holds everything together."
+      ],
+      "keyIdea": "You become your true self when Jesus is at the centre of everything you value — not competing with your life, but holding it all together.",
+      "reflectionScript": "Picture a circle, and around its edge write the things that fill your days — the people, the plans, the pressures. Now imagine a small centre point holding it all in place. That centre is Jesus. He isn't one more item competing for space. He's the one keeping every good thing from flying apart. Breathe out, and imagine handing him that centre spot.",
+      "quiz": {
+        "mc": {
+          "question": "In this session, why is the 'circle' picture better than the 'pyramid' for sorting your priorities?",
+          "options": [
+            {
+              "id": "a",
+              "text": "It lets you honour everything that matters with Jesus at the centre of it all",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "It proves that Jesus is less important than your friends"
+            },
+            {
+              "id": "c",
+              "text": "It means you never have to think about priorities again"
+            },
+            {
+              "id": "d",
+              "text": "It removes God from your list altogether"
+            }
+          ],
+          "good": "Yes. The circle keeps Jesus at the centre while all the important parts of your life stay honoured around him.",
+          "bad": "Not quite. The circle keeps every good thing in your life while placing Jesus at the centre, holding it all together."
+        },
+        "reflectPrompt": "If you drew your own life as a circle with Jesus in the middle, what parts of your life are hardest to picture him being at the centre of?"
+      },
+      "prayer": "Jesus, you made everything and you hold everything together. Come and be at the centre of my life — my friendships, my plans, my struggles — and make me into my true self. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 4,
+      "title": "Overcoming obstacles",
+      "ref": "Psalm 56:11",
+      "verseUsfm": "PSA.56.11",
+      "teaching": [
+        "Even when you're trying to become the person God made you to be, obstacles show up. Some are temptations to leave the path. Some are things others have done to you. Some are the pressures and lies the world throws at you.",
+        "Watch out for the common traps: trouble at home, addictions that start as 'just experimenting', unhealed pain that gets passed on to hurt others, and peer pressure that quietly costs you your true self. Sex, bullying, gender confusion, rebelling, abuse, loneliness, self-harm and even thoughts of suicide are real struggles — but none of them are the end of your story.",
+        "The message running through all of it is the same: you are not alone, God did not make a mistake when he made you, and there is always help. Speak to someone you trust, turn to God in prayer, and read his Word to find his will for your life."
+      ],
+      "keyIdea": "Obstacles are real — from peer pressure to abuse to despair — but you are never alone, God did not make a mistake in making you, and help is always available.",
+      "reflectionScript": "Think of a burden you've been carrying quietly — something you've told yourself you have to handle alone. Now imagine setting it down, just for a moment, in front of a God who already sees it and isn't ashamed of you. You were never meant to carry it by yourself. Naming it to one safe person is not weakness. It is the beginning of freedom.",
+      "quiz": {
+        "mc": {
+          "question": "What does this session say to someone who has been abused, bullied or is battling dark thoughts?",
+          "options": [
+            {
+              "id": "a",
+              "text": "It was your own fault, so keep it hidden"
+            },
+            {
+              "id": "b",
+              "text": "You are not alone, it wasn't your fault, and there is help — speak to someone you trust",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Ending your life is sometimes the answer"
+            },
+            {
+              "id": "d",
+              "text": "Real people never need help from anyone"
+            }
+          ],
+          "good": "Yes. You aren't alone, it isn't your fault, and reaching out to someone you trust is a brave and right step.",
+          "bad": "Please read again gently. The session insists you are not alone, that such things are not your fault, and that ending your life is never the answer — there is always help."
+        },
+        "reflectPrompt": "Which of these obstacles feels closest to your own life right now? Who is one trustworthy person you could take a first step towards talking to?"
+      },
+      "prayer": "God, some of the things that trip me up feel too heavy to carry. Remind me that I'm not alone. Give me courage to reach out for help, and hold me close as I heal. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 5,
+      "title": "Finding a good listener",
+      "ref": "Proverbs 17:17",
+      "verseUsfm": "PRO.17.17",
+      "teaching": [
+        "Overcoming the obstacles in your life almost always begins with finding someone to talk to, because a burden shared is a burden halved. When what you're sharing is very personal, it needs to be someone you really trust.",
+        "Whether it's a family member, pastor, teacher, counsellor or trusted friend, look for someone who is mature and trustworthy, who will listen without judging, who doesn't gossip, and who has your best interests at heart.",
+        "A good listener won't just tell you what to do — they'll help you find your own way, and ultimately they'll point you towards a loving God. If you can, joining a group with other people walking the same road makes a real difference."
+      ],
+      "keyIdea": "A burden shared is a burden halved. Find a trustworthy, non-judging listener who points you to a loving God.",
+      "reflectionScript": "Bring to mind the people around you, and quietly ask: who listens without making me feel small? Who keeps a secret? Who seems to know God well? You may already have a name. Sharing a heavy thing with the right person doesn't make it bigger — it cuts it in half. Consider taking that step this week.",
+      "quiz": {
+        "mc": {
+          "question": "According to this session, what should a good listener ultimately do?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Spread your story to other people"
+            },
+            {
+              "id": "b",
+              "text": "Judge you for what you've done"
+            },
+            {
+              "id": "c",
+              "text": "Point you towards a loving God and help you find your own way",
+              "correct": true
+            },
+            {
+              "id": "d",
+              "text": "Simply tell you exactly what to do and take over"
+            }
+          ],
+          "good": "Right. A good listener helps you find your way and points you to a loving God.",
+          "bad": "Look again. A good listener doesn't gossip, judge or take over — they help you find your own way and point you to a loving God."
+        },
+        "reflectPrompt": "Who in your life already listens well? And how could you become that kind of listener for someone else?"
+      },
+      "prayer": "Lord, thank you that I don't have to carry things alone. Lead me to a wise, trustworthy person who will listen and point me back to you. And make me a safe listener for others too. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 6,
+      "title": "Love: he made it all",
+      "ref": "Genesis 1:1",
+      "verseUsfm": "GEN.1.1",
+      "keyVerseRef": "Psalm 103:8",
+      "teaching": [
+        "Everyone's life story shares the same threads: love, betrayal, separation, promise, sacrifice, forgiveness and reunion. Behind all our small stories runs one much bigger story — God's story — and yours fits inside it.",
+        "It begins with God, who made it all, knows it all, owns it all and cares about it all. He is alive and full of energy, tender and kind, slow to anger and overflowing with love.",
+        "Of everything he created, God loves people most, because he made us in his own likeness — thinking, choosing, creating, made to love and be loved. We need God the way the earth needs the sun. He made us to find our meaning and joy in him."
+      ],
+      "keyIdea": "Behind every story is God's story, and it opens with love — a Creator who made you to find your meaning and happiness in him.",
+      "reflectionScript": "Look up, in your mind's eye, at everything that exists — the sky, the sea, the people you know. All of it came from a God who is bursting with life and love. And of everything he made, he loves people the most, because we were made to reflect him. You are not a background character in his story. You were made to know him.",
+      "supportingScriptures": [
+        {
+          "ref": "Genesis 1:27",
+          "usfm": "GEN.1.27"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "Why, according to this session, does God love people most of all his creation?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Because people are more powerful than the rest of creation"
+            },
+            {
+              "id": "b",
+              "text": "Because he created us in his own likeness",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Because we never disappoint him"
+            },
+            {
+              "id": "d",
+              "text": "Because we made ourselves"
+            }
+          ],
+          "good": "Yes. We are made in God's own likeness — designed to love and be loved by him.",
+          "bad": "Not quite. The session says God loves us most because he created us in his own likeness."
+        },
+        "reflectPrompt": "Where do you usually go looking for meaning and happiness? What would it look like to look for it in God instead?"
+      },
+      "prayer": "Creator God, you made everything and you made me for yourself. Thank you that you are full of love and slow to anger. Help me find my meaning and joy in you. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 7,
+      "title": "Betrayal: the God-shaped hole",
+      "ref": "Romans 1:25",
+      "verseUsfm": "ROM.1.25",
+      "keyVerseRef": "Romans 1:25",
+      "teaching": [
+        "Instead of looking to God to complete us, every one of us has turned away from him — chasing money, approval, comfort, romance, thrills and success instead. We chose a lie in place of the truth about God, worshipping created things rather than the Creator.",
+        "Turning from God breaks his heart, and it breaks everything else too. Our broken relationship with God has fractured all our relationships: people against people in selfishness, racism and violence; people against nature in waste and pollution; and people against themselves in shame, fear and emptiness.",
+        "Inside each of us is a God-shaped hole that only God can fill. That's why we feel so empty sometimes, craving something more. We can pack our lives with power, money and thrills, but nothing satisfies — we were made for far more than this world can offer."
+      ],
+      "keyIdea": "We've all betrayed God by looking to lesser things to fill us. Only God can fill the God-shaped hole inside us.",
+      "reflectionScript": "Think of the last time you got the thing you were sure would make you happy — and how quickly the emptiness crept back in. There's a hole in each of us shaped exactly like God, and nothing else fits. Money doesn't. Approval doesn't. Even love from another person doesn't quite reach it. Sit for a moment with the honest ache, and let it point you home.",
+      "supportingScriptures": [
+        {
+          "ref": "Genesis 6:5-6",
+          "usfm": "GEN.6.5-6"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What does this session say we've done instead of looking to God?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Trusted God perfectly all along"
+            },
+            {
+              "id": "b",
+              "text": "Turned to things like money, approval, comfort and thrills to complete us",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Stopped wanting anything at all"
+            },
+            {
+              "id": "d",
+              "text": "Loved our neighbours flawlessly"
+            }
+          ],
+          "good": "Yes. We've looked to created things to fill a hole only the Creator can fill.",
+          "bad": "Look again. The session says we betrayed God by looking to money, approval, comfort, romance and thrills instead of him."
+        },
+        "reflectPrompt": "What have you been using to try to fill the empty place inside you? Has it ever been enough?"
+      },
+      "prayer": "God, I admit I've looked to other things to fill me — things that always leave me empty. Forgive me. Come and fill the space that was only ever meant for you. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 8,
+      "title": "Separation: sin and judgment",
+      "ref": "Romans 6:23",
+      "verseUsfm": "ROM.6.23",
+      "keyVerseRef": "Romans 6:23",
+      "teaching": [
+        "We've all sinned against God in thought, word and deed. When a crime is committed, a penalty must be paid — and Scripture says the wage sin pays is death. Not just physical death, but spiritual death: being cut off from God.",
+        "Judgment day is real. Every thought, word and deed will one day be brought into the light and judged by a God who is perfectly holy. We will get away with nothing.",
+        "To be separated from God — and from everything good — for ever, is the true meaning of hell. This is sobering, but it's not where the story stops. It's the backdrop that makes the rescue that follows so astonishing."
+      ],
+      "keyIdea": "Sin separates us from God, and its penalty is spiritual death. Facing this honestly prepares us to see how great the rescue is.",
+      "reflectionScript": "This is a heavier moment, so stay with it gently. Imagine everything you've ever done being brought fully into the light — nothing hidden, nothing spun. It's a frightening thought, and it's meant to be honest. But hold on: this dark backdrop exists so that what comes next — the rescue — can shine all the brighter. Don't stop here.",
+      "supportingScriptures": [
+        {
+          "ref": "Romans 2:5",
+          "usfm": "ROM.2.5"
+        },
+        {
+          "ref": "2 Thessalonians 1:8-9",
+          "usfm": "2TH.1.8-9"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to this session, what is the deepest meaning of the 'death' that sin brings?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Simply growing old"
+            },
+            {
+              "id": "b",
+              "text": "Being spiritually separated from God",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Losing your money"
+            },
+            {
+              "id": "d",
+              "text": "Nothing at all — sin has no consequences"
+            }
+          ],
+          "good": "Yes. The penalty is spiritual death — being cut off from God.",
+          "bad": "Not quite. The session explains that the penalty for sin is spiritual death — being separated from God for ever."
+        },
+        "reflectPrompt": "Sitting honestly with the idea of judgment, what do you most hope God would deal with in your life?"
+      },
+      "prayer": "Holy God, I know I have sinned in things I've thought, said and done. I don't want to be separated from you. Prepare my heart to receive the rescue you have made. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 9,
+      "title": "Promise: God sends a Rescuer",
+      "ref": "Isaiah 7:14",
+      "verseUsfm": "ISA.7.14",
+      "keyVerseRef": "Isaiah 7:14",
+      "teaching": [
+        "Is there any hope for our broken lives and world? Only one — the grace of God. We betrayed him, but he didn't abandon us. Long before Jesus came, God promised again and again that he would one day win us back by sending a Rescuer.",
+        "One such promise said a virgin would give birth to a son who would be called Immanuel — 'God with us'. And God kept his promise. About 2,000 years ago he sent Jesus, his one and only Son, to this planet to rescue us.",
+        "As the God-Man, Jesus lived perfectly and showed us what God is like up close. He stood up to the proud, stooped down to lift up broken people and little children, and spoke words of wisdom and life into every situation. He came to offer life in all its fullness — though it would cost him his own life."
+      ],
+      "keyIdea": "God didn't abandon us. He kept his ancient promise and sent Jesus, 'God with us', to rescue us — whatever it would cost.",
+      "reflectionScript": "Imagine waiting a very long time for a rescue you had almost given up on. Then, at last, help arrives — not sent from a safe distance, but coming in person, willing to pay the cost itself. That is the promise God kept. He didn't shout instructions from far off. He came close, as one of us, to bring us home. Let that nearness sink in.",
+      "quiz": {
+        "mc": {
+          "question": "What does the name 'Immanuel', promised in this session, mean?",
+          "options": [
+            {
+              "id": "a",
+              "text": "God is far away"
+            },
+            {
+              "id": "b",
+              "text": "God with us",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "A great king"
+            },
+            {
+              "id": "d",
+              "text": "The end of hope"
+            }
+          ],
+          "good": "Yes. Immanuel means 'God with us' — the promise that God himself would come to rescue us.",
+          "bad": "Look again. The name Immanuel means 'God with us'."
+        },
+        "reflectPrompt": "When you picture Jesus lifting up broken people and children, where in your own life would you most want him to draw near?"
+      },
+      "prayer": "Faithful God, thank you that you didn't leave us in our brokenness. You promised a Rescuer, and you kept your word by sending Jesus. Thank you that you are God with us. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 10,
+      "title": "Sacrifice: the cross",
+      "ref": "1 Peter 3:18",
+      "verseUsfm": "1PE.3.18",
+      "keyVerseRef": "1 Peter 3:18",
+      "teaching": [
+        "On the cross, Christ sacrificed everything — for you. He loves you so much that he would rather die than live without you, and that is exactly what he did. He proved his undying love by dying on your behalf.",
+        "Scripture says Christ, the one who did what is right, suffered for those who don't, to bring us to God. God took the sin of the whole world, placed it on his Son, and punished him for it. Then the great exchange happened.",
+        "He was shut out from the Father's presence so that you could enter in. He was broken so you could be made whole. He was nailed down so you could go free. He was cursed so you could be blessed. He died so you could live for ever."
+      ],
+      "keyIdea": "On the cross the great exchange took place: Jesus took our sin and shame so that we could receive his freedom, wholeness and life.",
+      "reflectionScript": "Picture two hands held out. In one is everything wrong with you — the guilt, the shame, the separation from God. In the other, held out towards you, is freedom, wholeness and life. At the cross, Jesus took the first and offered you the second. He would rather die than be without you. Stay quiet for a moment in the weight and wonder of that trade.",
+      "supportingScriptures": [
+        {
+          "ref": "John 19:30",
+          "usfm": "JHN.19.30"
+        },
+        {
+          "ref": "Psalm 103:12",
+          "usfm": "PSA.103.12"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "How does this session describe what happened at the cross?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Jesus was broken so we could be made whole; he died so we could live",
+              "correct": true
+            },
+            {
+              "id": "a2",
+              "text": "Nothing was really exchanged"
+            },
+            {
+              "id": "c",
+              "text": "We had to earn our own rescue"
+            },
+            {
+              "id": "d",
+              "text": "God punished us for the world's sin"
+            }
+          ],
+          "good": "Yes — the great exchange: he took our sin and shame so we could receive freedom, wholeness and life.",
+          "bad": "Look again. The session describes a great exchange: Jesus was broken, cursed and nailed down so that we could be whole, blessed and free."
+        },
+        "reflectPrompt": "What does it stir in you to know that Jesus would rather die than live without you?"
+      },
+      "prayer": "Jesus, on the cross you took what was mine — my sin, my shame, my separation — and gave me what was yours. There are no words big enough. Thank you for loving me that much. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 11,
+      "title": "Forgiveness: it is finished",
+      "ref": "Ephesians 2:8",
+      "verseUsfm": "EPH.2.8",
+      "keyVerseRef": "Ephesians 2:8",
+      "teaching": [
+        "Moments before he died, Jesus cried out, 'It is finished!' What had he finished? Our forgiveness and acceptance by God. We couldn't save ourselves, so he saved us.",
+        "Scripture says God's grace has saved us through faith in Christ — salvation isn't something we earn; it is God's gift. Many religions wrongly teach that we can earn our way to God by good deeds, but none of us can ever be good enough. It isn't good people who find God — it's forgiven people.",
+        "The religions of the world say do, do, do. Only Jesus says done. The one place we sinners can be reunited with God is on our knees at the foot of the cross, where he removes our sins from us as far as the east is from the west."
+      ],
+      "keyIdea": "Salvation is not earned by doing good — it is God's free gift, finished by Jesus. It isn't good people who find God, but forgiven people.",
+      "reflectionScript": "Think of how exhausting it is to try to be good enough — for people, for yourself, for God. Now hear the word Jesus said as he died: finished. Not 'try harder'. Not 'almost'. Finished. Your forgiveness isn't a project you're managing. It's a gift already paid for, waiting to be received. Let your striving rest for a moment.",
+      "supportingScriptures": [
+        {
+          "ref": "John 19:30",
+          "usfm": "JHN.19.30"
+        },
+        {
+          "ref": "Psalm 103:12",
+          "usfm": "PSA.103.12"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to this session, how do we become right with God?",
+          "options": [
+            {
+              "id": "a",
+              "text": "By doing enough good deeds to earn it"
+            },
+            {
+              "id": "b",
+              "text": "By receiving God's free gift of grace through faith in Christ",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "By being better than other people"
+            },
+            {
+              "id": "d",
+              "text": "It isn't possible for anyone"
+            }
+          ],
+          "good": "Yes. Salvation is God's gift, received by faith — 'the religions of the world say do; only Jesus says done.'",
+          "bad": "Look again. We can never be good enough — salvation is God's free gift received by faith in Christ."
+        },
+        "reflectPrompt": "Have you been trying to earn God's acceptance by being 'good enough'? What would change if you received it as a gift instead?"
+      },
+      "prayer": "Jesus, thank you that on the cross you cried 'It is finished.' I can't earn my way to God, and I don't have to. I receive your forgiveness as the free gift it is. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 12,
+      "title": "Life: he rose from the dead",
+      "ref": "1 Peter 1:3",
+      "verseUsfm": "1PE.1.3",
+      "keyVerseRef": "1 Peter 1:3",
+      "teaching": [
+        "The Son died on Friday afternoon, but on Sunday morning he rose from the dead. Death was defeated, and shafts of unstoppable hope shone onto our dark planet. Because of the resurrection, God has given us a new birth and a living hope.",
+        "Jesus can now set free those who were held all their lives as slaves to the fear of death. When we turn to the Risen One, we come alive to the Living God. His Spirit comes to live inside us, and the winds of heaven begin blowing through the deepest chambers of our hearts.",
+        "Most wonderfully, we're given a forever-relationship with our Creator. The door into his throne room swings open, and we can be up close and personal with the invisible God any time we want — filled with a joy that can't be put into words."
+      ],
+      "keyIdea": "The resurrection means death is defeated, fear is broken, and we're given a living hope and a forever-relationship with God.",
+      "reflectionScript": "Sunday morning. The stone rolled away. The impossible done. Imagine the very worst thing — death itself — being beaten, and hope pouring back into the world like sunrise. Because Jesus is alive, you don't have to live as a slave to fear. The door to God stands open, and you can step in and speak to him any time. Breathe in that living hope.",
+      "supportingScriptures": [
+        {
+          "ref": "Hebrews 2:15",
+          "usfm": "HEB.2.15"
+        },
+        {
+          "ref": "1 Peter 1:8",
+          "usfm": "1PE.1.8"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What does this session say the resurrection frees us from?",
+          "options": [
+            {
+              "id": "a",
+              "text": "All responsibility"
+            },
+            {
+              "id": "b",
+              "text": "The fear of death that held people as slaves",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "The need to trust God"
+            },
+            {
+              "id": "d",
+              "text": "Nothing at all"
+            }
+          ],
+          "good": "Yes. Because Jesus rose, we can be set free from the fear of death and given a living hope.",
+          "bad": "Look again. The session says Jesus can set free those who were held all their lives as slaves to the fear of death."
+        },
+        "reflectPrompt": "How does the fact that Jesus is alive — not just a historical figure — change the way you face your fears?"
+      },
+      "prayer": "Risen Jesus, you defeated death and shone hope into a dark world. Come alive in me by your Spirit. Free me from fear, and fill me with the joy of knowing you. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 13,
+      "title": "Reunion: our future is heaven",
+      "ref": "Revelation 21:3-4",
+      "verseUsfm": "REV.21.3-4",
+      "keyVerseRef": "Revelation 21:3-4",
+      "teaching": [
+        "In Christ, our past is forgiven and our present has purpose. Best of all, our future is heaven. Scripture pictures God making his home with his people — wiping away every tear, ending death, sadness, crying and pain. Things will no longer be the way they used to be.",
+        "God's story reaches its high point when Jesus returns to remove all that is evil and heal all that is broken. He will bring with him a whole new world, where we will enjoy God and each other for ever — everything this world was meant to be but couldn't be because of sin.",
+        "Scripture says no eye has seen, no ear has heard, and no human mind has imagined the things God has prepared for those who love him. There is so much to look forward to — and there's no need to wait to begin."
+      ],
+      "keyIdea": "The story ends in reunion: God making his home with us in a new world with no more tears, death or pain — and we can start living in that hope now.",
+      "reflectionScript": "Imagine a day when God himself lives among his people, and he reaches out and wipes every tear from your eyes. No more death. No more crying. No more of the ache that follows you around. Not a fantasy, but a promised future being prepared right now — beyond anything you could picture. And the best part: you don't have to wait to start living in that hope.",
+      "supportingScriptures": [
+        {
+          "ref": "1 Corinthians 2:9",
+          "usfm": "1CO.2.9"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What does this session say God will do when the story reaches its high point?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Leave the world broken for ever"
+            },
+            {
+              "id": "b",
+              "text": "Return to remove all evil, heal all that's broken, and bring a whole new world",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Keep his distance from people"
+            },
+            {
+              "id": "d",
+              "text": "Reward only those who earned it"
+            }
+          ],
+          "good": "Yes. Jesus will return to heal all that's broken and make his home with his people in a new world.",
+          "bad": "Look again. The session says God's story climaxes when Jesus returns to remove evil, heal what's broken and bring a whole new world."
+        },
+        "reflectPrompt": "What in this broken world do you most long to see God heal and make new?"
+      },
+      "prayer": "God, thank you that my future is safe with you — a home where every tear is wiped away and everything broken is made new. Fill me with that hope today. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 14,
+      "title": "Coming home",
+      "ref": "Romans 10:13",
+      "verseUsfm": "ROM.10.13",
+      "keyVerseRef": "Romans 10:13",
+      "teaching": [
+        "God's arms are open wide. He invites you to come home to him — right here, right now. Scripture says that those who received Jesus and believed in his name were given the right to become children of God.",
+        "Can you feel his love drawing you like a magnet? This could be the moment your story collides with his. The invitation is simple: turn to him and trust in him, because everyone who calls on the name of the Lord will be saved.",
+        "If you want to put your faith in Christ as Lord and Saviour, don't wait. Get alone, get on your knees, and pray in your own words — telling Jesus you believe he is the Son of God who died and rose for you, asking him to forgive you, make you his child, and take control of your life by his Spirit."
+      ],
+      "keyIdea": "God's arms are wide open. Anyone who turns to Jesus and calls on him is welcomed home and made a child of God.",
+      "reflectionScript": "Picture a doorway, lit and open, with someone standing there who has been waiting a long time for you — not with folded arms, but with arms wide open. There's nothing to prove and nothing to fix first. The only step is to turn towards home and say yes. If you're ready, you don't have to wait another minute. Simply talk to him.",
+      "supportingScriptures": [
+        {
+          "ref": "John 1:12",
+          "usfm": "JHN.1.12"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to this session, who can be saved and become a child of God?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Only people who have never sinned"
+            },
+            {
+              "id": "b",
+              "text": "Everyone who calls on the name of the Lord and trusts in Jesus",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Only religious leaders"
+            },
+            {
+              "id": "d",
+              "text": "Only people who clean up their own lives first"
+            }
+          ],
+          "good": "Yes. Everyone who calls on the name of the Lord will be saved and welcomed home.",
+          "bad": "Look again. Scripture says everyone who calls on the name of the Lord will be saved — the invitation is open to all who trust in Jesus."
+        },
+        "reflectPrompt": "Is there anything holding you back from turning to Jesus today? What would it mean to actually take that step?"
+      },
+      "prayer": "Jesus, I believe you are the Son of God who died and rose to bring me back to God. Forgive me. Make me your child, part of your family now and for ever. Come and live in me by your Spirit, and take control of my life as I learn to follow you. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 15,
+      "title": "First steps: the adventure begins",
+      "ref": "2 Corinthians 5:17",
+      "verseUsfm": "2CO.5.17",
+      "keyVerseRef": "Romans 8:38-39",
+      "teaching": [
+        "If you've turned to Jesus, welcome home — the adventure has begun. Like every relationship, your walk with God grows stronger the more time you spend with him. So each day, celebrate his unfailing, undeserved love, remembering that nothing in all creation can separate you from it.",
+        "Find a spiritual home in a church and with Christian friends, since we're told not to give up meeting together. Start talking to God about anything and everything, and don't be shy to tell people you've decided to follow Jesus. Read his Word daily and ask him to speak to you through it.",
+        "Your relationship with God isn't based on your feelings but on his Word — feelings come and go, but his promises are unshakeable. Don't expect life to become easy, and when you fail, receive Christ's forgiveness and get back on your feet. You are now a new creation: the old is gone, the new is here."
+      ],
+      "keyIdea": "Following Jesus is a new-creation adventure. Grow through daily love, church, prayer, honesty and God's Word — anchored not in feelings but in his unshakeable promises.",
+      "reflectionScript": "So the adventure has begun. Picture the road ahead — not always easy, but never walked alone. Feelings will rise and fall like weather, but underneath is solid ground: God's promise that nothing at all can separate you from his love. Choose one small step for this week — a few minutes with him, a message to a friend, an open Bible — and take it. The old is gone. The new is here.",
+      "supportingScriptures": [
+        {
+          "ref": "Hebrews 10:25",
+          "usfm": "HEB.10.25"
+        },
+        {
+          "ref": "Ephesians 6:18",
+          "usfm": "EPH.6.18"
+        },
+        {
+          "ref": "1 John 1:9",
+          "usfm": "1JN.1.9"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to this session, what should your relationship with God be based on?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Your feelings, which come and go"
+            },
+            {
+              "id": "b",
+              "text": "God's Word and his unshakeable promises",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "How good a week you're having"
+            },
+            {
+              "id": "d",
+              "text": "Never making any mistakes"
+            }
+          ],
+          "good": "Yes. Feelings rise and fall, but your relationship with God rests on his unshakeable promises.",
+          "bad": "Look again. The session says your relationship with God isn't based on feelings, which change, but on his Word, which never changes."
+        },
+        "reflectPrompt": "Of the first steps described — daily time with God, church, prayer, telling others, reading the Bible — which one will you take this week?"
+      },
+      "prayer": "Father, thank you that in Christ I am a new creation. Help me take real first steps — to spend time with you, join your people, pray honestly, and trust your promises even when my feelings waver. Nothing can separate me from your love. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 16,
+      "title": "Believe 1: Spiritual thirst",
+      "ref": "John 4:4-24",
+      "verseUsfm": "JHN.4.4-24",
+      "keyVerseRef": "John 4:14",
+      "teaching": [
+        "We tend to shrink God down to something small and 'on the side', like the moon, when in fact he is meant to be the sun at the centre of our lives. He gives meaning and lights our way.",
+        "Jesus met a woman at a well who had looked for love in five different relationships. He used her daily thirst as a picture of her soul's deeper thirst, then offered himself as living water that satisfies forever. There is a God-shaped emptiness in us that only Christ can fill; success, thrills, money and romance only leave us empty in the end."
+      ],
+      "keyIdea": "Material things can't fill a spiritual void. Until we drink from the spring that is Jesus, we will never find what we are looking for.",
+      "reflectionScript": "Take a slow breath and think of the things you reach for when you feel empty inside. Screens, approval, romance, achievement. Notice how quickly the good feeling fades. Now picture Jesus offering you a spring that never runs dry. What would it mean to drink from him instead? Let that question sit quietly with you.",
+      "supportingScriptures": [
+        {
+          "ref": "Romans 1:21-25",
+          "usfm": "ROM.1.21-25"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What did Jesus offer the woman that could satisfy her forever?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Living water welling up to eternal life",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "A new husband"
+            },
+            {
+              "id": "c",
+              "text": "Gold and riches"
+            },
+            {
+              "id": "d",
+              "text": "A deeper well"
+            }
+          ],
+          "good": "Yes. Jesus pointed to himself as living water that satisfies the soul like nothing else can.",
+          "bad": "Look again: Jesus spoke of 'living water' that would become a spring welling up to eternal life."
+        },
+        "reflectPrompt": "In what ways is God central, or only on the edge, of your life right now? What do you tend to put in his place?"
+      },
+      "prayer": "Jesus, you are the living water. I admit the things I have used to fill the emptiness inside. Satisfy my thirst with yourself today. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 17,
+      "title": "Believe 2: Who is Jesus?",
+      "ref": "John 8:1-11",
+      "verseUsfm": "JHN.8.1-11",
+      "keyVerseRef": "John 8:11",
+      "teaching": [
+        "To reach a fish you would have to become a fish. In the same way, God made himself known to us in the clearest way possible: he became a man. When we look at Jesus, we see God.",
+        "In the story of the woman caught in sin we see God's heart. Jesus cares about truth, sees through our religious acts, is wise enough to escape the trap set for him, deals gently with the broken woman, forgives her, and yet is morally pure, telling her to leave her sin. The character of God shines through the life of Jesus."
+      ],
+      "keyIdea": "Look at the Son and you will see the Father. In these last days God has spoken to us through his Son, who is the exact likeness of God's being.",
+      "reflectionScript": "Imagine you are the person standing before Jesus, your worst moment exposed. The crowd is ready to condemn. Then everyone drifts away and only Jesus remains. He does not shame you. He forgives you, and gently calls you to a new life. Sit with that mix of mercy and holiness, and let it reshape how you picture God.",
+      "supportingScriptures": [
+        {
+          "ref": "Matthew 16:13-17",
+          "usfm": "MAT.16.13-17"
+        },
+        {
+          "ref": "Hebrews 1:1-3",
+          "usfm": "HEB.1.1-3"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "How did Jesus respond to the woman caught in sin?",
+          "options": [
+            {
+              "id": "a",
+              "text": "He did not condemn her and told her to leave her life of sin",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "He ordered her to be stoned"
+            },
+            {
+              "id": "c",
+              "text": "He ignored her completely"
+            },
+            {
+              "id": "d",
+              "text": "He praised her accusers"
+            }
+          ],
+          "good": "Right. Jesus showed both mercy and holiness: he forgave her and called her to change.",
+          "bad": "Not quite. Jesus refused to condemn her, then told her to go and leave her sin."
+        },
+        "reflectPrompt": "What have you always believed God is like? How does the way Jesus treats this woman change or challenge that picture?"
+      },
+      "prayer": "Father, thank you for showing me who you are through Jesus. Help me see you as you truly are: holy, wise, gentle and forgiving. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 18,
+      "title": "Believe 3: Sin and judgment",
+      "ref": "Romans 3:10-23",
+      "verseUsfm": "ROM.3.10-23",
+      "keyVerseRef": "Romans 3:23",
+      "teaching": [
+        "All of us carry an illness worse than any disease: sin. It doesn't only cut our lives short, it cuts us off from our Creator. The word 'sin' means to miss the goal; instead of reflecting God's love and goodness, we live selfishly and hurt ourselves and others.",
+        "God looks deeper than our achievements and appearances. He sees minds that don't understand him and hearts that have turned away. His judgment is not cruelty; it is justice, refusing to let wrong go unanswered. And the verdict is that every one of us has sinned and fallen short of his perfect ways."
+      ],
+      "keyIdea": "We are more sinful than we ever realised. Everyone has sinned and falls short of God's glory, and stands guilty before a holy God.",
+      "reflectionScript": "This is a hard one to sit with. Be honest for a moment about the ways you have missed the mark, the selfishness, the words that wounded, the good you failed to do. Don't rush past the discomfort. Feeling the weight of sin is the first step toward understanding just how much we need to be rescued.",
+      "supportingScriptures": [
+        {
+          "ref": "Romans 2:5-6",
+          "usfm": "ROM.2.5-6"
+        },
+        {
+          "ref": "1 Thessalonians 1:10",
+          "usfm": "1TH.1.10"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to this passage, how many people have sinned?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Everyone; all have sinned and fall short",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Only very bad people"
+            },
+            {
+              "id": "c",
+              "text": "No one is really guilty"
+            },
+            {
+              "id": "d",
+              "text": "Only those outside the church"
+            }
+          ],
+          "good": "Correct. Scripture says all have sinned and fall short of God's glory.",
+          "bad": "Look again: the passage says everyone has sinned and falls short of God's glory."
+        },
+        "reflectPrompt": "In what ways have you seen sin hurt people? How do you honestly feel about standing guilty before a holy God?"
+      },
+      "prayer": "Holy God, I stop making excuses. I admit I have sinned and fallen short. Prepare my heart for the good news of your grace. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 19,
+      "title": "Believe 4: The cross",
+      "ref": "Mark 15:16-39",
+      "verseUsfm": "MRK.15.16-39",
+      "keyVerseRef": "Mark 15:38",
+      "teaching": [
+        "A wartime policeman once confessed to a crime he did not commit so that twenty-two innocent men would go free. He died in their place. That echoes the message of the cross: Jesus died for our sins so we would not have to.",
+        "While Jesus died an unfair, public death, something unseen and far worse happened. The sinless one carried the punishment our sin deserved. As he breathed his last, the temple curtain tore in two on its own. God tore down the barrier that had kept sinful people from his presence. The door to God is now open, but going through it means putting our faith in Jesus and his cross."
+      ],
+      "keyIdea": "With our sins forgiven, the door is now open for us to live close to God.",
+      "reflectionScript": "Picture a thick curtain that has always kept you at a distance from God. Now imagine it tearing right down the middle, opened not by you but by Jesus giving his life. The way is clear. You are invited in, forgiven and welcome. Take a moment to simply receive that gift instead of trying to earn it.",
+      "supportingScriptures": [
+        {
+          "ref": "Hebrews 10:19-22",
+          "usfm": "HEB.10.19-22"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What happened to the temple curtain when Jesus died?",
+          "options": [
+            {
+              "id": "a",
+              "text": "It was torn in two from top to bottom",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "It caught fire"
+            },
+            {
+              "id": "c",
+              "text": "Nothing happened to it"
+            },
+            {
+              "id": "d",
+              "text": "The priests repaired it"
+            }
+          ],
+          "good": "Yes. The torn curtain signalled that the barrier between God and people had been removed.",
+          "bad": "Look again: the curtain was torn in two, showing the way to God was now open."
+        },
+        "reflectPrompt": "What has drawn you toward, or held you back from, trusting in Christ's cross for forgiveness?"
+      },
+      "prayer": "Jesus, thank you for taking the punishment I deserved. I trust your cross to make me right with God. Bring me through the open door. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 20,
+      "title": "Believe 5: Grace",
+      "ref": "John 14:1-9",
+      "verseUsfm": "JHN.14.1-9",
+      "keyVerseRef": "John 14:6",
+      "teaching": [
+        "A girl dreamed of climbing a high cliff to reach God at the top, but no matter how hard she tried she could not make it. Then she noticed a trampoline, let go, bounced off it and landed at the top. We don't reach God by cliff-climbing effort; we get there by letting go and trusting.",
+        "Every religion tends to be a cliff-climbing attempt to earn our way to God. Christianity is different: it is God's attempt to reach us. Since we can never be good enough on our own, he comes to us as we trust in his undeserved grace. Only in Jesus do we find the way, the truth and life, and a relationship with God as Father."
+      ],
+      "keyIdea": "Religion is our attempt to reach God; Christianity is God's attempt to reach us. His acceptance is given as grace, not earned.",
+      "reflectionScript": "Imagine standing at the foot of a cliff too high to climb, exhausted from trying to be good enough. Then you see there is another way: not effort, but trust. Picture yourself letting go and being carried up to God by his grace alone. Breathe out the striving. Breathe in the truth that you are accepted as a gift.",
+      "supportingScriptures": [
+        {
+          "ref": "Luke 18:9-14",
+          "usfm": "LUK.18.9-14"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "Jesus said, 'I am the way and the truth and the ___.'",
+          "options": [
+            {
+              "id": "a",
+              "text": "Life",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Light"
+            },
+            {
+              "id": "c",
+              "text": "Door"
+            },
+            {
+              "id": "d",
+              "text": "Vine"
+            }
+          ],
+          "good": "Correct. Jesus is the way, the truth and the life; no one comes to the Father except through him.",
+          "bad": "Look again: Jesus said 'I am the way and the truth and the life.'"
+        },
+        "reflectPrompt": "What holds you back from making the jump from trying to earn God's acceptance to simply receiving it as a gift?"
+      },
+      "prayer": "Father, I stop trying to climb my way to you. Thank you that Jesus is the way. I receive your grace as a free gift. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 21,
+      "title": "Believe 6: God our Father",
+      "ref": "Luke 15:11-32",
+      "verseUsfm": "LUK.15.11-32",
+      "keyVerseRef": "Luke 15:20",
+      "teaching": [
+        "A father in Madrid placed a newspaper ad asking his runaway son Paco to meet him, saying all was forgiven. Eight hundred young men named Paco showed up. Deep down we all long for a home where we are loved without conditions.",
+        "Sin separates us from the God who loves us and, in the end, hurts us as much as it hurts him. But it is never too late to come home. When the lost son turned back, his father ran to him, threw his arms around him and celebrated. That is a picture of how God waits for us with open arms. When God asks us to leave our sin, it is because he has something far better for us."
+      ],
+      "keyIdea": "See what amazing love the Father has given us: he runs to welcome us home and calls us his own children.",
+      "reflectionScript": "Picture yourself walking a long, tired road home, unsure of your welcome. Then you see a figure in the distance running toward you. It is your Father, and he is not angry. He throws his arms around you and celebrates that you have come back. Whatever you have done, let yourself be welcomed. That is how God sees you.",
+      "supportingScriptures": [
+        {
+          "ref": "1 John 3:1",
+          "usfm": "1JN.3.1"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "How did the father respond when his lost son came home?",
+          "options": [
+            {
+              "id": "a",
+              "text": "He ran to him, embraced him and celebrated",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "He turned him away"
+            },
+            {
+              "id": "c",
+              "text": "He made him work as a servant first"
+            },
+            {
+              "id": "d",
+              "text": "He ignored him"
+            }
+          ],
+          "good": "Yes. The father ran to his son, welcomed him and threw a celebration.",
+          "bad": "Look again: the father ran to his son, embraced him and celebrated his return."
+        },
+        "reflectPrompt": "Is there any sin or pain keeping you from coming home to God? How is God different from any earthly father you have known?"
+      },
+      "prayer": "Father, thank you that you run to welcome me home. I turn back to you. Wrap your arms around me and call me your child. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 22,
+      "title": "Believe 7: The resurrection",
+      "ref": "Matthew 28:1-10",
+      "verseUsfm": "MAT.28.1-10",
+      "keyVerseRef": "Matthew 28:6",
+      "teaching": [
+        "Time is ticking; the average person lives only a couple of billion seconds. Is there any hope beyond death? There is one: Jesus' own resurrection from the dead, which is the proof of our future resurrection.",
+        "The resurrection means we can be sure of eternal life, that Jesus really is God (which is why the women worshipped him), and that Christianity is true. It sets Jesus apart from every other religious founder, for only he has no grave. Because he lives, everyone who trusts him will one day be raised too."
+      ],
+      "keyIdea": "Because Jesus rose from the dead, sins can be forgiven, there is life beyond the grave, and the good news stands on solid ground.",
+      "reflectionScript": "Imagine walking up to a tomb expecting death and grief, and finding it empty. The stone is rolled away, and the message rings out: he is alive. Let that news land on the parts of your life that feel hopeless or finished. The same power that raised Jesus is at work now. Where do you most need new life today?",
+      "supportingScriptures": [
+        {
+          "ref": "1 Corinthians 15:1-8",
+          "usfm": "1CO.15.1-8"
+        },
+        {
+          "ref": "John 20:29",
+          "usfm": "JHN.20.29"
+        },
+        {
+          "ref": "Philippians 3:21",
+          "usfm": "PHP.3.21"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What did the angel tell the women at the tomb?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Do not be afraid; he has risen, just as he said",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Stay silent and tell no one"
+            },
+            {
+              "id": "c",
+              "text": "The body had been stolen"
+            },
+            {
+              "id": "d",
+              "text": "Jesus was still dead"
+            }
+          ],
+          "good": "Correct. The angel announced that Jesus had risen and told the women to go and tell the disciples.",
+          "bad": "Look again: the angel said, 'Do not be afraid; he has risen, just as he said.'"
+        },
+        "reflectPrompt": "What does the resurrection mean for you? Is there a dead or dying part of your life you need God's resurrection power to touch?"
+      },
+      "prayer": "Risen Jesus, you conquered death. Thank you that because you live, I can have life. Touch the dead places in me with your power. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 23,
+      "title": "Believe 8: Following Jesus",
+      "ref": "Matthew 4:17-23",
+      "verseUsfm": "MAT.4.17-23",
+      "keyVerseRef": "Matthew 4:19",
+      "teaching": [
+        "The earliest believers did not call themselves Christians; they called themselves disciples, or followers, of Jesus. To follow him means being stunned by his wisdom and strength, starting a personal relationship with him, and copying his example.",
+        "It also means believing and obeying his teaching, joining his mission to reach people, and giving him our highest loyalty. When Jesus called the fishermen, they left their nets at once and followed. Whatever we give up is nothing compared with what we gain."
+      ],
+      "keyIdea": "To follow Jesus is to trust him, become like him, obey him, join his mission and give him first place in our lives.",
+      "reflectionScript": "Picture yourself at your ordinary work, hands busy with the everyday, when Jesus walks by and says, follow me. There is no long negotiation, just an invitation. What are the nets you are holding that make it hard to say yes? Imagine setting them down, one finger at a time, and stepping forward to follow.",
+      "supportingScriptures": [
+        {
+          "ref": "Luke 5:1-11",
+          "usfm": "LUK.5.1-11"
+        },
+        {
+          "ref": "Matthew 28:19",
+          "usfm": "MAT.28.19"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What did Peter and Andrew do when Jesus called them?",
+          "options": [
+            {
+              "id": "a",
+              "text": "They left their nets at once and followed him",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "They asked for time to think"
+            },
+            {
+              "id": "c",
+              "text": "They refused"
+            },
+            {
+              "id": "d",
+              "text": "They finished the fishing season first"
+            }
+          ],
+          "good": "Yes. They left their nets immediately and followed Jesus.",
+          "bad": "Look again: they left their nets at once and followed him."
+        },
+        "reflectPrompt": "What has caused you to follow, or hold back from following, Jesus? Which part of following him challenges you most?"
+      },
+      "prayer": "Jesus, I want to be your follower, not just an admirer. Give me the courage to leave my nets and follow you. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 24,
+      "title": "Believe 9: Living in faith",
+      "ref": "Romans 8:14-17; 35-39",
+      "verseUsfm": "ROM.8.14-17",
+      "keyVerseRef": "Romans 8:38-39",
+      "teaching": [
+        "A man once crossed the sea eating only stale bread, not realising his meals were included in the ticket. Many people think Jesus only gives a ticket to heaven and so live spiritually hungry, when God actually invites us to feast at his table every day.",
+        "If we trust and follow Jesus, we receive the Holy Spirit living in us, an invitation to know God as our loving Father whom we can call Abba, a new identity as his children, and the promise that nothing can ever separate us from his love. Like the ugly duckling who discovers it is really a swan, we can spread our wings and live by faith."
+      ],
+      "keyIdea": "Nothing in all creation can separate us from God's love. We are his loved and adopted children.",
+      "reflectionScript": "Bring to mind the fears that whisper you might be too far gone or not good enough. Now hold them next to a simple truth: nothing can separate you from God's love. Not failure, not fear, not your past. Picture yourself held securely in his hand, called his child. Rest there for a moment and let the fear lose its grip.",
+      "supportingScriptures": [
+        {
+          "ref": "Ephesians 3:14-21",
+          "usfm": "EPH.3.14-21"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to Paul, what can separate us from God's love?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Nothing in all creation",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Death"
+            },
+            {
+              "id": "c",
+              "text": "Trouble and hardship"
+            },
+            {
+              "id": "d",
+              "text": "Powers and angels"
+            }
+          ],
+          "good": "Correct. Paul says nothing at all can separate us from the love of God in Christ Jesus.",
+          "bad": "Look again: Paul lists all these things and says none of them can separate us from God's love."
+        },
+        "reflectPrompt": "Which of God's promises to you do you struggle most to believe? How can you trust his unchanging word instead of your changing feelings?"
+      },
+      "prayer": "Father, thank you that I am your adopted child and nothing can separate me from your love. Help me live by faith, not by my feelings. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 25,
+      "title": "Believe 10: Paying the price",
+      "ref": "Luke 9:18-26",
+      "verseUsfm": "LUK.9.18-26",
+      "keyVerseRef": "Luke 9:23",
+      "teaching": [
+        "Seventeen-year-old Cassie was asked at gunpoint if she believed in God. She said yes, and it cost her life; at her funeral seventy-five of her friends became Christians because they saw a faith worth dying for.",
+        "When we see who Jesus really is, we become willing to pay a price to follow him. It means denying ourselves and carrying our cross. Nothing in this life lasts forever, so it is pointless to gain the whole world and lose our souls. On judgment day our devotion to Jesus will be richly rewarded, and knowing him makes it impossible to be ashamed of him."
+      ],
+      "keyIdea": "He is no fool who gives up what he cannot keep to gain what he can never lose.",
+      "reflectionScript": "Following Jesus is not always comfortable. Imagine a set of scales: on one side the things you might have to let go of, on the other the treasure of knowing Christ. Watch how the treasure outweighs everything. What is Jesus asking you to lay down? Remember, you are not losing. In him, you are gaining far more than you give up.",
+      "supportingScriptures": [
+        {
+          "ref": "Matthew 13:44",
+          "usfm": "MAT.13.44"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to Jesus, what must a person do to follow him?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Deny themselves and take up their cross daily",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Become wealthy first"
+            },
+            {
+              "id": "c",
+              "text": "Gain the whole world"
+            },
+            {
+              "id": "d",
+              "text": "Keep their faith secret"
+            }
+          ],
+          "good": "Yes. Jesus said whoever wants to follow him must deny themselves and take up their cross.",
+          "bad": "Look again: Jesus said to follow him we must deny ourselves and take up our cross."
+        },
+        "reflectPrompt": "What is it costing you to follow Jesus? What stops you from being fully committed to him, and what motivates you to be?"
+      },
+      "prayer": "Jesus, you gave everything for me. Give me courage to deny myself, carry my cross and follow you without shame, whatever it costs. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 26,
+      "title": "Grow 1: The Bible",
+      "ref": "Psalm 119:9-21, 103-105",
+      "verseUsfm": "PSA.119.9-16",
+      "keyVerseRef": "Psalm 119:105",
+      "teaching": [
+        "God did not write the Bible with his own hand, but he inspired around forty writers over 1,600 years so that it faithfully tells us who he is, what he has done, and how to know him. Its message is as true and relevant today as ever.",
+        "Scripture keeps us pure, brings joy and wonder, nourishes our souls like honey and guides our decisions like a lamp on a dark path. But it is not enough to read and be informed; we must obey it, treasure it, memorise it, think about it and ask God to open our eyes, until we are transformed."
+      ],
+      "keyIdea": "God's word is a lamp for our feet and a light for our path. Don't just hear it; do what it says and be transformed.",
+      "reflectionScript": "Think of a dark path where you cannot see your next step. Now imagine a lamp in your hand, spilling light just far enough to walk safely. That is what Scripture is meant to be for you: not a book to argue about, but a light to walk by. Where do you most need God's guidance right now? Ask him to shine his word onto that step.",
+      "supportingScriptures": [
+        {
+          "ref": "James 1:21-25",
+          "usfm": "JAS.1.21-25"
+        },
+        {
+          "ref": "John 8:32",
+          "usfm": "JHN.8.32"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "How does the psalm say a young person can keep their life pure?",
+          "options": [
+            {
+              "id": "a",
+              "text": "By living according to God's word",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "By avoiding all people"
+            },
+            {
+              "id": "c",
+              "text": "By becoming wealthy"
+            },
+            {
+              "id": "d",
+              "text": "By never making mistakes"
+            }
+          ],
+          "good": "Correct. The psalm says purity comes from living according to God's word.",
+          "bad": "Look again: the psalm says a young person keeps their life pure by living according to God's word."
+        },
+        "reflectPrompt": "What part has the Bible played in your life so far? What one step can you take to begin doing, not just reading, what it teaches?"
+      },
+      "prayer": "Lord, thank you for your word. Open my eyes to its wonderful truths and help me not only to read it but to obey and treasure it. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 27,
+      "title": "Grow 2: The Church",
+      "ref": "Acts 2:38-47",
+      "verseUsfm": "ACT.2.38-47",
+      "keyVerseRef": "Acts 2:42",
+      "teaching": [
+        "Take a burning log out of the fire and its flame soon dies; it needs other burning wood to keep glowing. In the same way our passion for God can fade if we try to follow Jesus alone rather than connected to a church that loves him.",
+        "The early church shows us how to live together: devoted to God's word and to strong relationships, breaking bread, praying and praising, caring for one another, drawing in outsiders and not giving up on each other. Every church is an imperfect group of people joined to a perfect head, Jesus."
+      ],
+      "keyIdea": "The Christian life is about togetherness. God designed us to grow stronger in a loving, supportive community, so he created the Church.",
+      "reflectionScript": "Picture a flock of geese flying together, each one making the journey easier for the others, the ones behind calling out encouragement. That is a picture of the Church. Now think of your own faith. Are you trying to fly alone? Imagine the difference of travelling with others who pray for you and cheer you on. Who could you draw closer to this week?",
+      "supportingScriptures": [
+        {
+          "ref": "Hebrews 10:24-25",
+          "usfm": "HEB.10.24-25"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What did the early believers devote themselves to?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The apostles' teaching, fellowship, breaking bread and prayer",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Making money together"
+            },
+            {
+              "id": "c",
+              "text": "Keeping to themselves"
+            },
+            {
+              "id": "d",
+              "text": "Political power"
+            }
+          ],
+          "good": "Yes. They devoted themselves to teaching, fellowship, breaking bread and prayer.",
+          "bad": "Look again: they devoted themselves to the apostles' teaching, fellowship, breaking bread and prayer."
+        },
+        "reflectPrompt": "What experiences of church have you had? What makes you want to join a church, and what holds you back?"
+      },
+      "prayer": "Lord, thank you for your family, the Church. Connect me to people who love you, and help me to give as well as receive. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 28,
+      "title": "Grow 3: The Holy Spirit",
+      "ref": "John 16:7-15",
+      "verseUsfm": "JHN.16.7-15",
+      "keyVerseRef": "John 16:13",
+      "teaching": [
+        "Water, gas and ice are all the same substance in different forms; in a similar way God is one, yet reveals himself as Father, Son and Holy Spirit. A sailing boat needs wind to move, and the Holy Spirit is the wind in the sails of every Christian's life.",
+        "Jesus called the Spirit the Friend and the Spirit of truth, given to us as Jesus' replacement so that he could be with millions of people at once. The Spirit convinces people to turn from sin, helps us understand the Bible, shows us God's will, leads us to worship Jesus and lets us experience God's grace."
+      ],
+      "keyIdea": "Knowing and obeying God is impossible without the Holy Spirit, who comes to live in every believer.",
+      "reflectionScript": "You cannot see the wind, but you can feel it move the branches of a tree. The Holy Spirit is like that: invisible, but real and powerful. Think of him not as a force but as a Friend who stands alongside you, comforts you and guides you. Where do you need his help today? Quietly ask him to fill you and lead you.",
+      "supportingScriptures": [
+        {
+          "ref": "John 14:16-18",
+          "usfm": "JHN.14.16-18"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What does Jesus call the Holy Spirit in this passage?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The Friend and the Spirit of truth",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "An angel"
+            },
+            {
+              "id": "c",
+              "text": "A prophet"
+            },
+            {
+              "id": "d",
+              "text": "A stranger"
+            }
+          ],
+          "good": "Correct. Jesus calls him the Friend and the Spirit of truth.",
+          "bad": "Look again: Jesus calls him the Friend and the Spirit of truth."
+        },
+        "reflectPrompt": "What experiences, if any, have you had of the Holy Spirit? In what ways has he helped you in your walk with God?"
+      },
+      "prayer": "Holy Spirit, thank you for living in me as my Friend and guide. Fill me, teach me your truth and lead me to worship Jesus. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 29,
+      "title": "Grow 4: Prayer",
+      "ref": "Matthew 6:5-13",
+      "verseUsfm": "MAT.6.5-13",
+      "keyVerseRef": "Matthew 6:6",
+      "teaching": [
+        "Early Sudanese believers each had their own private spot in the bush for prayer, and the paths there became well worn. If someone neglected prayer, others would gently say, 'Friend, the grass grows on your path.'",
+        "Jesus teaches us to cut out distractions and pray honestly to a Father who is eager to respond, rather than trying to impress him with fancy words. We can focus on who God is, invite his will, ask for what we need, confess our sins, forgive others and ask for protection. And we can pray continually, pushing through the times it seems he isn't listening."
+      ],
+      "keyIdea": "Prayer is honest, ongoing conversation with a Father who loves to listen. Stay connected to him throughout the day.",
+      "reflectionScript": "Picture a quiet, private place where no one is watching and you can be completely honest with God. No fancy words are needed. Bring him your gratitude, your worries, your sorry, your requests. Now imagine leaving that place but not ending the conversation, carrying it with you like a friend at your side all day long. That is what prayer can become.",
+      "supportingScriptures": [
+        {
+          "ref": "Matthew 26:36-46",
+          "usfm": "MAT.26.36-46"
+        },
+        {
+          "ref": "1 Thessalonians 5:17",
+          "usfm": "1TH.5.17"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "How does Jesus say we should not pray?",
+          "options": [
+            {
+              "id": "a",
+              "text": "With empty, showy words to impress people",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "In private"
+            },
+            {
+              "id": "c",
+              "text": "By confessing our sins"
+            },
+            {
+              "id": "d",
+              "text": "By asking for our needs"
+            }
+          ],
+          "good": "Correct. Jesus warns against praying with empty words to be seen and admired.",
+          "bad": "Look again: Jesus warns against showy, empty prayers meant to impress others."
+        },
+        "reflectPrompt": "What does your prayer life look like right now? How could you make prayer more honest and part of your everyday life?"
+      },
+      "prayer": "Father, teach me to pray honestly and often. Help me talk with you throughout my day and trust you even when it feels like silence. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 30,
+      "title": "Grow 5: More like Jesus",
+      "ref": "Galatians 5:16-25",
+      "verseUsfm": "GAL.5.16-25",
+      "keyVerseRef": "Galatians 5:22-23",
+      "teaching": [
+        "A sculptor said he made a bird from a rock by chipping away everything that didn't look like a bird. God is the Master Sculptor who lovingly chips away everything in us that is not like Christ. When we believe, we instantly share Jesus' acceptance; then, over time, God develops Jesus' character in us.",
+        "The fruit of the Spirit, love, joy, peace, patience, kindness, goodness, faithfulness, gentleness and self-control, grows as we stay close to the Spirit and keep in step with him. This means obeying his gentle voice through the Bible and our conscience, especially when we are tempted."
+      ],
+      "keyIdea": "The more we keep in step with the Spirit, the more like Jesus we become.",
+      "reflectionScript": "Imagine a fruit tree drawing life quietly from the soil. It does not strain to produce fruit; it simply stays connected. In the same way, becoming like Jesus is less about trying harder and more about staying close to the Spirit. Which fruit, patience, kindness, self-control, do you long to see grow in you? Ask the Spirit to grow it as you stay near him.",
+      "supportingScriptures": [
+        {
+          "ref": "John 15:1-8",
+          "usfm": "JHN.15.1-8"
+        },
+        {
+          "ref": "Ephesians 4:30",
+          "usfm": "EPH.4.30"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "Which of these is part of the fruit of the Spirit?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Love, joy and peace",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Jealousy and rage"
+            },
+            {
+              "id": "c",
+              "text": "Selfish ambition"
+            },
+            {
+              "id": "d",
+              "text": "Getting drunk"
+            }
+          ],
+          "good": "Correct. Love, joy and peace are part of the fruit the Spirit produces.",
+          "bad": "Look again: the fruit of the Spirit includes love, joy, peace, patience, kindness and more."
+        },
+        "reflectPrompt": "How aware are you of the Holy Spirit's work in you? Which fruit of the Spirit do you most need right now, and why?"
+      },
+      "prayer": "Holy Spirit, produce your fruit in me. Help me keep in step with you and become more like Jesus every day. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 31,
+      "title": "Grow 6: Obedience",
+      "ref": "1 John 1:5-2:6",
+      "verseUsfm": "1JN.1.5-10",
+      "keyVerseRef": "1 John 1:9",
+      "teaching": [
+        "If a teenager lies to a parent, they don't stop being the parent's child, but the relationship is damaged until they confess and change. In the same way, when we sin after becoming God's child, we don't stop being his child, but our closeness with him is broken until we admit our sin and ask for help.",
+        "God is light and hates sin, but if we confess he faithfully forgives and cleanses us through the blood of Jesus. Like a child learning to walk, we move beyond constant falling to walk in obedience. Learn the difference between the Holy Spirit's loving conviction, which draws us back to God, and the devil's condemnation, which drives us away in shame."
+      ],
+      "keyIdea": "If we confess our sins, God is faithful to forgive and cleanse us. Reject shame and run to God's grace.",
+      "reflectionScript": "There are two voices that speak when we sin. One highlights the sin gently and draws us back toward God's grace; that is the Holy Spirit. The other whispers that we are worthless and should hide; that is the accuser. Learn to tell them apart. When you fall, don't run away in shame. Turn toward God, confess, and let his grace lift you up again.",
+      "supportingScriptures": [
+        {
+          "ref": "Romans 6:8-13",
+          "usfm": "ROM.6.8-13"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What does God promise if we confess our sins?",
+          "options": [
+            {
+              "id": "a",
+              "text": "He will forgive us and purify us from all wrong",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Nothing changes"
+            },
+            {
+              "id": "c",
+              "text": "He will stop loving us"
+            },
+            {
+              "id": "d",
+              "text": "He will keep a record of them"
+            }
+          ],
+          "good": "Correct. God is faithful and just to forgive our sins and purify us.",
+          "bad": "Look again: if we confess our sins, God is faithful to forgive and cleanse us."
+        },
+        "reflectPrompt": "What sins do you struggle with? Do you tend to hide them or confess them, and what small signs of becoming more like Jesus do you notice?"
+      },
+      "prayer": "Faithful God, I confess my sin to you. Thank you for forgiving and cleansing me. Help me walk in obedience and reject shame. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 32,
+      "title": "Grow 7: Worship",
+      "ref": "Psalm 98",
+      "verseUsfm": "PSA.98.1-9",
+      "keyVerseRef": "Psalm 98:1",
+      "teaching": [
+        "God loves being enjoyed, and the Father is looking for worshippers. Worship is not only singing once a week; it is total devotion to God because of who he is and all he has done, learning to love and be in awe of him every waking hour.",
+        "We worship God because he is holy, righteous, loving and faithful, a King and Judge who has done wonderful things. We can worship with our minds, filling them with truth about him; with our hearts, bursting into song; with our bodies, clapping and making music; and with our wills, giving everything to him. Worshipping God brings deeper satisfaction than anything the world offers."
+      ],
+      "keyIdea": "In worship we enjoy the God who enjoys us. It is the one thing we will do forever.",
+      "reflectionScript": "We often settle for small pleasures, like children splashing in gutter water when the ocean is waiting. The deepest joy is worship, a mind filled with God's goodness, a heart warmed by his love. Take a moment to name three things God has done for you. Let gratitude rise, and let it turn quietly into praise. This is what you were made for.",
+      "supportingScriptures": [
+        {
+          "ref": "1 Timothy 1:12-17",
+          "usfm": "1TI.1.12-17"
+        },
+        {
+          "ref": "Psalm 103:1",
+          "usfm": "PSA.103.1"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "Why does the psalm call us to sing a new song to the Lord?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Because he has done wonderful things and saved his people",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Because singing is fun"
+            },
+            {
+              "id": "c",
+              "text": "Because it is a rule"
+            },
+            {
+              "id": "d",
+              "text": "Because everyone else is singing"
+            }
+          ],
+          "good": "Correct. We sing because God has done marvellous things and made known his salvation.",
+          "bad": "Look again: we sing a new song because the Lord has done wonderful things and saved his people."
+        },
+        "reflectPrompt": "What stirs you to worship God? What holds you back, and how could you worship him more, both alone and with others?"
+      },
+      "prayer": "Lord, you are holy and have done wonderful things. I give you my mind, heart, body and will in worship. Fill me with awe of you. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 33,
+      "title": "Grow 8: Spiritual warfare",
+      "ref": "1 Peter 5:6-11",
+      "verseUsfm": "1PE.5.6-11",
+      "keyVerseRef": "1 Peter 5:8",
+      "teaching": [
+        "A man stranded overnight in a game park hid in a tree in terror at a lion's roar, only to discover the next day that the lion had been caged the whole time. When we follow Jesus we gain an enemy, Satan, but if we belong to Christ we have nothing to fear, because we do not fight in our own strength.",
+        "We resist the devil through humility, trusting God, self-control and spiritual alertness. The main battlefield is our minds, so we must stand on the truth of the Bible, stay in community, and turn away from all occult practices. Be aware of the devil, but be in awe of God, who will overcome the enemy's efforts to harm us."
+      ],
+      "keyIdea": "Stand firm in your faith. The devil prowls like a roaring lion, but Jesus holds all authority over him.",
+      "reflectionScript": "Imagine hearing a lion roar in the dark and being paralysed by fear, then discovering the lion was behind bars all along. The enemy's roar is loud, but in Christ his power is limited. When lies and fear crowd your mind, picture yourself standing firm on God's truth, humble before him and unafraid. Be aware of the enemy, but keep your eyes fixed in awe on God.",
+      "supportingScriptures": [
+        {
+          "ref": "Matthew 4:1-11",
+          "usfm": "MAT.4.1-11"
+        },
+        {
+          "ref": "Luke 10:17-19",
+          "usfm": "LUK.10.17-19"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "How is the devil described in this passage?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Like a roaring lion looking for someone to devour",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Like a gentle lamb"
+            },
+            {
+              "id": "c",
+              "text": "Like a wise teacher"
+            },
+            {
+              "id": "d",
+              "text": "Like a helpful friend"
+            }
+          ],
+          "good": "Correct. Peter says the devil prowls like a roaring lion looking for someone to devour.",
+          "bad": "Look again: the devil is described as a roaring lion looking for someone to devour."
+        },
+        "reflectPrompt": "Have you experienced any spiritual attacks? How can you fight this battle better in the future?"
+      },
+      "prayer": "Lord, thank you that Jesus has authority over the enemy. Make me humble, alert and strong in faith. I resist the devil in your name. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 34,
+      "title": "Grow 9: Trust",
+      "ref": "Mark 4:35-41",
+      "verseUsfm": "MRK.4.35-41",
+      "keyVerseRef": "Mark 4:39",
+      "teaching": [
+        "Pilots in thick cloud can get vertigo and lose all sense of up and down; those who trust their untrustworthy senses have crashed, while good pilots rely on their instruments. In the same way, when doubt, fear and worry overwhelm us, we must distrust our feelings and trust God's unchanging promises.",
+        "Jesus led the disciples into a storm, and when it raged he seemed asleep and uncaring, yet he was in full control and could calm it in a moment. God allows storms to develop our faith, because faith that is untested is not real faith. We grow in trust by remembering that Jesus is with us, that he cares, and that he keeps his promises."
+      ],
+      "keyIdea": "God has promised, 'I will never leave you.' In every storm his grace will sustain you; trust his faithfulness, not your feelings.",
+      "reflectionScript": "Imagine a small boat tossed by a fierce storm, waves crashing over the side. Fear says you are alone. But Jesus is in the boat with you, and at his word the storm can fall silent. Bring to mind the storm you are facing now. Picture Jesus turning toward it and toward you. He has not left. Rest your trust in his presence, not in the size of the waves.",
+      "supportingScriptures": [
+        {
+          "ref": "Romans 4:17-21",
+          "usfm": "ROM.4.17-21"
+        },
+        {
+          "ref": "Hebrews 13:5",
+          "usfm": "HEB.13.5"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What did Jesus do when the disciples woke him in the storm?",
+          "options": [
+            {
+              "id": "a",
+              "text": "He commanded the wind and waves, and they became calm",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "He jumped overboard"
+            },
+            {
+              "id": "c",
+              "text": "He panicked with them"
+            },
+            {
+              "id": "d",
+              "text": "He did nothing"
+            }
+          ],
+          "good": "Correct. Jesus rebuked the storm and it became completely calm.",
+          "bad": "Look again: Jesus commanded the wind and waves, and everything became calm."
+        },
+        "reflectPrompt": "Which promises in the Bible mean the most to you? What storms have you faced, and how can you grow your trust in God's faithfulness?"
+      },
+      "prayer": "Lord Jesus, you are in the boat with me even in the storm. Help me trust your promises when my feelings tell me you are far away. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 35,
+      "title": "Grow 10: Tough times",
+      "ref": "2 Corinthians 1:3-11",
+      "verseUsfm": "2CO.1.3-11",
+      "keyVerseRef": "2 Corinthians 1:3-4",
+      "teaching": [
+        "A butterfly struggles for hours to break free from its cocoon, and if you cut it open to help, it dies, because the struggle itself gives it strength to fly. This is why God does not always take away our hard times; he loves us too much to spare us the growth.",
+        "Paul gives several reasons God allows suffering: so he can comfort us, so we can comfort others, so we experience Christ the wounded healer, so others are inspired by our perseverance, so we rely on God more, so he receives glory by delivering us, and so the community is strengthened as we pray. God does not always take our suffering away, but he promises to take us through it."
+      ],
+      "keyIdea": "God comforts us in all our troubles so that we can comfort others with the comfort we ourselves received.",
+      "reflectionScript": "Think of the butterfly straining against its cocoon. The struggle is not cruelty; it is what gives it strength to fly. Now think of a hard season you have been through. What strength or compassion did it grow in you? God does not waste our pain. Even the wounds we carry can become the very places from which we comfort someone else.",
+      "supportingScriptures": [
+        {
+          "ref": "Romans 5:1-5",
+          "usfm": "ROM.5.1-5"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to Paul, why does God comfort us in our troubles?",
+          "options": [
+            {
+              "id": "a",
+              "text": "So that we can comfort others going through trouble",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "So that we can boast"
+            },
+            {
+              "id": "c",
+              "text": "So that we can avoid all pain"
+            },
+            {
+              "id": "d",
+              "text": "So that we can stay alone"
+            }
+          ],
+          "good": "Correct. God comforts us so that we can comfort others with the comfort we received.",
+          "bad": "Look again: Paul says God comforts us so we can comfort others in their trouble."
+        },
+        "reflectPrompt": "What tough times have you experienced, and what did you learn? How can you deal with suffering better in the future?"
+      },
+      "prayer": "Father of compassion, thank you that you hold me tightest when I hurt most. Comfort me, and use my scars to help others. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 36,
+      "title": "Live 1: The media",
+      "ref": "Romans 12:1-2",
+      "verseUsfm": "ROM.12.1-2",
+      "keyVerseRef": "Romans 12:2",
+      "teaching": [
+        "A frog placed in slowly heating water is said not to notice the danger until it is too late. Music, movies, games, TV and especially social media can slowly kill our godly values without us realising, feeding us lies: sleep around, take revenge, chase riches and fame, ignore God.",
+        "God is holy and merciful, and our relationship with him should change us to reflect his holiness rather than blend into a culture that ignores him. We resist by offering every area of our lives to God as worship and by letting our thinking be completely renewed, filling our minds daily with his word and controlling what we watch, read and post."
+      ],
+      "keyIdea": "Don't be shaped by the pattern of this world; be transformed by the renewing of your mind so you can know God's good will.",
+      "reflectionScript": "Think about what flows into your mind through your screens on an ordinary day. Images, messages, comparisons, values, some good, some not. Remember the old wisdom: sow a thought, reap an action; sow an action, reap a habit; sow a habit, reap a character. What are you sowing? Picture yourself choosing what enters your mind as carefully as you choose what enters your body.",
+      "supportingScriptures": [
+        {
+          "ref": "Philippians 4:8",
+          "usfm": "PHP.4.8"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to Paul, how are we transformed?",
+          "options": [
+            {
+              "id": "a",
+              "text": "By the renewing of our minds",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "By copying the world around us"
+            },
+            {
+              "id": "c",
+              "text": "By trying harder on our own"
+            },
+            {
+              "id": "d",
+              "text": "By avoiding all people"
+            }
+          ],
+          "good": "Correct. We are transformed by the renewing of our minds.",
+          "bad": "Look again: Paul says we are transformed by the renewing of our minds, not by copying the world."
+        },
+        "reflectPrompt": "What effects have you noticed the media having on your faith and values? How can you keep a renewed mind and stay connected to real life?"
+      },
+      "prayer": "Lord, I offer you my whole life as worship. Renew my mind and guard what I take in, so I can know and do your good will. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 37,
+      "title": "Live 2: Alcohol and drugs",
+      "ref": "Ephesians 5:8-20",
+      "verseUsfm": "EPH.5.8-20",
+      "keyVerseRef": "Ephesians 5:18",
+      "teaching": [
+        "Drugs and alcohol may make you feel good for a few hours until the comedown leaves you worse than before. Teachers say don't; friends and media say do. But God says he has something so much better for you.",
+        "Substance abuse is an act of darkness that keeps us from becoming who God made us to be, and it often leads to other sins including sexual sin, because it weakens our self-control. God has something far better: to be controlled by his Spirit rather than a substance, and to enjoy greater and lasting satisfaction with no bad after-effects."
+      ],
+      "keyIdea": "Don't get drunk on wine; instead be filled with the Holy Spirit. If you are going to be addicted to anything, let it be to God.",
+      "reflectionScript": "The quick high always demands a comedown. Picture the promise a substance makes, confidence, escape, freedom, and then picture the empty feeling that follows. Now picture something better: being filled and steadied by God's Spirit, a joy with no crash. When you need confidence, or escape, or a lift, imagine turning to him instead. He will not leave you worse off.",
+      "supportingScriptures": [
+        {
+          "ref": "Romans 13:11-14",
+          "usfm": "ROM.13.11-14"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "Instead of getting drunk with wine, what does Paul say we should do?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Be filled with the Holy Spirit",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Work harder"
+            },
+            {
+              "id": "c",
+              "text": "Sleep more"
+            },
+            {
+              "id": "d",
+              "text": "Keep it a secret"
+            }
+          ],
+          "good": "Correct. Paul urges us to be filled with the Holy Spirit rather than drunk with wine.",
+          "bad": "Look again: instead of getting drunk, Paul says to be filled with the Holy Spirit."
+        },
+        "reflectPrompt": "Why do people abuse substances? What effects have you seen alcohol or drugs have, and what does God's word offer someone wanting freedom?"
+      },
+      "prayer": "Lord, fill me with your Spirit instead of anything that harms me. Give me lasting joy and self-control, and free anyone caught in addiction. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 38,
+      "title": "Live 3: Friends and peer pressure",
+      "ref": "Psalm 1",
+      "verseUsfm": "PSA.1.1-6",
+      "keyVerseRef": "Psalm 1:1",
+      "teaching": [
+        "A thermometer only measures the temperature, but a heater changes it. God wants you to be a heater, not a thermometer, positively influencing your friends rather than being pulled down by them. When we stop influencing others for good, some people start influencing us for bad.",
+        "Psalm 1 warns us to choose our company well. Walking with the wicked and sitting with mockers puts us in danger of missing God's blessing, fruitfulness and care, and being blown away like straw. Instead, delight in God's word and keep your closest friends among those who love God."
+      ],
+      "keyIdea": "Walk with wise people and become wise; a companion of fools suffers harm. Choose your friends and life partner well.",
+      "reflectionScript": "Picture two trees. One is planted beside a flowing stream, roots deep, leaves green, fruit heavy on its branches. The other is dry straw, tossed wherever the wind blows. Now think of the people you spend the most time with. Are they streams of living water for you, or wind that blows you off course? Your friendships are shaping the person you are becoming.",
+      "supportingScriptures": [
+        {
+          "ref": "1 Corinthians 15:33",
+          "usfm": "1CO.15.33"
+        },
+        {
+          "ref": "Proverbs 13:20",
+          "usfm": "PRO.13.20"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What is the godly person in Psalm 1 compared to?",
+          "options": [
+            {
+              "id": "a",
+              "text": "A tree planted by streams of water",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Straw the wind blows away"
+            },
+            {
+              "id": "c",
+              "text": "A locked gate"
+            },
+            {
+              "id": "d",
+              "text": "A dry desert"
+            }
+          ],
+          "good": "Correct. The blessed person is like a fruitful tree planted by streams of water.",
+          "bad": "Look again: the godly person is like a tree by streams of water, while the wicked are like straw."
+        },
+        "reflectPrompt": "Who are the friends who influence you most? Do they pull you away from God or draw you closer, and what changes might you need to make?"
+      },
+      "prayer": "Lord, help me choose friends who love you and to be a good influence on others. Plant me like a tree beside your living water. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 39,
+      "title": "Live 4: Love and dating",
+      "ref": "1 Corinthians 13:1-13",
+      "verseUsfm": "1CO.13.1-13",
+      "keyVerseRef": "1 Corinthians 13:4",
+      "teaching": [
+        "There is a difference between being in love and real love. Being in love focuses on our own happiness and craves instant satisfaction; real love focuses on the other person's well-being, is patient and willing to sacrifice. Anyone can be in love, but only someone mature can truly love.",
+        "Because God is love, he wants us to follow the way of love and build relationships on real love, not just feelings. That should make us rethink dating: do we pursue people out of loneliness or to look good, or for their good? Are we ready for the kind of love that sticks with one person for life? If not, it is far better to stay single until we are ready."
+      ],
+      "keyIdea": "Real love is patient and kind; it is not self-seeking. You don't need someone to be someone.",
+      "reflectionScript": "Read slowly through the description of real love: patient, kind, not self-seeking, not easily angered. Now hold your own relationships up against it, friendships, family, romance. Where do you fall short? Real love is not a feeling that comes and goes; it is a choice you grow into. Ask God to shape that kind of love in you before you look for it in someone else.",
+      "supportingScriptures": [
+        {
+          "ref": "1 Corinthians 7:32-35",
+          "usfm": "1CO.7.32-35"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to this passage, which describes real love?",
+          "options": [
+            {
+              "id": "a",
+              "text": "It is patient and kind and not self-seeking",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "It is jealous and proud"
+            },
+            {
+              "id": "c",
+              "text": "It keeps a record of wrongs"
+            },
+            {
+              "id": "d",
+              "text": "It always demands its own way"
+            }
+          ],
+          "good": "Correct. Love is patient, kind and not self-seeking.",
+          "bad": "Look again: real love is patient, kind and not self-seeking."
+        },
+        "reflectPrompt": "What have your experiences of dating been? How can you relate to the opposite sex in a way that reflects real, God-honouring love?"
+      },
+      "prayer": "Lord, you are love. Teach me the difference between feelings and real love, and give me patience to become ready for it. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 40,
+      "title": "Live 5: Sexuality",
+      "ref": "1 Thessalonians 4:1-9",
+      "verseUsfm": "1TH.4.1-9",
+      "keyVerseRef": "1 Thessalonians 4:3",
+      "teaching": [
+        "Sex is God's idea, a gift that unites people not only physically but spiritually, which is why it needs the context of a lifelong marriage commitment. Like two pieces of tape stuck together and torn apart, separating from a sexual partner is often deeply painful.",
+        "We honour God with our sexuality by avoiding all sexual immorality, learning to control our bodies, never taking advantage of anyone, and linking sex with real love. We do this because Jesus commands it, because God wants us holy, because we are called to be different from those who don't know him, and because God takes disobedience seriously."
+      ],
+      "keyIdea": "God's will is that we be made holy, avoiding sexual sin and learning to control our own bodies in a way that honours him.",
+      "reflectionScript": "Think of sex as a river. Within strong banks it brings life; in flood it destroys. The banks that make it safe are real commitment and real friendship, found in marriage. Consider the choices in front of you and the value of what you are being asked to guard. God's boundaries are not to spoil your joy, but to protect something powerful and precious for the right time.",
+      "supportingScriptures": [
+        {
+          "ref": "1 Corinthians 6:12-20",
+          "usfm": "1CO.6.12-20"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to Paul, what is God's will for our sexuality?",
+          "options": [
+            {
+              "id": "a",
+              "text": "That we be holy and avoid sexual sin",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "That we do whatever feels good"
+            },
+            {
+              "id": "c",
+              "text": "That we take advantage of others"
+            },
+            {
+              "id": "d",
+              "text": "That we hide our bodies in shame"
+            }
+          ],
+          "good": "Correct. God's will is that we be sanctified and avoid sexual immorality.",
+          "bad": "Look again: Paul says God's will is that we be holy and stay away from sexual sin."
+        },
+        "reflectPrompt": "In what ways have you fallen short of God's will for you sexually? What choices can you make to honour God with your sexuality?"
+      },
+      "prayer": "Lord, thank you that sex is your good gift. Help me control my body, honour others, and keep sex for the safety of lifelong love. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 41,
+      "title": "Live 6: Work and school",
+      "ref": "Colossians 3:17, 22-4:1",
+      "verseUsfm": "COL.3.22-25",
+      "keyVerseRef": "Colossians 3:23",
+      "teaching": [
+        "A young footballer named Ted began playing brilliantly after his father died, because he imagined his father might be watching and did not want to let him down. God, our heavenly Father, watches over us, and knowing this should inspire us to work hard.",
+        "God is interested in every part of our lives, not just prayer and Bible reading but our schoolwork, chores and jobs. We work in a God-pleasing way by doing everything with his help and for his glory, putting our whole heart into it, and aiming to please God rather than only impressing bosses, parents or teachers, even when no one but God is watching."
+      ],
+      "keyIdea": "Work at everything with all your heart, as working for the Lord and not for people.",
+      "reflectionScript": "Imagine doing your ordinary work, homework, chores, a job, with the awareness that God himself sees every effort. Not to shame you, but as a Father who delights in your diligence. How would that change the way you approach today's tasks? Picture pouring your whole heart into your work as an act of worship, offered to the One who is always watching with love.",
+      "supportingScriptures": [
+        {
+          "ref": "2 Thessalonians 3:6-15",
+          "usfm": "2TH.3.6-15"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to Paul, we should work as if we are working for whom?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The Lord, not human masters",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Only our bosses"
+            },
+            {
+              "id": "c",
+              "text": "Only ourselves"
+            },
+            {
+              "id": "d",
+              "text": "No one in particular"
+            }
+          ],
+          "good": "Correct. We are to work with all our heart, as working for the Lord.",
+          "bad": "Look again: Paul says to work as if working for the Lord, not for human masters."
+        },
+        "reflectPrompt": "On a scale of 1 to 10, how hard a worker are you? What changes would God want you to make in your attitude toward work, and what are your dreams in life?"
+      },
+      "prayer": "Lord, help me work with all my heart as if working for you, even when no one else is watching. Give me a vision worth working toward. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 42,
+      "title": "Live 7: Self-image",
+      "ref": "Psalm 139:1-18",
+      "verseUsfm": "PSA.139.1-18",
+      "keyVerseRef": "Psalm 139:14",
+      "teaching": [
+        "Nick Vujicic was born with no arms or legs and nearly gave up because of teasing, until he learned to see himself through God's eyes rather than other people's. No matter how unattractive, untalented or uncool people may think you are, you are special because God loves you.",
+        "Psalm 139 shows how deeply God knows and treasures you: he knows your thoughts and habits, holds and guides you, made your body and soul wonderfully, has loved you since the womb, and has a plan for your life. When we see ourselves as God sees us, we can stop comparing and start appreciating ourselves and others."
+      ],
+      "keyIdea": "You are fearfully and wonderfully made. See yourself through God's eyes, not the eyes of society.",
+      "reflectionScript": "Slow down and let a few truths sink in. God knows your every thought. He formed your body with care. He has loved you since before you were born and he has a plan for your life. The world measures you by looks, talent and popularity. God measures you by his love. Picture yourself resting in that gaze, fully known and fully treasured, and let the comparisons fall quiet.",
+      "supportingScriptures": [
+        {
+          "ref": "2 Corinthians 5:17",
+          "usfm": "2CO.5.17"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to David, since when has God known him?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Since he was formed in his mother's womb",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Only since he became an adult"
+            },
+            {
+              "id": "c",
+              "text": "Only when he behaves well"
+            },
+            {
+              "id": "d",
+              "text": "God does not really know him"
+            }
+          ],
+          "good": "Correct. God knew and formed David even before he was born.",
+          "bad": "Look again: God knew David and formed him in his mother's womb."
+        },
+        "reflectPrompt": "How do you see yourself, and how has that been shaped by others' opinions? How can you begin to see yourself the way God sees you?"
+      },
+      "prayer": "Lord, thank you that you made me wonderfully and have loved me since the womb. Help me see myself through your eyes today. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 43,
+      "title": "Live 8: Money",
+      "ref": "1 Timothy 6:6-11, 17-19",
+      "verseUsfm": "1TI.6.6-11",
+      "keyVerseRef": "1 Timothy 6:10",
+      "teaching": [
+        "You cannot see the stars well when surrounded by bright lights, and it is easy to drift from God when captivated by money and the status it brings. Chasing wealth as a life goal is spiritually dangerous.",
+        "Money itself is not evil, but the love of it causes all kinds of evil. It can lead us to break God's commands, turn us from him, promise happiness but bring ruin, and it is uncertain and easy to lose. We use money in a God-pleasing way by being content, putting our hope in God rather than riches, enjoying what he gives, and giving generously to those in need and to his kingdom."
+      ],
+      "keyIdea": "The love of money is a root of all kinds of evil. Run after God, not wealth, and use what he gives in ways that please him.",
+      "reflectionScript": "Imagine standing under bright city lights where you cannot see a single star. That is what the love of money does; it drowns out the glory of God. Now picture stepping into the dark and looking up as the whole sky fills with stars. Where is your hope resting today, in what you own, or in the God who owns everything? Let contentment and generosity draw your eyes back to him.",
+      "supportingScriptures": [
+        {
+          "ref": "Matthew 6:19-34",
+          "usfm": "MAT.6.19-34"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to Paul, the love of money is what?",
+          "options": [
+            {
+              "id": "a",
+              "text": "A root of all kinds of evil",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "The key to happiness"
+            },
+            {
+              "id": "c",
+              "text": "Always harmless"
+            },
+            {
+              "id": "d",
+              "text": "Required by God"
+            }
+          ],
+          "good": "Correct. The love of money is a root of all kinds of evil.",
+          "bad": "Look again: Paul says the love of money is a root of all kinds of evil."
+        },
+        "reflectPrompt": "Have you seen how the love of money can be dangerous in your life or others'? How can you use money in ways that bring praise to God?"
+      },
+      "prayer": "Lord, guard my heart from loving money. Help me be content, put my hope in you, and give generously to those in need. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 44,
+      "title": "Live 9: Marriage and family",
+      "ref": "Ephesians 5:21-6:4",
+      "verseUsfm": "EPH.5.21-33",
+      "keyVerseRef": "Ephesians 5:25",
+      "teaching": [
+        "Many people carry pain from broken homes and have lost hope for their own future marriage. But there is fresh hope in God's plan. Out of love for Christ, husbands and wives are to follow one another's lead, treating each other with the same love and respect they give the Lord, working as a loving team rather than as competitors.",
+        "The word 'head' means source of strength and protection, not boss; husbands are to serve and sacrifice for their wives as Christ did for the church. Children are to obey and honour their parents, and parents are to keep pointing their children to God through their own example. Such marriages and families are a blessing to each other, to God and to the world."
+      ],
+      "keyIdea": "Husbands, love your wives just as Christ loved the church and gave himself up for her.",
+      "reflectionScript": "Picture a triangle with God at the top and a husband and wife at the two lower corners. As each one moves closer to God, they move closer to each other. That is the secret of a strong marriage, and the secret of a strong family too. Even now, whatever your home has been like, you can begin drawing closer to God and learning to love, respect and serve the people around you.",
+      "supportingScriptures": [
+        {
+          "ref": "Matthew 19:4-6",
+          "usfm": "MAT.19.4-6"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "How are husbands told to treat their wives?",
+          "options": [
+            {
+              "id": "a",
+              "text": "To love them as Christ loved the church",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "To rule over them harshly"
+            },
+            {
+              "id": "c",
+              "text": "To ignore their needs"
+            },
+            {
+              "id": "d",
+              "text": "To compete with them"
+            }
+          ],
+          "good": "Correct. Husbands are to love their wives as Christ loved the church and gave himself for her.",
+          "bad": "Look again: husbands are to love their wives sacrificially, as Christ loved the church."
+        },
+        "reflectPrompt": "What experiences have you had of others' marriages? If you hope to marry one day, how can you start preparing now, and how can you honour God in your family today?"
+      },
+      "prayer": "Lord, thank you for your good plan for marriage and family. Prepare me now to love, respect and serve, and help me honour my family today. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 45,
+      "title": "Live 10: Emotional pain",
+      "ref": "Philippians 3:7-16",
+      "verseUsfm": "PHP.3.7-16",
+      "keyVerseRef": "Philippians 3:13-14",
+      "teaching": [
+        "Emotional pain is real, and if it is not dealt with it becomes baggage that weighs us down and steals our hope. It comes from being hurt or used, from shattered dreams, mistakes and tough times. Christ wants us to find him in our pain so that we become pioneers of our future rather than prisoners of our past.",
+        "Paul wrote these words from prison and teaches us to see all pain as an opportunity to draw closer to God, not to face hardship alone, to trust God's resurrection power to help us overcome, to forget what is behind by forgiving those who hurt us, and to press on toward what lies ahead."
+      ],
+      "keyIdea": "Forget what is behind and press on toward the goal. Bitterness is like drinking poison and hoping the other person will die.",
+      "reflectionScript": "Bitterness is like drinking poison and hoping the other person will die; it only harms us. Bring to mind someone who has hurt you. Forgiveness is not saying it did not matter; it is a choice to set yourself free. Picture yourself handing that pain to God, refusing to carry it anymore, and turning to face the future he is opening in front of you. What dream is he calling you toward?",
+      "supportingScriptures": [
+        {
+          "ref": "Matthew 6:12-15",
+          "usfm": "MAT.6.12-15"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What is the one thing Paul says he does?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Forgets what is behind and presses toward the goal",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Dwells on his past failures"
+            },
+            {
+              "id": "c",
+              "text": "Gives up when life is hard"
+            },
+            {
+              "id": "d",
+              "text": "Blames others for his problems"
+            }
+          ],
+          "good": "Correct. Paul forgets what is behind and strains toward what is ahead.",
+          "bad": "Look again: Paul forgets what is behind and presses on toward the goal."
+        },
+        "reflectPrompt": "What emotional pain are you struggling with? How can you deal with it in a God-pleasing way, and what dreams has God put in your heart for the future?"
+      },
+      "prayer": "Lord, thank you that in you I am not a prisoner of my past. Help me forgive those who hurt me and press on toward the future you have for me. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 46,
+      "title": "Change 1: Bringing about change",
+      "ref": "Matthew 5:11-16",
+      "verseUsfm": "MAT.5.11-16",
+      "keyVerseRef": "Matthew 5:16",
+      "teaching": [
+        "We are on this planet to reflect Christ's character and do God's will. If Christ is the hope of the world, then God's people are the messengers of that hope, on a mission to bring change starting with the people around us.",
+        "Salt only works when it leaves the shaker and touches the food, so God gives each of us a mission field: our family, community and those we study or work with. A life 'salty' with passion for God makes others thirst for him. Light is meant to be seen, not hidden; following Jesus is personal but not private. Some will hate the light, but others will see our good deeds and give glory to God."
+      ],
+      "keyIdea": "Let your light shine before others, so that they may see your good deeds and glorify your Father in heaven.",
+      "reflectionScript": "Salt stuck in the shaker changes nothing; it has to touch the food. Light hidden under a bowl gives no help. Picture the people God has already placed around you, your family, classmates, workmates, as your mission field. You do not need a stage. You need a life that quietly makes others thirsty for God. What would it look like to let your light shine there this week?",
+      "supportingScriptures": [
+        {
+          "ref": "John 6:1-14",
+          "usfm": "JHN.6.1-14"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What does Jesus call his followers in this passage?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The salt of the earth and the light of the world",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "The judges of the world"
+            },
+            {
+              "id": "c",
+              "text": "The rulers of nations"
+            },
+            {
+              "id": "d",
+              "text": "A hidden secret"
+            }
+          ],
+          "good": "Correct. Jesus calls his followers the salt of the earth and the light of the world.",
+          "bad": "Look again: Jesus calls his followers salt and light."
+        },
+        "reflectPrompt": "How do you feel about being salt and light? How would it change your lifestyle if you began to see the people around you as your mission field?"
+      },
+      "prayer": "Lord, make me salt and light where you have placed me. Let my life make others thirst for you and give glory to your name. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 47,
+      "title": "Change 2: Telling your story",
+      "ref": "Acts 22:1-16",
+      "verseUsfm": "ACT.22.1-16",
+      "keyVerseRef": "Acts 22:15",
+      "teaching": [
+        "A young woman named Susan trusted Christ for the first time and was immediately encouraged by a text from a stranger who had felt led to message an unknown number, hers. You too have a story of God's goodness to tell.",
+        "Paul told his God-story to unbelievers, and we can learn from him: describe a little about your life before you trusted Christ, explain the events that led to you becoming a follower of Jesus, and tell how your life has changed since. Your experience does not need to be dramatic. If God has forgiven you, freed you, given you peace or answered prayer, simply share it, and if it is real, people will be impacted."
+      ],
+      "keyIdea": "You are a witness of what God has done for you. Portray Jesus as the hero of your story, and people will move closer to trusting him.",
+      "reflectionScript": "Think back over your own journey with God. What was life like before you knew him? What happened that began to change things? What is different now? You do not need a dramatic testimony, only a true one. Picture yourself simply telling a friend one honest thing God has done for you. That small story could be the crack of light through which someone else finds him.",
+      "supportingScriptures": [
+        {
+          "ref": "Mark 5:18-20",
+          "usfm": "MRK.5.18-20"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "How did Paul share his story with the crowd?",
+          "options": [
+            {
+              "id": "a",
+              "text": "By telling about his life before, how he met Christ, and how he changed",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "By arguing about politics"
+            },
+            {
+              "id": "c",
+              "text": "By staying silent"
+            },
+            {
+              "id": "d",
+              "text": "By boasting about himself"
+            }
+          ],
+          "good": "Correct. Paul told about his old life, his conversion, and the change afterward.",
+          "bad": "Look again: Paul told his story in three parts, his life before, his encounter with Christ, and how he changed."
+        },
+        "reflectPrompt": "What was your life like before, what happened to change it, and what is your life like now? Ask God for an opportunity to share your story."
+      },
+      "prayer": "Lord, thank you for what you have done in my life. Give me courage and opportunities to tell my story, always making you the hero. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 48,
+      "title": "Change 3: Spreading the gospel",
+      "ref": "Ephesians 2:1-10",
+      "verseUsfm": "EPH.2.1-10",
+      "keyVerseRef": "Ephesians 2:8",
+      "teaching": [
+        "If you had a cure for a deadly disease, you would not keep it to yourself; the gospel is even better news. This passage gives five truths: we are all sinners separated from God and needing salvation, our salvation was achieved by Christ's death, it unites us to Christ now and forever.",
+        "Our salvation is by grace, not by works, so our good deeds do not qualify us and our bad deeds do not disqualify us; we simply receive God's grace by faith. And salvation leads to a changed life, as God transforms us and uses us to change the world. These simple truths have the power to change people's lives forever."
+      ],
+      "keyIdea": "It is by grace you have been saved, through faith; it is God's gift, not the result of works, so no one can boast.",
+      "reflectionScript": "Hold this in your mind: your good deeds could never earn your salvation, and your worst deeds cannot cancel it out. It is a gift, received by faith. Now think of the people around you who have never truly heard that. Picture their faces. Someone told you this good news, or you would still be in the dark. Who is God nudging you to tell? Ask him to open the door.",
+      "supportingScriptures": [
+        {
+          "ref": "Romans 10:9-17",
+          "usfm": "ROM.10.9-17"
+        },
+        {
+          "ref": "Romans 1:16",
+          "usfm": "ROM.1.16"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to this passage, how are we saved?",
+          "options": [
+            {
+              "id": "a",
+              "text": "By grace through faith, as God's gift",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "By our own good works"
+            },
+            {
+              "id": "c",
+              "text": "By being born into the right family"
+            },
+            {
+              "id": "d",
+              "text": "By never sinning"
+            }
+          ],
+          "good": "Correct. We are saved by grace through faith; it is the gift of God, not by works.",
+          "bad": "Look again: we are saved by grace through faith, as God's gift, not by works."
+        },
+        "reflectPrompt": "Write these five truths in your own words and try to memorise them. Who would you like to share them with? Pray for those people by name."
+      },
+      "prayer": "Lord, thank you for saving me by grace, not because I earned it. Help me share this good news clearly with people who need to hear it. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 49,
+      "title": "Change 4: Using your gifts",
+      "ref": "Romans 12:3-10",
+      "verseUsfm": "ROM.12.3-10",
+      "keyVerseRef": "Romans 12:6",
+      "teaching": [
+        "Your body works best when every part does its unique job; if your legs or eyes stopped working one morning, the whole body would suffer. The Church is like a body, and you have a special function that no one else has, given to build up the whole body and reach the world.",
+        "Common spiritual gifts include sensing what God is saying, practical service, teaching, encouraging, giving, leadership and helping the hurting. We are to use these gifts humbly, appreciating everyone since each person has at least one gift, developing our skills through practice, and serving as much as we can rather than focusing on what we cannot do."
+      ],
+      "keyIdea": "Each of us has different gifts given by God's grace. Fan them into flame and use them faithfully to serve others.",
+      "reflectionScript": "Every gift starts out undeveloped, like a small spark before it becomes a fire. Maybe you are unsure what yours even is. Think about what you enjoy, what others thank you for, what needs stir you to act. Picture that spark being fanned into flame as you practise and serve. God gave you your gift on purpose. The Church, the body, is not complete without your part.",
+      "supportingScriptures": [
+        {
+          "ref": "1 Peter 4:10-11",
+          "usfm": "1PE.4.10-11"
+        },
+        {
+          "ref": "2 Timothy 1:6-7",
+          "usfm": "2TI.1.6-7"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What attitude does Paul warn against when using our gifts?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Being proud or thinking of ourselves too highly",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Being generous"
+            },
+            {
+              "id": "c",
+              "text": "Being humble"
+            },
+            {
+              "id": "d",
+              "text": "Serving too much"
+            }
+          ],
+          "good": "Correct. Paul warns us not to be proud but to think of ourselves with sober judgment.",
+          "bad": "Look again: Paul warns against pride and calls us to think of ourselves humbly."
+        },
+        "reflectPrompt": "Looking at the list of gifts, what do you think your gift or gifts may be? How can you, with the Spirit's help, develop them for God's glory and others' good?"
+      },
+      "prayer": "Lord, thank you for the gifts you have given me. Keep me humble, and help me develop and use them faithfully to serve others. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 50,
+      "title": "Change 5: Serving others",
+      "ref": "John 13:1-17",
+      "verseUsfm": "JHN.13.1-17",
+      "keyVerseRef": "John 13:14",
+      "teaching": [
+        "In our world the greatest person is usually the one with the most people serving them, but in God's kingdom the greatest is the one who serves others. Jesus turns everything upside down, making the last first.",
+        "We serve others because it is love in action, because in God's kingdom we exist for others, because God blesses us when we serve, and because Jesus said it is more blessed to give than to receive. Remembering who we are in Christ frees us to humble ourselves and find practical, even lowly, ways to serve, just as Jesus washed his disciples' feet."
+      ],
+      "keyIdea": "Jesus washed his disciples' feet and told us to do the same. Don't seek to be served, but to serve.",
+      "reflectionScript": "Picture the Lord of the universe kneeling on the floor with a towel and basin, washing the dirty feet of his friends. This is greatness in God's kingdom, not being served, but serving. Where has God placed you, at home, at school, at work? Imagine one humble, practical act of service you could offer someone there. Then let Jesus' example give you the freedom to do it.",
+      "supportingScriptures": [
+        {
+          "ref": "Mark 10:35-45",
+          "usfm": "MRK.10.35-45"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What did Jesus do to show his love and set an example for his disciples?",
+          "options": [
+            {
+              "id": "a",
+              "text": "He washed their feet",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "He gave them money"
+            },
+            {
+              "id": "c",
+              "text": "He made them serve him"
+            },
+            {
+              "id": "d",
+              "text": "He left them alone"
+            }
+          ],
+          "good": "Correct. Jesus washed his disciples' feet as an example of humble service.",
+          "bad": "Look again: Jesus washed his disciples' feet and told them to serve one another."
+        },
+        "reflectPrompt": "How do you feel about serving others, and what holds you back? In what practical ways can you become more of a servant this week?"
+      },
+      "prayer": "Lord Jesus, you knelt to wash feet. Free me from pride and give me a servant's heart to serve others in practical, humble ways. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 51,
+      "title": "Change 6: Helping the hurting",
+      "ref": "Luke 10:25-37",
+      "verseUsfm": "LUK.10.25-37",
+      "keyVerseRef": "Luke 10:27",
+      "teaching": [
+        "A man throwing stranded starfish back into the sea one at a time realised he could not save them all, but he could make a difference for this one, and this one, and that one. The pain and injustice around us can overwhelm us, but God calls us to do what we can.",
+        "In the parable, the religious people passed by while the despised Samaritan lovingly did what he could. Following Jesus means loving those around us, especially the hurting, doing what we can and encouraging others to join in. Being a Christian is not only about loving God; it is about loving people too, and serving broken people draws us closer to the God who loves them."
+      ],
+      "keyIdea": "Love your neighbour as yourself. Whatever we do for the least of these, we do for Jesus himself.",
+      "reflectionScript": "Imagine walking past someone in real need, the way the busy and religious did in the story. Now imagine being the one who stops, kneels, and helps, even at a cost. Jesus said that whatever we do for the least of these, we do for him. Who is the wounded person on your road right now? You may not be able to help everyone, but you can help this one.",
+      "supportingScriptures": [
+        {
+          "ref": "Matthew 25:31-40",
+          "usfm": "MAT.25.31-40"
+        },
+        {
+          "ref": "James 1:27",
+          "usfm": "JAS.1.27"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "Who stopped to help the wounded man in the parable?",
+          "options": [
+            {
+              "id": "a",
+              "text": "A Samaritan",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "A priest"
+            },
+            {
+              "id": "c",
+              "text": "A Levite"
+            },
+            {
+              "id": "d",
+              "text": "A rich ruler"
+            }
+          ],
+          "good": "Correct. It was the Samaritan, looked down on by others, who stopped and helped.",
+          "bad": "Look again: the priest and Levite passed by, but the Samaritan stopped to help."
+        },
+        "reflectPrompt": "How do you feel about being more compassionate toward hurting people, and what holds you back? Where can you start helping others wisely?"
+      },
+      "prayer": "Lord, give me eyes to see the hurting and a heart to help. Let me love my neighbour as myself and serve you by serving them. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 52,
+      "title": "Change 7: Becoming empowered",
+      "ref": "Acts 1:4-8, 2:1-4",
+      "verseUsfm": "ACT.2.1-4",
+      "keyVerseRef": "Acts 1:8",
+      "teaching": [
+        "An electric guitar unplugged can barely be heard, but plugged into an amplifier it can fill a stadium. God wants to plug our small lives into the power of his Spirit so our impact is far greater than anything we could do in our own cleverness or determination.",
+        "God promises us the gift of the Holy Spirit. When we are saved we are born of the Spirit, but God also wants to fill us with the Spirit so we experience his presence, power and boldness to be witnesses. Jesus tells us to come thirsting and ask in simple trust to be filled, and to keep being filled every day by giving the Spirit total control of our lives."
+      ],
+      "keyIdea": "You will receive power when the Holy Spirit comes on you, and you will be Jesus' witnesses.",
+      "reflectionScript": "Picture an electric guitar played without being plugged in, its sound thin and faint. Then imagine it connected to a powerful amplifier, filling a whole stadium. That is the difference the Holy Spirit makes. In your own strength you can only do so much. Come thirsty, like a dry field before rain, and ask God to fill you. Then imagine being empowered to make a difference far beyond yourself.",
+      "supportingScriptures": [
+        {
+          "ref": "1 Corinthians 12:7-11",
+          "usfm": "1CO.12.7-11"
+        },
+        {
+          "ref": "John 7:37-39",
+          "usfm": "JHN.7.37-39"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What did Jesus promise his followers before returning to heaven?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Power through the coming of the Holy Spirit",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Money and comfort"
+            },
+            {
+              "id": "c",
+              "text": "An easy life"
+            },
+            {
+              "id": "d",
+              "text": "Political rule"
+            }
+          ],
+          "good": "Correct. Jesus promised they would receive power when the Holy Spirit came on them.",
+          "bad": "Look again: Jesus promised power through the Holy Spirit so they could be his witnesses."
+        },
+        "reflectPrompt": "Can you think of times when you sensed the Spirit's presence or use in your life? Find time alone today to ask Jesus to fill you with his Spirit."
+      },
+      "prayer": "Jesus, I come thirsting to you. Fill me with your Holy Spirit and give me power and boldness to be your witness. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 53,
+      "title": "Change 8: Making peace",
+      "ref": "Colossians 3:8-15",
+      "verseUsfm": "COL.3.8-15",
+      "keyVerseRef": "Colossians 3:14",
+      "teaching": [
+        "A man once built a fence to keep out a neighbour he disliked, then, when God told him to make peace, he tore it down and used the wood to build a path to the neighbour's door. Our world is hurting because of the fences of hostility, prejudice and superiority we build; God calls us to build paths instead.",
+        "When we follow Jesus we are no longer identified mainly by class, culture, race or gender, but by our new identity in God as his loved and chosen people. We seek peace by getting rid of anger and hate, becoming compassionate, kind, humble, patient, forgiving and loving, and above all letting God's love bind us together in unity. Change must start with the Church."
+      ],
+      "keyIdea": "Over all these virtues put on love, which binds them all together in perfect unity. Become a peacemaker.",
+      "reflectionScript": "Picture a fence someone built between two homes, and then imagine that same wood taken down and laid out as a path from one door to the other. Think of a relationship in your life marked by tension, prejudice or hurt. What would it look like to build a path instead of a wall? Ask God to clothe you with compassion, patience and love, and to make you a bridge of peace.",
+      "supportingScriptures": [
+        {
+          "ref": "Matthew 5:23-24",
+          "usfm": "MAT.5.23-24"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "According to Paul, what binds all the virtues together in unity?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Love",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Rules"
+            },
+            {
+              "id": "c",
+              "text": "Wealth"
+            },
+            {
+              "id": "d",
+              "text": "Power"
+            }
+          ],
+          "good": "Correct. Over all the virtues we are to put on love, which binds everything together in unity.",
+          "bad": "Look again: Paul says love binds all the virtues together in perfect unity."
+        },
+        "reflectPrompt": "How have you experienced prejudice, division or hostility in your world? What changes must happen in your heart, and where can you start being a peacemaker?"
+      },
+      "prayer": "Lord, tear down the fences of hostility and prejudice in my heart. Clothe me with love and make me a peacemaker in your name. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 54,
+      "title": "Change 9: Leading others",
+      "ref": "1 Peter 5:1-6",
+      "verseUsfm": "1PE.5.1-6",
+      "keyVerseRef": "1 Peter 5:2",
+      "teaching": [
+        "Jesus chose twelve unimpressive, ordinary men to be the first Christian leaders, and young Timothy was chosen to oversee a whole church. Throughout history, when God wants to do something, he often taps an ordinary person on the shoulder. A leader is simply an influencer.",
+        "Leaders in God's kingdom are very different from leaders in the world. They have experienced Christ personally, care for people's spiritual well-being, take responsibility, serve rather than seek money or fame, lead by example rather than by control, draw people to Christ rather than to themselves, follow other leaders well, and stay humble, keeping their eyes on Jesus the Chief Shepherd."
+      ],
+      "keyIdea": "Be shepherds of God's flock, serving eagerly and leading by example, not lording it over others.",
+      "reflectionScript": "Imagine God quietly tapping you on the shoulder and saying, I need you to do something for me. Leadership in his kingdom is not about titles or control; it is about serving, caring, and setting an example. Maybe there is an opportunity or responsibility you have been running from. Picture yourself stepping into it, not proudly, but humbly, eyes fixed on Jesus, ready to help others rise.",
+      "supportingScriptures": [
+        {
+          "ref": "Acts 6:1-7",
+          "usfm": "ACT.6.1-7"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "How does Peter say leaders should serve God's flock?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Willingly and eagerly, as examples, not for money",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "For personal profit"
+            },
+            {
+              "id": "c",
+              "text": "By lording it over people"
+            },
+            {
+              "id": "d",
+              "text": "Only when forced to"
+            }
+          ],
+          "good": "Correct. Leaders are to serve willingly and eagerly, as examples, not for dishonest gain.",
+          "bad": "Look again: leaders serve willingly and eagerly, as examples, not for money or control."
+        },
+        "reflectPrompt": "How do you feel about being a spiritual leader or influencer for Christ? What can you do to become a better influencer of others?"
+      },
+      "prayer": "Lord, you raise up ordinary people to lead. Make me a humble servant-leader who influences others toward you, keeping my eyes on you, the Chief Shepherd. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    },
+    {
+      "n": 55,
+      "title": "Change 10: Praying more",
+      "ref": "Luke 11:5-13",
+      "verseUsfm": "LUK.11.5-13",
+      "keyVerseRef": "Luke 11:9",
+      "teaching": [
+        "A father could easily move a couch alone, but he asked his little son to help, and the boy felt special sharing the task. God could change the world by himself, but he lovingly lets his children help him, and one major way we work with him is through prayer.",
+        "Jesus teaches us to pray with compassion for others' needs, with boldness, with perseverance, keeping on asking, seeking and knocking without giving up, and with trust in a good and powerful Father. We also pray for the help of the Spirit, and when what we ask matches what God wants, he changes situations and hearts."
+      ],
+      "keyIdea": "Ask and it will be given; seek and you will find; knock and the door will be opened. Prayer is how we partner with God.",
+      "reflectionScript": "Imagine a small child helping a parent lift something far too heavy for them alone. The parent carries almost all the weight, but the child feels honoured to share the task. That is prayer. God does the real work, yet he invites you to partner with him. Bring to mind one person or situation you long to see change. Picture yourself bringing it to your Father again and again, refusing to give up.",
+      "supportingScriptures": [
+        {
+          "ref": "1 Thessalonians 5:16-17",
+          "usfm": "1TH.5.16-17"
+        },
+        {
+          "ref": "Romans 8:26-27",
+          "usfm": "ROM.8.26-27"
+        }
+      ],
+      "quiz": {
+        "mc": {
+          "question": "What does Jesus teach about asking in prayer?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Keep asking, seeking and knocking, and don't give up",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Give up if there is no quick answer"
+            },
+            {
+              "id": "c",
+              "text": "Only ask once"
+            },
+            {
+              "id": "d",
+              "text": "Never ask for anything"
+            }
+          ],
+          "good": "Correct. Jesus urges us to keep asking, seeking and knocking, with persistence and trust.",
+          "bad": "Look again: Jesus says to keep asking, seeking and knocking, and not give up."
+        },
+        "reflectPrompt": "Can you name three ways you have experienced God answering your prayers? Who and what are some of the people and situations you are praying for now?"
+      },
+      "prayer": "Father, thank you that you invite me to work with you through prayer. Give me compassion, boldness and persistence, and help me never give up. Amen.",
+      "media": {
+        "scriptureAudio": true
+      }
+    }
+  ]
+}

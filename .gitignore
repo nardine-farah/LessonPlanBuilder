@@ -1,0 +1,10 @@
+node_modules/
+.next/
+.analysis-cache/
+out/
+.env.local
+.env*.local
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+.secrets/

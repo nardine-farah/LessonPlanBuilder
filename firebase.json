@@ -1,0 +1,16 @@
+{
+  "apphosting": {
+    "backendId": "lesson-plan-builder",
+    "rootDir": ".",
+    "alwaysDeployFromSource": true,
+    "ignore": [
+      "node_modules",
+      ".git",
+      ".next",
+      ".analysis-cache",
+      ".secrets",
+      "exports",
+      ".env.local"
+    ]
+  }
+}
