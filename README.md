@@ -96,7 +96,13 @@ npm run dev        # http://localhost:3210
 (backend `lesson-plan-builder` in the `scripture-studio-df955` project, region
 us-central1 — alongside the Studio's own `biblica` backend).
 
-To ship an update:
+**Continuous deployment:** the `lesson-plan-builder` backend is connected to
+GitHub (`nardine-farah/LessonPlanBuilder`, live branch `main`) with **automatic
+rollouts enabled** — every push to `main` builds and deploys on its own. No
+manual step needed.
+
+Manual deploy is still available if you ever need it (e.g. to ship without a
+commit):
 
 ```bash
 firebase deploy --only apphosting

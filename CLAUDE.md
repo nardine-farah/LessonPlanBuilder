@@ -128,6 +128,20 @@ plans auto-import on first sign-in.
   appears (same content hash reconnects everything, no AI cost).
 - Export: `media.image {asset, alt}` per lesson.
 
+## Source control
+
+- **GitHub: `nardine-farah/LessonPlanBuilder`** (separate repo from the Studio's
+  `nardine-farah/ScriptureStudio` — two apps, two backends, two repos). Pushed
+  2026-07-16. Secrets (`.env.local`, `.secrets/`) are gitignored and NOT on GitHub.
+- **GitHub auto-deploy is LIVE** (set up 2026-07-22): the `lesson-plan-builder`
+  App Hosting backend is connected to this repo with automatic rollouts enabled on
+  `main` — every push auto-builds+deploys, matching the Studio's `biblica` backend.
+  `firebase deploy --only apphosting` still works as a manual fallback. (Note: the
+  CLI `backends:get` "ABIU" column = Automatic Base Image Updates, a SEPARATE
+  runtime-patching feature — NOT the auto-rollout signal; don't confuse them.)
+- The two project folders are siblings under `~/` — a single Claude Code session
+  started from `~/` (or referencing both by path) works across both repos.
+
 ## Firebase / deployment
 
 - Project `scripture-studio-df955`. SA file: `.secrets/firebase-service-account.json`
