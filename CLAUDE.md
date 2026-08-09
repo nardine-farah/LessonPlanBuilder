@@ -59,7 +59,14 @@ TS 7 / native compiler otherwise, which breaks next.config.ts loading). Key modu
   ESM-only with top-level await; static import breaks CJS server build**); 3-render
   semaphore; pixmap clamped on BOTH axes; `RenderError` carries machine `code`
   (`cache-miss`/`bad-page`/`render`); `renderPdfFromBytes` powers the selftest.
-- `lib/tts.ts` — Google Cloud TTS **via the service account's OAuth** (no API key
+- `lib/tts.ts` — **ElevenLabs is the preferred provider** (added 2026-07-22):
+  auto-selected when `ELEVENLABS_API_KEY` is set (secret in apphosting.yaml;
+  voice ids `ELEVENLABS_VOICE_ID` / `ELEVENLABS_VOICE_ID_AR` are plain env).
+  `eleven_multilingual_v2`, breath pacing via inline `<break/>` tags, voice ids
+  folded into `audioSignature` (republish re-renders on voice change; the
+  google/openai signature shape is unchanged so old recordings stay valid when
+  ElevenLabs is off). Mirrors Scripture Studio `src/lib/providers/tts.ts`.
+  Fallback: Google Cloud TTS **via the service account's OAuth** (no API key
   needed; the TTS API is enabled on the project). Natural-voice setup (2026-07-16):
   en `en-US-Studio-O`, ar `ar-XA-Wavenet-B` (no Arabic Studio voice exists); plain
   text → SSML (`toSsml`: 300ms lead-in, 550ms between sentences incl. Arabic `؟۔`,

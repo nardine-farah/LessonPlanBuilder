@@ -35,5 +35,20 @@ env:
   - variable: ANTHROPIC_API_KEY
     secret: ANTHROPIC_API_KEY
     availability: [RUNTIME]
+  # ElevenLabs reflection narration (natural multilingual voices; fixes the
+  # robotic Arabic that Google's voice lineup can't — no Arabic Studio tier).
+  # Create the secret once:  firebase apphosting:secrets:set ELEVENLABS_API_KEY
+  # (and grant this backend access when prompted). Until the secret exists,
+  # publishing keeps using Google TTS unchanged.
+  - variable: ELEVENLABS_API_KEY
+    secret: ELEVENLABS_API_KEY
+    availability: [RUNTIME]
+  # Voice ids are catalog identifiers, not secrets.
+  - variable: ELEVENLABS_VOICE_ID
+    value: uIZsnBL0YK1S5j69bAih
+    availability: [RUNTIME]
+  - variable: ELEVENLABS_VOICE_ID_AR
+    value: xPcC3nehhziQaOrIeAwv
+    availability: [RUNTIME]
   # GOOGLE_APPLICATION_CREDENTIALS is intentionally absent — the runtime's
   # Application Default Credentials cover Firestore, Storage, and TTS.

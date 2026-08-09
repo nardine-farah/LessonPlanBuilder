@@ -11,8 +11,14 @@ import path from "path";
  * sentence-aware pauses, speakingRate 0.92, headphone effects profile. Arabic
  * has no Studio voice, so it keeps Wavenet but gets the same SSML pacing.
  *
- * Provider order: TTS_PROVIDER override → GOOGLE_TTS_API_KEY → OPENAI_API_KEY
- * → Google TTS via service-account OAuth.
+ * Provider order: TTS_PROVIDER override → ELEVENLABS_API_KEY →
+ * GOOGLE_TTS_API_KEY → OPENAI_API_KEY → Google TTS via service-account OAuth.
+ *
+ * ElevenLabs (eleven_multilingual_v2) is the naturalness upgrade — Google has
+ * no Arabic Studio voice, so Arabic stayed robotic on Wavenet. Voice ids come
+ * from the ElevenLabs Voice Library: ELEVENLABS_VOICE_ID (English) and
+ * ELEVENLABS_VOICE_ID_AR (Arabic). No SSML there — pacing is inline <break/>
+ * tags, mirroring Scripture Studio's src/lib/providers/tts.ts.
  */
 
 export interface TtsResult {
@@ -29,6 +35,24 @@ const BREAK_LEAD = 300;
 const BREAK_BETWEEN = 550;
 const BREAK_TRAIL = 400;
 
+export type TtsProvider = "google" | "openai" | "elevenlabs";
+
+/** Single source of truth for which provider a synthesis will use. */
+export function activeProvider(): TtsProvider {
+  const explicit = process.env.TTS_PROVIDER;
+  if (explicit === "google" || explicit === "openai" || explicit === "elevenlabs") return explicit;
+  if (process.env.ELEVENLABS_API_KEY) return "elevenlabs";
+  if (process.env.GOOGLE_TTS_API_KEY) return "google";
+  if (process.env.OPENAI_API_KEY) return "openai";
+  return "google"; // service-account OAuth path
+}
+
+function elevenVoiceFor(language: "en" | "ar"): string | undefined {
+  return language === "ar"
+    ? (process.env.ELEVENLABS_VOICE_ID_AR ?? undefined)
+    : (process.env.ELEVENLABS_VOICE_ID ?? undefined);
+}
+
 function voiceFor(language: "en" | "ar"): string {
   if (language === "ar") return process.env.TTS_VOICE_AR ?? "ar-XA-Wavenet-B";
   return process.env.TTS_VOICE ?? process.env.TTS_VOICE_EN ?? "en-US-Studio-O";
@@ -40,13 +64,24 @@ function voiceFor(language: "en" | "ar"): string {
  * setup changes, instead of reusing stale recordings.
  */
 export function audioSignature(language: "en" | "ar"): string {
-  const config = JSON.stringify({
-    v: 2, // bump when the SSML shaping itself changes
-    voice: voiceFor(language),
-    rate: SPEAKING_RATE,
-    effects: EFFECTS_PROFILE,
-    provider: process.env.TTS_PROVIDER ?? (process.env.OPENAI_API_KEY && !process.env.GOOGLE_TTS_API_KEY ? "openai" : "google"),
-  });
+  const provider = activeProvider();
+  const config =
+    provider === "elevenlabs"
+      ? JSON.stringify({
+          v: 2,
+          provider,
+          voice: elevenVoiceFor(language) ?? "unset",
+          model: process.env.ELEVENLABS_MODEL ?? "eleven_multilingual_v2",
+        })
+      : // Keep this shape EXACTLY as before ElevenLabs existed, so switching
+        // the feature off (or never on) doesn't invalidate prior recordings.
+        JSON.stringify({
+          v: 2, // bump when the SSML shaping itself changes
+          voice: voiceFor(language),
+          rate: SPEAKING_RATE,
+          effects: EFFECTS_PROFILE,
+          provider,
+        });
   return createHash("sha1").update(config).digest("hex").slice(0, 8);
 }
 
@@ -162,17 +197,47 @@ async function openaiTts(text: string): Promise<Buffer> {
   return Buffer.from(await res.arrayBuffer());
 }
 
+/**
+ * ElevenLabs multilingual TTS. Voice id selects the language; pacing is the
+ * same breath-between-sentences treatment via inline <break/> tags (their
+ * SSML equivalent), reusing the Arabic-aware sentence splitter.
+ */
+async function elevenlabsTts(text: string, language: "en" | "ar"): Promise<Buffer> {
+  const key = process.env.ELEVENLABS_API_KEY;
+  if (!key) throw new TtsError("ELEVENLABS_API_KEY not set");
+  const voiceId = elevenVoiceFor(language);
+  if (!voiceId) {
+    throw new TtsError(
+      language === "ar"
+        ? "No Arabic ElevenLabs voice configured — set ELEVENLABS_VOICE_ID_AR."
+        : "No English ElevenLabs voice configured — set ELEVENLABS_VOICE_ID.",
+    );
+  }
+  const paced = splitSentences(text).join(' <break time="0.6s" /> ');
+  const res = await fetch(
+    `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
+    {
+      method: "POST",
+      headers: { "xi-api-key": key, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text: paced,
+        model_id: process.env.ELEVENLABS_MODEL ?? "eleven_multilingual_v2",
+        voice_settings: { stability: 0.5, similarity_boost: 0.75 },
+      }),
+    },
+  );
+  if (!res.ok) throw new TtsError(`ElevenLabs TTS ${res.status}: ${(await res.text()).slice(0, 300)}`);
+  return Buffer.from(await res.arrayBuffer());
+}
+
 /** Synthesize narration MP3 for a reflection script. */
 export async function synthesize(text: string, language: "en" | "ar"): Promise<TtsResult> {
-  const explicit = process.env.TTS_PROVIDER;
-  const provider =
-    explicit === "google" || explicit === "openai"
-      ? explicit
-      : process.env.GOOGLE_TTS_API_KEY
-        ? "google"
-        : process.env.OPENAI_API_KEY
-          ? "openai"
-          : "google"; // service-account OAuth path
-  const mp3 = provider === "google" ? await googleTts(text, language) : await openaiTts(text);
+  const provider = activeProvider();
+  const mp3 =
+    provider === "elevenlabs"
+      ? await elevenlabsTts(text, language)
+      : provider === "google"
+        ? await googleTts(text, language)
+        : await openaiTts(text);
   return { mp3, durationSec: estimateDurationSec(text) };
 }
