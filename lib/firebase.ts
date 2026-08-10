@@ -1,7 +1,9 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import {
+  connectAuthEmulator,
   getAuth,
   GoogleAuthProvider,
+  signInWithCredential,
   signInWithPopup,
   signOut as fbSignOut,
   onAuthStateChanged,
@@ -26,8 +28,25 @@ function app() {
   return getApps().length ? getApp() : initializeApp(config);
 }
 
+const emulatorWired = new WeakSet<object>();
+
 export function auth() {
-  return getAuth(app());
+  const a = getAuth(app());
+  // Local-demo only: point the client at the Auth emulator when the env
+  // flag is set (never set in production config). The sandboxed demo can't
+  // load Google's popup relay script, so a window hook signs in through
+  // signInWithCredential — the same emulator signInWithIdp exchange the
+  // popup would perform.
+  const emulatorHost = process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_HOST;
+  if (emulatorHost && !emulatorWired.has(a)) {
+    emulatorWired.add(a);
+    connectAuthEmulator(a, `http://${emulatorHost}`, { disableWarnings: true });
+    if (typeof window !== "undefined") {
+      (window as any).__lpbTestSignIn = (claims: Record<string, unknown>) =>
+        signInWithCredential(a, GoogleAuthProvider.credential(JSON.stringify(claims)));
+    }
+  }
+  return a;
 }
 
 export function signInWithGoogle() {

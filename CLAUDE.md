@@ -198,6 +198,19 @@ plans auto-import on first sign-in.
 - Studio quirks: CSP blocks any origin not whitelisted (this caused the "audio
   won't play" bug); `getLessonPlan` casts Firestore data without schema parse.
 
+## Local demo without real credentials (Firebase emulators)
+
+`lib/firebase.ts` wires the client to the **Auth emulator** when
+`NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_HOST` is set (e.g. `127.0.0.1:9099`) —
+never set in apphosting.yaml, so production is untouched. Same flag exposes
+`window.__lpbTestSignIn(claims)` (signInWithCredential with a fake-IdP JSON
+token — the emulator sign-in the popup would do; used because sandboxes may
+block apis.google.com, which signInWithPopup needs even in emulator mode).
+Server side needs only `FIRESTORE_EMULATOR_HOST` + `FIREBASE_AUTH_EMULATOR_HOST`
++ `FIREBASE_PROJECT_ID=demo-*` (admin SDK then needs no credentials). Verified
+2026-08-10: emulators + seeded reviewers/plans/library + Playwright drive the
+full sign-in → /plans → /admin flow (incl. non-admin 403) in a clean container.
+
 ## Facts & lessons learned
 
 - PDFs tokenize at roughly **~2.5k tokens/page** (text + page image); the 512-page
