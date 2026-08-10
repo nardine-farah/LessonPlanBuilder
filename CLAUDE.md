@@ -215,8 +215,13 @@ plans auto-import on first sign-in.
 - Changes I made there (schema `media.image`, lesson-runtime image pass-through,
   LessonPlayer image rendering, CSP `media-src`/`img-src` + firebasestorage):
   committed by the user as `297637e` and pushed via cherry-pick to main.
-- **PENDING uncommitted edit in the Studio**: LessonPlayer image `maxHeight: 340,
-  objectFit: "cover"` (added 2026-07-15). Needs commit+push to take effect.
+- **RESOLVED 2026-08-10 — do NOT apply the old local edit**: the uncommitted
+  LessonPlayer image tweak on the user's machine (`maxHeight: 340, objectFit:
+  "cover"`, penned 2026-07-15) was SUPERSEDED next day by Studio commit
+  `e9e28bf` ("Lesson artwork: preserve aspect ratio, never crop", 2026-07-16 —
+  maxHeight 180, no cover-crop), which is the live, deliberate design. The
+  stale local edit should be discarded before pulling
+  (`git checkout -- "src/app/t/[toolId]/lesson/[n]/LessonPlayer.tsx"`).
 - **Studio branch `claude/lesson-video-support`** (pushed 2026-08-10, NOT merged):
   mirrors `media.video` in lesson-plans.ts, lesson-runtime maps it into
   LessonView (real video suppresses the videoPoster placeholder), LessonPlayer
