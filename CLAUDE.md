@@ -129,8 +129,11 @@ Google sign-in (popup), **same Firebase project as Scripture Studio**
 (`scripture-studio-df955`) so one account works across both. Routes: `/` welcome,
 `/plans` dashboard (Continue/Reopen/⤓ JSON/Publish/Import/delete), `/builder`
 (auth-gated wizard), `/admin` (admin-only, read-only dashboard: Reviewers tab =
-all users → plans → progress bar + expandable per-lesson grid + schema status +
-⤓ JSON; Library tab = all `lessonPlans` incl. Studio seeds, with publisher
+card GRID of reviewers (avatar, status-count badges, avg-progress bar, last
+active; filter box narrows by reviewer/plan/planId with a "N plans match"
+hint) → clicking a card opens that reviewer's detail (plans → progress bar +
+expandable per-lesson grid + schema status + ⤓ JSON, `← All reviewers` to go
+back); Library tab = all `lessonPlans` incl. Studio seeds, with publisher
 attribution; the `✦ Admin dashboard` button on `/plans` appears only after the
 `GET /api/admin` probe says yes — never lists ALL Firebase accounts, only
 profiles that have plans, since the auth pool is shared with Studio end-users). Working draft lives in localStorage (`lpb-draft-v1`

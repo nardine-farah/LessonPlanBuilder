@@ -200,17 +200,17 @@ function PlanBlock({
   );
 }
 
-function UserCard({
-  user,
-  filter,
-  onDownload,
-  downloadingKey,
-}: {
-  user: AdminUser;
-  filter: string;
-  onDownload: (uid: string, plan: AdminPlanSummary) => void;
-  downloadingKey: string;
-}) {
+function Avatar({ user }: { user: AdminUser }) {
+  return user.photoURL ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={user.photoURL} alt="" className="user-avatar" referrerPolicy="no-referrer" />
+  ) : (
+    <div className="avatar-fallback">{(userLabel(user)[0] || "?").toUpperCase()}</div>
+  );
+}
+
+/** Which of this reviewer's plans match the filter (empty string matches all). */
+function matchingPlans(user: AdminUser, filter: string) {
   const q = filter.trim().toLowerCase();
   const userMatches =
     !q ||
@@ -222,49 +222,129 @@ function UserCard({
     : user.plans.filter(
         (p) => p.title.toLowerCase().includes(q) || p.planId.toLowerCase().includes(q),
       );
+  return { userMatches, plans };
+}
+
+/** Compact summary card — the grid stays scannable however many plans each reviewer holds. */
+function ReviewerCard({
+  user,
+  filter,
+  onOpen,
+}: {
+  user: AdminUser;
+  filter: string;
+  onOpen: (uid: string) => void;
+}) {
+  const { userMatches, plans } = matchingPlans(user, filter);
   if (!userMatches && plans.length === 0) return null;
 
+  const scored = user.plans.filter((p) => p.progress);
+  const avg = scored.length
+    ? Math.round(scored.reduce((sum, p) => sum + (p.progress?.percent ?? 0), 0) / scored.length)
+    : null;
+
   return (
-    <section className="card">
-      <div className="admin-user-head">
-        {user.photoURL ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={user.photoURL} alt="" className="user-avatar" referrerPolicy="no-referrer" />
-        ) : (
-          <div className="avatar-fallback">{(userLabel(user)[0] || "?").toUpperCase()}</div>
-        )}
+    <button className="reviewer-card" onClick={() => onOpen(user.uid)}>
+      <div className="reviewer-card-head">
+        <Avatar user={user} />
         <div className="admin-user-info">
           <div className="user-name" style={{ fontSize: 15 }}>
             {userLabel(user)}
-            {!user.accountExists && (
-              <span className="badge badge-error" style={{ marginLeft: 8 }}>
-                account removed
-              </span>
-            )}
           </div>
           <div className="user-email" title={user.uid}>
-            {user.email || <span className="mono">{user.uid}</span>}
+            {user.email || <span className="mono">{user.uid.slice(0, 16)}…</span>}
           </div>
         </div>
-        <div className="admin-user-counts">
-          {user.counts.total} plan{user.counts.total === 1 ? "" : "s"} · {user.counts.inProgress} in review ·{" "}
-          {user.counts.completed} completed · {user.counts.published} in library
-          <div style={{ textAlign: "right" }}>last active {fmtDate(user.lastActive)}</div>
+      </div>
+      <div className="reviewer-card-badges">
+        {user.counts.inProgress > 0 && (
+          <span className="badge badge-garnet">{user.counts.inProgress} in review</span>
+        )}
+        {user.counts.completed > 0 && (
+          <span className="badge badge-moss">{user.counts.completed} completed</span>
+        )}
+        {user.counts.published > 0 && (
+          <span className="badge badge-gold">{user.counts.published} in library</span>
+        )}
+        {!user.accountExists && <span className="badge badge-error">account removed</span>}
+      </div>
+      {avg !== null && (
+        <div className="progress-row" style={{ marginTop: 0 }} title="Average progress across this reviewer's plans">
+          <div className="progress-track">
+            <div className={`progress-fill${avg >= 100 ? " full" : ""}`} style={{ width: `${avg}%` }} />
+          </div>
+          <span className="progress-num">{avg}%</span>
         </div>
+      )}
+      {!userMatches && (
+        <div className="reviewer-card-match">
+          {plans.length} plan{plans.length === 1 ? "" : "s"} match{plans.length === 1 ? "es" : ""}: “
+          {plans[0].title}”{plans.length > 1 ? ", …" : ""}
+        </div>
+      )}
+      <div className="reviewer-card-foot">
+        <span>
+          {user.counts.total} plan{user.counts.total === 1 ? "" : "s"} · last active {fmtDate(user.lastActive)}
+        </span>
+        <span className="reviewer-card-open">View plans →</span>
       </div>
+    </button>
+  );
+}
 
-      <div style={{ marginTop: 6 }}>
-        {plans.map((plan) => (
-          <PlanBlock
-            key={plan.key}
-            uid={user.uid}
-            plan={plan}
-            onDownload={onDownload}
-            downloading={downloadingKey === `${user.uid}/${plan.key}`}
-          />
-        ))}
-      </div>
-    </section>
+/** Everything about one reviewer — their plans with progress bars, lesson grids, schema status, JSON export. */
+function ReviewerDetail({
+  user,
+  onBack,
+  onDownload,
+  downloadingKey,
+}: {
+  user: AdminUser;
+  onBack: () => void;
+  onDownload: (uid: string, plan: AdminPlanSummary) => void;
+  downloadingKey: string;
+}) {
+  return (
+    <>
+      <button className="btn btn-small" onClick={onBack}>
+        ← All reviewers
+      </button>
+      <section className="card" style={{ marginTop: 14 }}>
+        <div className="admin-user-head">
+          <Avatar user={user} />
+          <div className="admin-user-info">
+            <div className="user-name" style={{ fontSize: 15 }}>
+              {userLabel(user)}
+              {!user.accountExists && (
+                <span className="badge badge-error" style={{ marginLeft: 8 }}>
+                  account removed
+                </span>
+              )}
+            </div>
+            <div className="user-email" title={user.uid}>
+              {user.email || <span className="mono">{user.uid}</span>}
+            </div>
+          </div>
+          <div className="admin-user-counts">
+            {user.counts.total} plan{user.counts.total === 1 ? "" : "s"} · {user.counts.inProgress} in review ·{" "}
+            {user.counts.completed} completed · {user.counts.published} in library
+            <div style={{ textAlign: "right" }}>last active {fmtDate(user.lastActive)}</div>
+          </div>
+        </div>
+
+        <div style={{ marginTop: 6 }}>
+          {user.plans.map((plan) => (
+            <PlanBlock
+              key={plan.key}
+              uid={user.uid}
+              plan={plan}
+              onDownload={onDownload}
+              downloading={downloadingKey === `${user.uid}/${plan.key}`}
+            />
+          ))}
+        </div>
+      </section>
+    </>
   );
 }
 
@@ -309,6 +389,7 @@ export default function AdminPage() {
   const [error, setError] = useState("");
   const [tab, setTab] = useState<"reviewers" | "library">("reviewers");
   const [filter, setFilter] = useState("");
+  const [selectedUid, setSelectedUid] = useState<string | null>(null);
   const [downloadingKey, setDownloadingKey] = useState("");
 
   useEffect(() => {
@@ -458,43 +539,65 @@ export default function AdminPage() {
                 )}
 
                 <div className="tab-row">
-                  <button className={`tab${tab === "reviewers" ? " on" : ""}`} onClick={() => setTab("reviewers")}>
+                  <button
+                    className={`tab${tab === "reviewers" ? " on" : ""}`}
+                    onClick={() => {
+                      setTab("reviewers");
+                      setSelectedUid(null);
+                    }}
+                  >
                     Reviewers &amp; plans
                   </button>
-                  <button className={`tab${tab === "library" ? " on" : ""}`} onClick={() => setTab("library")}>
+                  <button
+                    className={`tab${tab === "library" ? " on" : ""}`}
+                    onClick={() => {
+                      setTab("library");
+                      setSelectedUid(null);
+                    }}
+                  >
                     Studio library
                   </button>
                 </div>
 
-                {tab === "reviewers" && (
-                  <>
-                    <div className="field" style={{ maxWidth: 420 }}>
-                      <input
-                        type="text"
-                        placeholder="Filter by reviewer, plan title, or planId…"
-                        value={filter}
-                        onChange={(e) => setFilter(e.target.value)}
-                      />
-                    </div>
-                    {overview.users.length === 0 ? (
-                      <section className="card">
-                        <p className="field-help">
-                          No reviewer profiles yet — profiles appear here once someone saves a plan.
-                        </p>
-                      </section>
-                    ) : (
-                      overview.users.map((u) => (
-                        <UserCard
-                          key={u.uid}
-                          user={u}
-                          filter={filter}
+                {tab === "reviewers" &&
+                  (() => {
+                    const selected = selectedUid ? overview.users.find((u) => u.uid === selectedUid) : undefined;
+                    if (selected) {
+                      return (
+                        <ReviewerDetail
+                          user={selected}
+                          onBack={() => setSelectedUid(null)}
                           onDownload={download}
                           downloadingKey={downloadingKey}
                         />
-                      ))
-                    )}
-                  </>
-                )}
+                      );
+                    }
+                    return (
+                      <>
+                        <div className="field" style={{ maxWidth: 420 }}>
+                          <input
+                            type="text"
+                            placeholder="Filter by reviewer, plan title, or planId…"
+                            value={filter}
+                            onChange={(e) => setFilter(e.target.value)}
+                          />
+                        </div>
+                        {overview.users.length === 0 ? (
+                          <section className="card">
+                            <p className="field-help">
+                              No reviewer profiles yet — profiles appear here once someone saves a plan.
+                            </p>
+                          </section>
+                        ) : (
+                          <div className="reviewer-grid">
+                            {overview.users.map((u) => (
+                              <ReviewerCard key={u.uid} user={u} filter={filter} onOpen={setSelectedUid} />
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    );
+                  })()}
 
                 {tab === "library" && (
                   <section className="card">
