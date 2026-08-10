@@ -47,6 +47,8 @@ const mediaSchema = z.object({
     .optional(),
   /** Curator-chosen lesson artwork (public URL + alt text). */
   image: z.object({ asset: z.string(), alt: z.string().optional() }).optional(),
+  /** Curator-attached teaching video (hosted MP4/WebM URL; duration in seconds). */
+  video: z.object({ asset: z.string(), duration: z.number().positive().optional() }).optional(),
 });
 
 export const lessonSchema = z.object({

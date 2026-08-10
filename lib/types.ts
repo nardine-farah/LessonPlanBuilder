@@ -33,6 +33,17 @@ export interface DraftLessonImage {
   page: number | null;
 }
 
+export interface DraftLessonVideo {
+  /** Public URL of the teaching video (Firebase Storage upload or a hosted link). */
+  url: string;
+  /** Length in seconds, when it could be read from the file (null otherwise). */
+  duration: number | null;
+  /** Original file name for uploaded videos ("" for pasted URLs). */
+  fileName: string;
+  /** Upload size in bytes (null for pasted URLs). */
+  sizeBytes: number | null;
+}
+
 export interface DraftLesson {
   n: number;
   title: string;
@@ -49,6 +60,8 @@ export interface DraftLesson {
   artPages: number[];
   /** The curator's chosen lesson image, if any. */
   image: DraftLessonImage | null;
+  /** The curator's attached teaching video, if any. */
+  video: DraftLessonVideo | null;
 }
 
 export interface Draft {
@@ -113,6 +126,7 @@ export function emptyLesson(n: number): DraftLesson {
     quiz: emptyQuiz(),
     artPages: [],
     image: null,
+    video: null,
   };
 }
 
@@ -149,6 +163,7 @@ export function normalizeDraft(draft: Draft): Draft {
       ...l,
       artPages: Array.isArray(l.artPages) ? l.artPages : [],
       image: l.image && typeof l.image.url === "string" ? l.image : null,
+      video: l.video && typeof l.video.url === "string" ? l.video : null,
     })),
   };
 }
@@ -195,7 +210,15 @@ export function buildPlanDoc(draft: Draft): Record<string, unknown> {
     if (trimmed(l.prayer)) lesson.prayer = trimmed(l.prayer);
     const media: Record<string, unknown> = {};
     if (offersAudio) media.scriptureAudio = true;
-    if (offersVideo) media.videoPoster = { label: "Teaching · video", duration: "0:00" };
+    if (l.video?.url) {
+      media.video = {
+        asset: l.video.url,
+        ...(l.video.duration && l.video.duration > 0 ? { duration: Math.round(l.video.duration * 10) / 10 } : {}),
+      };
+    } else if (offersVideo) {
+      // Placeholder tile for lessons that don't have a real video yet.
+      media.videoPoster = { label: "Teaching · video", duration: "0:00" };
+    }
     if (l.image?.url) media.image = { asset: l.image.url, alt: trimmed(l.title) || "Lesson artwork" };
     if (Object.keys(media).length) lesson.media = media;
     return lesson;

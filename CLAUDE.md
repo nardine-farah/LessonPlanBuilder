@@ -15,7 +15,13 @@ for the Scripture Studio library, via a 6-step wizard:
 2. **Plan details** — title/subtitle/summary/planId/span/translation/reviewedBy.
 3. **Who it's for** — match tags (exact enums the Studio matcher scores).
 4. **Lessons** — per-lesson editor (passage + USFM, teaching, key idea, quiz with
-   exactly-one-correct enforcement, prayer, reflectionScript, supporting scriptures).
+   exactly-one-correct enforcement, prayer, reflectionScript, supporting scriptures,
+   **teaching video** — upload [chunked, at attach time, survives cache expiry] or
+   paste an https URL; duration probed client-side from metadata; first attach
+   auto-ticks the "video" resource tag; export = `media.video {asset, duration?}`,
+   and the legacy `videoPoster` placeholder now stamps ONLY videoless lessons when
+   the video resource is on — Studio player renders real video first, poster as
+   fallback).
 5. **Lesson images** — see "Image pipeline" below.
 6. **Review & export** — validates against the ported Studio schema; reviewer
    checklist (from Studio's LESSON_PLAN_AUTHORING.md §13); download/copy JSON
@@ -26,9 +32,10 @@ for the Scripture Studio library, via a 6-step wizard:
 - **Scripture is referenced, never stored** — refs + USFM codes only; the AI prompt
   forbids verbatim verse text in teaching/keyIdea/reflectionScript.
 - **`lib/schema.ts` is an EXACT port of Scripture Studio `src/lib/lesson-plans.ts`**
-  (Zod). Any schema change must land in BOTH files (e.g. `media.image` was added to
-  both on 2026-07-15). Library cap: **max 40 lessons/plan** (advise splitting into
-  volumes).
+  (Zod). Any schema change must land in BOTH files (e.g. `media.image` added to
+  both 2026-07-15; `media.video {asset, duration?}` added to both 2026-08-10 —
+  Studio side on branch `claude/lesson-video-support` until merged). Library cap:
+  **max 40 lessons/plan** (advise splitting into volumes).
 - **Exports are always `status: "draft"`**; only `/api/publish` writes `"published"`.
 - **The browser NEVER touches Firestore.** Scripture Studio's `firestore.rules` are
   deliberately deny-all for clients; all data goes through API routes using
@@ -96,6 +103,14 @@ TS 7 / native compiler otherwise, which breaks next.config.ts loading). Key modu
   probe (renders a synthetic PDF; proves mupdf works in prod).
 - `POST /api/lesson-image` — authed; validates 8-byte PNG signature, ≤3MB; uploads
   to Storage `lesson-images/{uid}/…`.
+- `POST/PUT /api/lesson-video` — authed **chunked** teaching-video upload (added
+  2026-08-10; Cloud Run caps requests ~32MB, so the client sends ≤6MB chunks):
+  POST start (type gate mp4/webm/mov, size ≤ `LPB_VIDEO_MAX_MB` default 200MB) →
+  PUT chunks staged in `.video-uploads/` (gitignored; same maxInstances:1 disk
+  as the analysis cache; stale >24h pruned) → POST finish streams to Storage
+  `lesson-videos/{uid}/{uploadId}-{name}` (download-token URL; emulator-aware).
+  Guards verified: 401/413/415/409. `storageBucket()` skips the exists() probe
+  under `FIREBASE_STORAGE_EMULATOR_HOST` (emulator buckets materialize on write).
 - `POST /api/source` — authed; attach a PDF to the render cache (no analysis).
 - `GET/PUT/DELETE /api/plans` — authed; PUT has an **updatedAt out-of-order write
   guard** (stale autosave can't regress a finished plan) and **preserves
@@ -189,7 +204,8 @@ plans auto-import on first sign-in.
 - Hosted domain is registered in Firebase Auth authorized domains (done via
   Identity Toolkit API with the SA).
 - Storage bucket exists (`scripture-studio-df955.firebasestorage.app`) — holds
-  `lesson-audio/{planId}/{n}.mp3` and `lesson-images/{uid}/…`.
+  `lesson-audio/{planId}/{n}.mp3`, `lesson-images/{uid}/…`, and
+  `lesson-videos/{uid}/…` (teaching videos, uploaded at attach time).
 - Health checks: `/api/render?selftest=1`; all other APIs 401 without token.
 
 ## Scripture Studio repo (cross-repo state)
@@ -201,6 +217,13 @@ plans auto-import on first sign-in.
   committed by the user as `297637e` and pushed via cherry-pick to main.
 - **PENDING uncommitted edit in the Studio**: LessonPlayer image `maxHeight: 340,
   objectFit: "cover"` (added 2026-07-15). Needs commit+push to take effect.
+- **Studio branch `claude/lesson-video-support`** (pushed 2026-08-10, NOT merged):
+  mirrors `media.video` in lesson-plans.ts, lesson-runtime maps it into
+  LessonView (real video suppresses the videoPoster placeholder), LessonPlayer
+  renders `<TeachingVideo>` (native `<video controls>`, 16px radius like the
+  poster tile). Studio `next build` passes on the branch; CSP media-src already
+  allows firebasestorage (no CSP change needed). Merging it to Studio main
+  auto-deploys the Studio.
 - Studio quirks: CSP blocks any origin not whitelisted (this caused the "audio
   won't play" bug); `getLessonPlan` casts Firestore data without schema parse.
 

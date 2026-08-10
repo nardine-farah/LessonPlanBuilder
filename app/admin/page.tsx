@@ -40,6 +40,7 @@ function lessonTooltip(lp: LessonProgress) {
     lp.quiz === "ok" && "quiz ✓",
     lp.quiz === "partial" && "quiz incomplete",
     lp.image && "image ✓",
+    lp.video && "video ✓",
     lp.supporting > 0 && `${lp.supporting} supporting`,
   ]
     .filter(Boolean)
@@ -146,6 +147,7 @@ function PlanBlock({
                 {p.lessonsComplete}/{p.lessonsTotal}
               </li>
               <li>○ Images {p.imagesChosen}/{p.lessonsTotal} <span className="detail-soft">(optional)</span></li>
+              <li>○ Videos {p.videosAdded}/{p.lessonsTotal} <span className="detail-soft">(optional)</span></li>
               <li>{p.quizzesOk > 0 ? "✓" : "○"} Quizzes ready: {p.quizzesOk}</li>
               <li>
                 {plan.status === "completed" ? "✓" : "○"} Finished

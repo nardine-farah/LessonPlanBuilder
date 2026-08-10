@@ -1,6 +1,7 @@
 node_modules/
 .next/
 .analysis-cache/
+.video-uploads/
 out/
 .env.local
 .env*.local

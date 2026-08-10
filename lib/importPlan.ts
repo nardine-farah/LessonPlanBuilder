@@ -74,6 +74,14 @@ function draftFromDocShape(doc: any): Draft {
     quiz: quizFromMc(l?.quiz),
     artPages: [],
     image: str(l?.media?.image?.asset) ? { url: str(l.media.image.asset), page: null } : null,
+    video: str(l?.media?.video?.asset)
+      ? {
+          url: str(l.media.video.asset),
+          duration: typeof l.media.video.duration === "number" ? l.media.video.duration : null,
+          fileName: "",
+          sizeBytes: null,
+        }
+      : null,
   }));
 
   return {
@@ -140,6 +148,22 @@ function draftFromDraftShape(obj: any): Draft {
         ? { url: str(l.image.url), page: Number.isInteger(l.image.page) ? l.image.page : null }
         : str(l?.media?.image?.asset)
           ? { url: str(l.media.image.asset), page: null }
+          : null,
+    video:
+      l?.video && str(l.video.url)
+        ? {
+            url: str(l.video.url),
+            duration: typeof l.video.duration === "number" ? l.video.duration : null,
+            fileName: str(l.video.fileName),
+            sizeBytes: typeof l.video.sizeBytes === "number" ? l.video.sizeBytes : null,
+          }
+        : str(l?.media?.video?.asset)
+          ? {
+              url: str(l.media.video.asset),
+              duration: typeof l.media.video.duration === "number" ? l.media.video.duration : null,
+              fileName: "",
+              sizeBytes: null,
+            }
           : null,
   }));
 

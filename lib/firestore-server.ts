@@ -3,7 +3,8 @@ import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
 import { randomUUID } from "crypto";
-import { readFileSync } from "fs";
+import { createReadStream, readFileSync } from "fs";
+import { pipeline } from "stream/promises";
 import path from "path";
 
 /**
@@ -58,15 +59,21 @@ export async function storageBucket() {
       ? [explicit]
       : [`${projectId}.firebasestorage.app`, `${projectId}.appspot.com`];
     cachedBucketName = null;
-    for (const name of candidates) {
-      try {
-        const [exists] = await storage.bucket(name).exists();
-        if (exists) {
-          cachedBucketName = name;
-          break;
+    if (process.env.FIREBASE_STORAGE_EMULATOR_HOST) {
+      // Against the Storage emulator the exists() probe is meaningless —
+      // buckets materialize on first write. Trust the configured name.
+      cachedBucketName = candidates[0];
+    } else {
+      for (const name of candidates) {
+        try {
+          const [exists] = await storage.bucket(name).exists();
+          if (exists) {
+            cachedBucketName = name;
+            break;
+          }
+        } catch {
+          /* try the next candidate */
         }
-      } catch {
-        /* try the next candidate */
       }
     }
   }
@@ -76,6 +83,44 @@ export async function storageBucket() {
     );
   }
   return getStorage(adminApp()).bucket(cachedBucketName);
+}
+
+/**
+ * Firebase download-token URL for a Storage object. Emulator-aware so local
+ * demos against the Storage emulator get playable URLs; in production (no
+ * emulator env) this is the standard firebasestorage.googleapis.com form.
+ */
+function tokenDownloadUrl(bucketName: string, objectPath: string, token: string) {
+  const emulator = process.env.FIREBASE_STORAGE_EMULATOR_HOST;
+  const base = emulator ? `http://${emulator}` : "https://firebasestorage.googleapis.com";
+  return `${base}/v0/b/${bucketName}/o/${encodeURIComponent(objectPath)}?alt=media&token=${token}`;
+}
+
+/**
+ * Stream a staged teaching-video file into Storage and return a permanent,
+ * publicly playable URL (download-token style, like lesson audio/images).
+ * Streaming (not buffering) keeps 100MB+ videos out of instance memory.
+ */
+export async function uploadLessonVideo(
+  uid: string,
+  uploadId: string,
+  fileName: string,
+  localPath: string,
+  contentType: string,
+): Promise<string> {
+  const bucket = await storageBucket();
+  const safeName = fileName.replace(/[^\w.-]+/g, "_").slice(-80) || "video.mp4";
+  const objectPath = `lesson-videos/${uid}/${uploadId}-${safeName}`;
+  const token = randomUUID();
+  await pipeline(
+    createReadStream(localPath),
+    bucket.file(objectPath).createWriteStream({
+      contentType,
+      metadata: { metadata: { firebaseStorageDownloadTokens: token } },
+      resumable: false,
+    }),
+  );
+  return tokenDownloadUrl(bucket.name, objectPath, token);
 }
 
 /**

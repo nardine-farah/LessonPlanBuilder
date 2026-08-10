@@ -22,6 +22,7 @@ export interface LessonProgress {
   /** "ok" passes the Studio quiz rules; "partial" is enabled but incomplete; "off" not offered. */
   quiz: "ok" | "partial" | "off";
   image: boolean;
+  video: boolean;
   supporting: number;
 }
 
@@ -36,6 +37,7 @@ export interface PlanProgress {
   /** Lessons with core + teaching + key idea — "drafted". */
   lessonsComplete: number;
   imagesChosen: number;
+  videosAdded: number;
   quizzesOk: number;
   schemaValid: boolean;
   schemaIssueCount: number;
@@ -130,6 +132,7 @@ export function lessonProgress(l: DraftLesson): LessonProgress {
     prayer: has(l.prayer),
     quiz: quiz.enabled ? (quizOk ? "ok" : "partial") : "off",
     image: !!l.image?.url,
+    video: !!l.video?.url,
     supporting: (l.supportingScriptures ?? []).filter((s) => has(s.ref) && has(s.usfm)).length,
   };
 }
@@ -202,6 +205,7 @@ export function planProgress(draftIn: Draft, status: string, checklistDone: bool
     lessonsTotal: lessons.length,
     lessonsComplete: lessons.filter((lp) => lp.core && lp.teaching && lp.keyIdea).length,
     imagesChosen: lessons.filter((lp) => lp.image).length,
+    videosAdded: lessons.filter((lp) => lp.video).length,
     quizzesOk: lessons.filter((lp) => lp.quiz === "ok").length,
     schemaValid,
     schemaIssueCount: issues.length,

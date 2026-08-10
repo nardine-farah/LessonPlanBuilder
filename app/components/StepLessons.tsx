@@ -1,9 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import type { Draft, DraftLesson } from "@/lib/types";
+import { useRef, useState } from "react";
+import type { Draft, DraftLesson, DraftLessonVideo } from "@/lib/types";
 import { emptyLesson } from "@/lib/types";
 import { parseReference, isValidUsfm } from "@/lib/usfm";
+import {
+  VIDEO_ACCEPT,
+  fmtBytes,
+  fmtDuration,
+  isVideoFile,
+  probeVideoDuration,
+  uploadVideoFile,
+} from "@/lib/videoUpload";
 import { TextArea, TextField } from "./ui";
 
 export default function StepLessons(props: {
@@ -48,6 +56,14 @@ export default function StepLessons(props: {
           onToggle={() => setOpen(open === lesson.n ? null : lesson.n)}
           onChange={(patch) => setLesson(lesson.n, patch)}
           onRemove={() => removeLesson(lesson.n)}
+          onVideoAttached={() => {
+            // A plan with real videos offers video — tick the matcher tag the
+            // curator would otherwise have to remember (visible in "Who it's
+            // for", untick there to opt out).
+            if (!draft.match.resources.includes("video")) {
+              update({ match: { ...draft.match, resources: [...draft.match.resources, "video"] } });
+            }
+          }}
         />
       ))}
 
@@ -64,6 +80,7 @@ function LessonEditor(props: {
   onToggle: () => void;
   onChange: (patch: Partial<DraftLesson>) => void;
   onRemove: () => void;
+  onVideoAttached: () => void;
 }) {
   const { lesson: l, onChange } = props;
   const usfmOk = isValidUsfm(l.verseUsfm);
@@ -194,6 +211,16 @@ function LessonEditor(props: {
             max={2000}
             rows={3}
             help="Optional ~20–45s guided reflection a calm narrator reads. Your prose, never Scripture text. Rendered to MP3 later via tts:render."
+          />
+
+          <hr className="divider" />
+          <VideoSection
+            video={l.video}
+            onAttach={(video) => {
+              onChange({ video });
+              props.onVideoAttached();
+            }}
+            onRemove={() => onChange({ video: null })}
           />
 
           <hr className="divider" />
@@ -381,5 +408,131 @@ function LessonEditor(props: {
         </div>
       )}
     </div>
+  );
+}
+
+/**
+ * Per-lesson teaching video: upload a file (chunked to Storage at attach
+ * time, so it survives cache expiry like lesson images) or paste a hosted
+ * URL. Exported as media.video; the Studio player renders it above the
+ * lesson. Duration is read from the file's metadata when possible.
+ */
+function VideoSection(props: {
+  video: DraftLessonVideo | null;
+  onAttach: (video: DraftLessonVideo) => void;
+  onRemove: () => void;
+}) {
+  const { video } = props;
+  const [progress, setProgress] = useState<number | null>(null);
+  const [urlInput, setUrlInput] = useState("");
+  const [error, setError] = useState("");
+  const fileInput = useRef<HTMLInputElement>(null);
+
+  const pickFile = async (file: File | null | undefined) => {
+    if (!file) return;
+    setError("");
+    if (!isVideoFile(file)) {
+      setError("Use an MP4, WebM, or QuickTime video file (MP4 · H.264 plays everywhere).");
+      return;
+    }
+    setProgress(0);
+    try {
+      const duration = await probeVideoDuration(file);
+      const { url } = await uploadVideoFile(file, setProgress);
+      props.onAttach({ url, duration, fileName: file.name, sizeBytes: file.size });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Upload failed — try again.");
+    } finally {
+      setProgress(null);
+      if (fileInput.current) fileInput.current.value = "";
+    }
+  };
+
+  const attachUrl = async () => {
+    const url = urlInput.trim();
+    setError("");
+    if (!/^https:\/\/.+/i.test(url)) {
+      setError("Paste a full https:// link to a hosted video file.");
+      return;
+    }
+    const duration = await probeVideoDuration(url);
+    props.onAttach({ url, duration, fileName: "", sizeBytes: null });
+    setUrlInput("");
+  };
+
+  return (
+    <>
+      <h3 style={{ fontSize: 16, marginBottom: 4 }}>Teaching video</h3>
+      {video ? (
+        <div style={{ marginTop: 10 }}>
+          <video
+            controls
+            preload="metadata"
+            src={video.url}
+            style={{
+              display: "block",
+              maxWidth: 420,
+              width: "100%",
+              borderRadius: 8,
+              border: "1px solid var(--line)",
+              background: "#0f2537",
+            }}
+          />
+          <div className="field-help" style={{ marginTop: 6 }}>
+            {video.fileName || video.url}
+            {fmtDuration(video.duration) && <> · {fmtDuration(video.duration)}</>}
+            {fmtBytes(video.sizeBytes) && <> · {fmtBytes(video.sizeBytes)}</>}
+            <button className="btn btn-small btn-ghost" style={{ color: "var(--error)", marginLeft: 10 }} onClick={props.onRemove}>
+              ✕ Remove video
+            </button>
+          </div>
+        </div>
+      ) : progress !== null ? (
+        <div style={{ marginTop: 10, maxWidth: 420 }}>
+          <div className="progress-row">
+            <div className="progress-track">
+              <div className="progress-fill" style={{ width: `${Math.round(progress * 100)}%` }} />
+            </div>
+            <span className="progress-num">{Math.round(progress * 100)}%</span>
+          </div>
+          <div className="field-help" style={{ marginTop: 4 }}>Uploading — keep this tab open…</div>
+        </div>
+      ) : (
+        <>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginTop: 8 }}>
+            <button className="btn btn-small" onClick={() => fileInput.current?.click()}>
+              ⤒ Upload video
+            </button>
+            <span className="field-help" style={{ marginTop: 0 }}>or</span>
+            <input
+              type="text"
+              placeholder="https://… hosted video URL"
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
+              style={{ flex: "1 1 220px", maxWidth: 340 }}
+            />
+            <button className="btn btn-small" disabled={!urlInput.trim()} onClick={attachUrl}>
+              Attach URL
+            </button>
+            <input
+              ref={fileInput}
+              type="file"
+              accept={VIDEO_ACCEPT}
+              hidden
+              onChange={(e) => pickFile(e.target.files?.[0])}
+            />
+          </div>
+          <div className="field-help" style={{ marginTop: 6 }}>
+            Optional. Plays inside the lesson in Scripture Studio. MP4 (H.264) recommended; uploads
+            are stored with the plan’s other media.
+          </div>
+        </>
+      )}
+      {error && (
+        <div className="notice notice-error" style={{ marginTop: 10 }}>
+          {error}
+        </div>
+      )}
+    </>
   );
 }
