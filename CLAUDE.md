@@ -133,8 +133,11 @@ card GRID of reviewers (avatar, status-count badges, avg-progress bar, last
 active; filter box narrows by reviewer/plan/planId with a "N plans match"
 hint) → clicking a card opens that reviewer's detail (plans → progress bar +
 expandable per-lesson grid + schema status + ⤓ JSON, `← All reviewers` to go
-back); Library tab = all `lessonPlans` incl. Studio seeds, with publisher
-attribution; the `✦ Admin dashboard` button on `/plans` appears only after the
+back); Library tab = all `lessonPlans` incl. Studio seeds as a searchable card grid
+(text search + status/language/audience/topic selects; cards show status,
+language, lessons, audience/topic tags, publisher — publisher name
+cross-links into that reviewer's detail; overview select() includes `match`
+for the tags); the `✦ Admin dashboard` button on `/plans` appears only after the
 `GET /api/admin` probe says yes — never lists ALL Firebase accounts, only
 profiles that have plans, since the auth pool is shared with Studio end-users). Working draft lives in localStorage (`lpb-draft-v1`
 {draft, step, key, createdAt}) AND debounce-syncs (1.5s) to

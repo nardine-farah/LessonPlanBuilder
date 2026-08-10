@@ -10,6 +10,7 @@ import type {
   LessonProgress,
 } from "@/lib/adminData";
 import { authedFetch } from "@/lib/planStore";
+import { AUDIENCE_TAGS, FOCUS_TAGS } from "@/lib/schema";
 import { useAuth } from "../components/AuthProvider";
 
 /**
@@ -348,36 +349,193 @@ function ReviewerDetail({
   );
 }
 
-function LibraryRow({ plan }: { plan: AdminLibraryPlan }) {
+const prettyTag = (t: string) => t.replace(/_/g, " ");
+
+function LibraryCard({
+  plan,
+  onOpenReviewer,
+}: {
+  plan: AdminLibraryPlan;
+  onOpenReviewer: (uid: string) => void;
+}) {
+  const publisherName = plan.publishedBy
+    ? plan.publishedBy.displayName || plan.publishedBy.email || plan.publishedBy.uid
+    : "";
   return (
-    <div className="plan-row">
-      <div className="plan-row-main">
-        <div className="plan-row-title" dir="auto">
-          {plan.title}
-          <span className={`badge ${plan.status === "published" ? "badge-moss" : "badge-gold"}`}>{plan.status}</span>
+    <div className="reviewer-card library-card">
+      <div className="plan-row-title" dir="auto">
+        {plan.title}
+        <span className={`badge ${plan.status === "published" ? "badge-moss" : "badge-gold"}`}>{plan.status}</span>
+        {plan.language && <span className="badge badge-garnet">{plan.language.toUpperCase()}</span>}
+      </div>
+      {plan.subtitle && (
+        <div className="library-card-sub" dir="auto">
+          {plan.subtitle}
         </div>
-        {plan.subtitle && (
-          <div className="plan-row-meta" dir="auto">
-            {plan.subtitle}
-          </div>
+      )}
+      <div className="plan-row-meta">
+        <span className="mono">{plan.planId}</span>
+        {plan.lessonCount !== null && <> · {plan.lessonCount} lessons</>}
+        {plan.translation && <> · {plan.translation}</>}
+        {plan.span && <> · {plan.span}</>}
+      </div>
+      {plan.audience.length > 0 && (
+        <div className="mini-tag-row">
+          <span className="mini-tag-label">audience</span>
+          {plan.audience.map((t) => (
+            <span key={t} className="mini-tag">
+              {prettyTag(t)}
+            </span>
+          ))}
+        </div>
+      )}
+      {plan.focus.length > 0 && (
+        <div className="mini-tag-row">
+          <span className="mini-tag-label">topic</span>
+          {plan.focus.map((t) => (
+            <span key={t} className="mini-tag">
+              {prettyTag(t)}
+            </span>
+          ))}
+        </div>
+      )}
+      <div className="reviewer-card-foot">
+        {plan.publishedBy ? (
+          <button
+            className="library-publisher"
+            title="Open this reviewer's plans"
+            onClick={() => onOpenReviewer(plan.publishedBy!.uid)}
+          >
+            by {publisherName} →
+          </button>
+        ) : (
+          <span title="Seeded outside the builder (or published before publisher tracking)">Studio seed</span>
         )}
-        <div className="plan-row-meta">
-          <span className="mono">{plan.planId}</span>
-          {plan.lessonCount !== null && <> · {plan.lessonCount} lessons</>}
-          {plan.language && <> · {plan.language.toUpperCase()}</>}
-          {plan.translation && <> · {plan.translation}</>}
-          {plan.span && <> · {plan.span}</>}
-          {plan.reviewedBy && <> · reviewed by {plan.reviewedBy}</>}
-        </div>
-        <div className="plan-row-meta">
-          {plan.publishedBy
-            ? `Published from the builder by ${
-                plan.publishedBy.displayName || plan.publishedBy.email || plan.publishedBy.uid
-              } · ${fmtDate(plan.publishedAt)}`
-            : "Seeded outside the builder (or published before publisher tracking)"}
-        </div>
+        <span>{plan.publishedAt ? fmtDate(plan.publishedAt) : ""}</span>
       </div>
     </div>
+  );
+}
+
+/** The whole library as searchable, filterable cards. Filters reset when the tab remounts. */
+function LibrarySection({
+  library,
+  onOpenReviewer,
+}: {
+  library: AdminLibraryPlan[];
+  onOpenReviewer: (uid: string) => void;
+}) {
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
+  const [language, setLanguage] = useState("");
+  const [audience, setAudience] = useState("");
+  const [focus, setFocus] = useState("");
+
+  const statuses = [...new Set(library.map((p) => p.status).filter(Boolean))].sort();
+  const languages = [...new Set(library.map((p) => p.language).filter(Boolean))].sort();
+  const anyFilter = search.trim() || status || language || audience || focus;
+
+  const q = search.trim().toLowerCase();
+  const matches = library.filter((p) => {
+    if (status && p.status !== status) return false;
+    if (language && p.language !== language) return false;
+    if (audience && !p.audience.includes(audience)) return false;
+    if (focus && !p.focus.includes(focus)) return false;
+    if (q) {
+      const haystack = [
+        p.title,
+        p.subtitle,
+        p.planId,
+        p.reviewedBy,
+        p.publishedBy?.displayName ?? "",
+        p.publishedBy?.email ?? "",
+      ]
+        .join(" ")
+        .toLowerCase();
+      if (!haystack.includes(q)) return false;
+    }
+    return true;
+  });
+
+  return (
+    <>
+      <div className="filter-row">
+        <input
+          type="text"
+          aria-label="Search the library"
+          placeholder="Search title, planId, or publisher…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <select aria-label="Filter by status" value={status} onChange={(e) => setStatus(e.target.value)}>
+          <option value="">All statuses</option>
+          {statuses.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+        <select aria-label="Filter by language" value={language} onChange={(e) => setLanguage(e.target.value)}>
+          <option value="">All languages</option>
+          {languages.map((l) => (
+            <option key={l} value={l}>
+              {l.toUpperCase()}
+            </option>
+          ))}
+        </select>
+        <select aria-label="Filter by audience" value={audience} onChange={(e) => setAudience(e.target.value)}>
+          <option value="">Any audience</option>
+          {AUDIENCE_TAGS.map((t) => (
+            <option key={t} value={t}>
+              {prettyTag(t)}
+            </option>
+          ))}
+        </select>
+        <select aria-label="Filter by topic" value={focus} onChange={(e) => setFocus(e.target.value)}>
+          <option value="">Any topic</option>
+          {FOCUS_TAGS.map((t) => (
+            <option key={t} value={t}>
+              {prettyTag(t)}
+            </option>
+          ))}
+        </select>
+        {anyFilter && (
+          <button
+            className="btn btn-small btn-ghost"
+            onClick={() => {
+              setSearch("");
+              setStatus("");
+              setLanguage("");
+              setAudience("");
+              setFocus("");
+            }}
+          >
+            ✕ Clear
+          </button>
+        )}
+      </div>
+
+      <p className="field-help" style={{ marginBottom: 12 }}>
+        {matches.length} of {library.length} library plan{library.length === 1 ? "" : "s"}
+        {anyFilter ? " match" : ""} — plans published from this tool and plans seeded directly in the Studio.
+      </p>
+
+      {library.length === 0 ? (
+        <section className="card">
+          <p className="field-help">The library is empty.</p>
+        </section>
+      ) : matches.length === 0 ? (
+        <section className="card">
+          <p className="field-help">No library plans match these filters.</p>
+        </section>
+      ) : (
+        <div className="reviewer-grid">
+          {matches.map((plan) => (
+            <LibraryCard key={plan.planId} plan={plan} onOpenReviewer={onOpenReviewer} />
+          ))}
+        </div>
+      )}
+    </>
   );
 }
 
@@ -600,18 +758,13 @@ export default function AdminPage() {
                   })()}
 
                 {tab === "library" && (
-                  <section className="card">
-                    <h3 className="card-title">Scripture Studio library</h3>
-                    <p className="card-note">
-                      Everything in <span className="mono">lessonPlans</span> — plans published from this tool
-                      and plans seeded directly in the Studio.
-                    </p>
-                    {overview.library.length === 0 ? (
-                      <p className="field-help">The library is empty.</p>
-                    ) : (
-                      overview.library.map((plan) => <LibraryRow key={plan.planId} plan={plan} />)
-                    )}
-                  </section>
+                  <LibrarySection
+                    library={overview.library}
+                    onOpenReviewer={(uid) => {
+                      setTab("reviewers");
+                      setSelectedUid(uid);
+                    }}
+                  />
                 )}
               </>
             )}

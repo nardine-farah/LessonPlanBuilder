@@ -145,11 +145,13 @@ export async function GET(req: NextRequest) {
   // each doc) stays in Firestore.
   const librarySnap = await db
     .collection("lessonPlans")
-    .select("planId", "title", "subtitle", "language", "translation", "lessonCount", "span", "status", "reviewedBy")
+    .select("planId", "title", "subtitle", "language", "translation", "lessonCount", "span", "status", "reviewedBy", "match")
     .get();
+  const tagList = (raw: unknown): string[] =>
+    Array.isArray(raw) ? raw.filter((t): t is string => typeof t === "string") : [];
   const library: AdminLibraryPlan[] = librarySnap.docs
     .map((doc) => {
-      const data = doc.data() as Partial<AdminLibraryPlan>;
+      const data = doc.data() as Partial<AdminLibraryPlan> & { match?: { audience?: unknown; focus?: unknown } };
       const planId = data.planId || doc.id;
       const publisher = publisherByPlanId.get(planId);
       const account = publisher ? accounts.get(publisher.uid) : undefined;
@@ -163,6 +165,8 @@ export async function GET(req: NextRequest) {
         span: data.span || "",
         status: data.status || "unknown",
         reviewedBy: data.reviewedBy || "",
+        audience: tagList(data.match?.audience),
+        focus: tagList(data.match?.focus),
         publishedBy: publisher
           ? {
               uid: publisher.uid,

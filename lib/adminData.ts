@@ -85,6 +85,9 @@ export interface AdminLibraryPlan {
   span: string;
   status: string;
   reviewedBy: string;
+  /** Match tags (from the plan's `match` block) — who it's for and what it teaches. */
+  audience: string[];
+  focus: string[];
   /** The reviewer profile that published it — null for Studio seeds / pre-tracking writes. */
   publishedBy: { uid: string; email: string; displayName: string } | null;
   publishedAt: string | null;
