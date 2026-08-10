@@ -132,3 +132,5 @@ npm run db:seed:plans     # re-seed so the audio path is live
 
 Then test end-to-end at `/studio/lesson-plan` and flip `status` to `"published"` only
 after editorial + theological review.
+
+<!-- rollout: bind ELEVENLABS_API_KEY (57bcc3c) -->
