@@ -32,6 +32,12 @@ env:
   - variable: PUBLISH_ALLOWED_DOMAIN
     value: biblica.com
     availability: [RUNTIME]
+  # Admin dashboard (/admin) — comma-separated emails allowed to view every
+  # reviewer's plans + the whole library. Code defaults to this same value
+  # when unset; edit here to add/remove admins.
+  - variable: ADMIN_EMAILS
+    value: nardine.farah@biblica.com
+    availability: [RUNTIME]
   - variable: ANTHROPIC_API_KEY
     secret: ANTHROPIC_API_KEY
     availability: [RUNTIME]

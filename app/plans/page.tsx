@@ -6,6 +6,7 @@ import { buildPlanDoc } from "@/lib/types";
 import { importedDraftFromJson } from "@/lib/importPlan";
 import {
   PublishConflictError,
+  authedFetch,
   deletePlan,
   listPlans,
   newPlanKey,
@@ -29,6 +30,7 @@ export default function PlansPage() {
   const [error, setError] = useState("");
   const [importing, setImporting] = useState(false);
   const [publishing, setPublishing] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
   const importInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -39,6 +41,25 @@ export default function PlansPage() {
     setJustFinished(sessionStorage.getItem("lpb-just-finished") ?? "");
     sessionStorage.removeItem("lpb-just-finished");
   }, []);
+
+  // Show the Admin door only to allowlisted admins — the server re-checks
+  // the allowlist on every /api/admin request, this just controls the button.
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await authedFetch("/api/admin");
+        const body = res.ok ? await res.json() : null;
+        if (!cancelled) setIsAdmin(!!body?.admin);
+      } catch {
+        /* keep the door hidden */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
 
   const refresh = async () => {
     try {
@@ -276,6 +297,15 @@ export default function PlansPage() {
             </p>
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            {isAdmin && (
+              <button
+                className="btn"
+                onClick={() => router.push("/admin")}
+                title="View every reviewer's plans, their progress, and the Studio library"
+              >
+                ✦ Admin dashboard
+              </button>
+            )}
             <button
               className="btn"
               disabled={importing}

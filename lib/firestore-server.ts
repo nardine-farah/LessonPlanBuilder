@@ -104,6 +104,7 @@ export async function uploadLessonAudio(
 export interface CallerIdentity {
   uid: string;
   email: string;
+  emailVerified: boolean;
 }
 
 /** Verify a Firebase ID token from an Authorization: Bearer header. */
@@ -111,10 +112,46 @@ export async function identityFromRequest(authorization: string | null): Promise
   if (!authorization?.startsWith("Bearer ")) return null;
   try {
     const decoded = await adminAuth().verifyIdToken(authorization.slice(7));
-    return { uid: decoded.uid, email: decoded.email ?? "" };
+    return { uid: decoded.uid, email: decoded.email ?? "", emailVerified: decoded.email_verified === true };
   } catch {
     return null;
   }
+}
+
+/**
+ * Admin allowlist — ADMIN_EMAILS is a comma-separated list of reviewer
+ * emails allowed to see EVERY profile's plans and the whole library
+ * (/admin + /api/admin/*). Defaults to the Biblica curator so the deployed
+ * tool has a working admin with zero setup, same precedent as
+ * PUBLISH_ALLOWED_DOMAIN's default.
+ */
+const DEFAULT_ADMIN_EMAILS = "nardine.farah@biblica.com";
+
+export function isAdminEmail(email: string | null | undefined): boolean {
+  if (!email) return false;
+  const list = (process.env.ADMIN_EMAILS ?? DEFAULT_ADMIN_EMAILS)
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+  return list.includes(email.toLowerCase());
+}
+
+export type AdminGate =
+  | { ok: true; caller: CallerIdentity }
+  | { ok: false; status: 401 | 403; error: string };
+
+/**
+ * Gate an /api/admin route: signed in (401 otherwise) AND on the admin
+ * allowlist with a verified email (403 otherwise). Admin views are
+ * read-only, but they cross profile boundaries — hence the hard gate.
+ */
+export async function requireAdmin(authorization: string | null): Promise<AdminGate> {
+  const caller = await identityFromRequest(authorization);
+  if (!caller) return { ok: false, status: 401, error: "Sign in first." };
+  if (!caller.emailVerified || !isAdminEmail(caller.email)) {
+    return { ok: false, status: 403, error: "This view is limited to admin accounts." };
+  }
+  return { ok: true, caller };
 }
 
 /** Verify a Firebase ID token from an Authorization: Bearer header; returns the uid or null. */

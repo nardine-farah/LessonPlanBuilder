@@ -109,13 +109,31 @@ TS 7 / native compiler otherwise, which breaks next.config.ts loading). Key modu
   `lessonPlans/{planId}` with status published (same write as Studio's
   `db:seed:plans`); **auto-renders reflection audio** (reuses unchanged narrations
   on republish; audio failures never block publish); returns `audio` summary.
+- `GET /api/admin` (am-I-admin probe) / `GET /api/admin/overview` /
+  `GET /api/admin/plan-json?uid&key` — **admin-only** (added 2026-08-10):
+  `requireAdmin` gates on the `ADMIN_EMAILS` allowlist (comma-separated; code
+  default `nardine.farah@biblica.com`, also set in apphosting.yaml + needed in
+  `.env.local` only to test /admin as a non-default admin) AND a verified
+  email. `overview` = every reviewer profile (collectionGroup("plans"),
+  path-filtered to `reviewerPlans/*`, identities via `adminAuth().getUsers`)
+  with per-plan progress computed **server-side** in `lib/adminData.ts`
+  (draftJson parsed + scored 0–100, per-lesson booleans, Studio-schema
+  safeParse; raw draftJson never sent to the browser) + the whole
+  `lessonPlans` library (select() — lessons stay in Firestore) joined to the
+  publishing profile via `publishedPlanId`. `plan-json` = on-demand seed-file
+  export of any profile's plan. All admin routes are READ-ONLY.
 
 ### Reviewer profiles / auth
 
 Google sign-in (popup), **same Firebase project as Scripture Studio**
 (`scripture-studio-df955`) so one account works across both. Routes: `/` welcome,
 `/plans` dashboard (Continue/Reopen/⤓ JSON/Publish/Import/delete), `/builder`
-(auth-gated wizard). Working draft lives in localStorage (`lpb-draft-v1`
+(auth-gated wizard), `/admin` (admin-only, read-only dashboard: Reviewers tab =
+all users → plans → progress bar + expandable per-lesson grid + schema status +
+⤓ JSON; Library tab = all `lessonPlans` incl. Studio seeds, with publisher
+attribution; the `✦ Admin dashboard` button on `/plans` appears only after the
+`GET /api/admin` probe says yes — never lists ALL Firebase accounts, only
+profiles that have plans, since the auth pool is shared with Studio end-users). Working draft lives in localStorage (`lpb-draft-v1`
 {draft, step, key, createdAt}) AND debounce-syncs (1.5s) to
 `reviewerPlans/{uid}/plans/{key}`. Race guards: sync-epoch ref invalidates pending
 saves on finish/discard; flush-on-unmount; plans-page Continue with the SAME key
