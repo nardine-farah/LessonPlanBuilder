@@ -921,6 +921,42 @@ pre.json-preview {
 
 .rail-link:hover { text-decoration: underline; }
 
+/* ——— linked source PDF (builder step 1) ——— */
+
+.linked-source {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--trust-wash);
+  padding: 16px 18px;
+}
+
+.linked-source-badge {
+  flex: none;
+  width: 46px;
+  height: 56px;
+  border-radius: 6px;
+  background: var(--card);
+  border: 1px solid var(--trust-line);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--trust);
+  box-shadow: var(--shadow);
+}
+
+.linked-source-info { flex: 1; min-width: 0; }
+
+.linked-source-name {
+  font-weight: 700;
+  font-size: 15.5px;
+  overflow-wrap: anywhere;
+}
+
 /* ——— admin dashboard ——— */
 
 .tab-row {

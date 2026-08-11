@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { restoreSourcePdf } from "./sourceStore";
 
 /**
  * mupdf is ESM-only with top-level await, which breaks require()-style
@@ -77,11 +78,17 @@ async function renderPdfPageInner(
   try {
     bytes = await fs.readFile(path.join(CACHE_DIR, `${sourceId}.pdf`));
   } catch {
-    throw new RenderError(
-      "The source PDF isn't on this server anymore (caches reset on redeploy) — attach the source PDF to continue.",
-      404,
-      "cache-miss",
-    );
+    // Self-heal: the local cache is ephemeral (rollouts, pruning), but every
+    // analyzed PDF also lives in Storage — pull it back and carry on. The
+    // attach-PDF banner remains only for plans that predate persistence.
+    if (!(await restoreSourcePdf(sourceId))) {
+      throw new RenderError(
+        "The source PDF isn't on this server anymore (caches reset on redeploy) — attach the source PDF to continue.",
+        404,
+        "cache-miss",
+      );
+    }
+    bytes = await fs.readFile(path.join(CACHE_DIR, `${sourceId}.pdf`));
   }
   return renderPdfFromBytes(bytes, page1, targetWidth);
 }

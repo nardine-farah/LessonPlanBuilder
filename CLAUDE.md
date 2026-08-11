@@ -11,7 +11,9 @@ ministry PDF (devotional/course/study guide, **any language**) into a lesson-pla
 for the Scripture Studio library, via a 6-step wizard:
 
 1. **Source PDF** — upload; measured with `count_tokens` (free); oversized docs get a
-   choice screen (analyze specific pages `1-10,15,22-30` or all-in-parts).
+   choice screen (analyze specific pages `1-10,15,22-30` or all-in-parts). For an
+   existing draft this step shows the **linked source** (file name, analysis notes,
+   no dropzone); analyzing a different PDF is behind an explicit "Replace PDF…".
 2. **Plan details** — title/subtitle/summary/planId/span/translation/reviewedBy.
 3. **Who it's for** — match tags (exact enums the Studio matcher scores).
 4. **Lessons** — per-lesson editor (passage + USFM, teaching, key idea, quiz with
@@ -62,6 +64,12 @@ TS 7 / native compiler otherwise, which breaks next.config.ts loading). Key modu
   `hash(bytes+language)` + scope (`-full` / `-p<sel-hash>`); orphaned jobs revive
   after server restart (GET poll detects); prune >14 days; `storeSourcePdf` =
   attach-PDF-without-analysis. Failed token counts retried once, never cached.
+  **Source PDFs are durable** (2026-08-11, `lib/sourceStore.ts`): every PDF
+  entering the cache is also persisted fire-and-forget to Storage
+  `source-pdfs/{sourceId}.pdf` (content-addressed, deduped); job revival and
+  page rendering (`lib/render.ts`) restore from there on local cache miss, so
+  plans stay linked to their PDFs across rollouts/pruning — the attach-PDF
+  banner remains only for plans whose PDFs predate persistence.
 - `lib/render.ts` — mupdf WASM page rendering (**lazy `import("mupdf")` — it's
   ESM-only with top-level await; static import breaks CJS server build**); 3-render
   semaphore; pixmap clamped on BOTH axes; `RenderError` carries machine `code`
@@ -158,7 +166,10 @@ profiles that have plans, since the auth pool is shared with Studio end-users). 
 {draft, step, key, createdAt}) AND debounce-syncs (1.5s) to
 `reviewerPlans/{uid}/plans/{key}`. Race guards: sync-epoch ref invalidates pending
 saves on finish/discard; flush-on-unmount; plans-page Continue with the SAME key
-never overwrites localStorage (local may be newer). Legacy localStorage completed
+never overwrites localStorage (local may be newer). Continue on a DIFFERENT plan
+swaps the working copy silently (no confirm — unmount flush makes it loss-free);
+`+ Start building a new plan` clears the slot so the wizard always opens fresh
+at step 0 (2026-08-11; previously it resumed the last draft at its last step). Legacy localStorage completed
 plans auto-import on first sign-in.
 
 ### Image pipeline ("analysis notes pages → local render → human picks")
@@ -198,14 +209,17 @@ plans auto-import on first sign-in.
   — deploy with `firebase deploy --only apphosting` (CLI is logged in as the user;
   local-source deploy, `firebase.json` + `apphosting.yaml`; ANTHROPIC_API_KEY is a
   Secret Manager secret; `maxInstances: 1`).
-- **Every rollout wipes `.analysis-cache`** (fresh Cloud Run disk) → in-progress
-  plans show the attach-PDF recovery banner. Durable fix (not built): persist the
-  cache to the Storage bucket.
+- Every rollout wipes `.analysis-cache` (fresh Cloud Run disk), but since
+  2026-08-11 the render path **self-heals from Storage** (`source-pdfs/…`) —
+  the attach-PDF banner only appears for plans analyzed before persistence
+  existed (one final attach makes them durable too).
 - Hosted domain is registered in Firebase Auth authorized domains (done via
   Identity Toolkit API with the SA).
 - Storage bucket exists (`scripture-studio-df955.firebasestorage.app`) — holds
-  `lesson-audio/{planId}/{n}.mp3`, `lesson-images/{uid}/…`, and
-  `lesson-videos/{uid}/…` (teaching videos, uploaded at attach time).
+  `lesson-audio/{planId}/{n}.mp3`, `lesson-images/{uid}/…`,
+  `lesson-videos/{uid}/…` (teaching videos, uploaded at attach time), and
+  `source-pdfs/{sourceId}.pdf` (durable source documents; no download tokens —
+  server-only).
 - Health checks: `/api/render?selftest=1`; all other APIs 401 without token.
 
 ## Scripture Studio repo (cross-repo state)
@@ -265,5 +279,4 @@ full sign-in → /plans → /admin flow (incl. non-admin 403) in a clean contain
 
 - "Split into volumes" one-click on the Review step for >40-lesson plans.
 - "Suggest artwork pages" re-scan for plans analyzed before artPages existed.
-- Persisting the analysis cache to the Storage bucket (survives redeploys).
 - Cross-team shared plan lists (profiles are per-reviewer).

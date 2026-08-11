@@ -251,7 +251,7 @@ export default function BuilderPage() {
 
         {step === 0 && (
           <StepUpload
-            hasDraft={!!draft}
+            draft={draft}
             onAnalyzed={(d) => {
               setDraft(d);
               setPlanKey(newPlanKey(d));

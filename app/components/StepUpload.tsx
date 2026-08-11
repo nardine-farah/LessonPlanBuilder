@@ -33,7 +33,7 @@ const fmtTokens = (n: number) =>
   n >= 1_000_000 ? `${(n / 1_000_000).toFixed(1)}M` : n >= 1_000 ? `${Math.round(n / 1_000)}k` : String(n);
 
 export default function StepUpload(props: {
-  hasDraft: boolean;
+  draft: Draft | null;
   onAnalyzed: (draft: Draft) => void;
 }) {
   const [language, setLanguage] = useState<"en" | "ar">("en");
@@ -44,6 +44,9 @@ export default function StepUpload(props: {
   const [error, setError] = useState("");
   const [choice, setChoice] = useState<SizeChoice | null>(null);
   const [pagesSpec, setPagesSpec] = useState("");
+  // A draft opens on its LINKED source; the dropzone appears only for new
+  // plans or after an explicit "Replace" — no accidental re-analysis.
+  const [replacing, setReplacing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const activeJob = useRef<string | null>(null);
 
@@ -305,11 +308,58 @@ export default function StepUpload(props: {
     );
   }
 
+  // An existing draft shows its linked source, not an upload zone.
+  if (props.draft && !replacing) {
+    const d = props.draft;
+    return (
+      <>
+        {error && <div className="notice notice-error">{error}</div>}
+        <Card
+          title="1 · The source document"
+          note="The PDF this plan was analyzed from stays linked to the draft — lesson-image rendering uses it directly, nothing to re-attach."
+        >
+          <div className="linked-source">
+            <div className="linked-source-badge">PDF</div>
+            <div className="linked-source-info">
+              <div className="linked-source-name" dir="auto">
+                {d.sourceFileName || "Imported plan (no source PDF)"}
+              </div>
+              <div className="field-help" style={{ marginTop: 2 }}>
+                {d.detectedLanguage && <>Source language: {d.detectedLanguage} · </>}
+                {d.lessons.length} lesson{d.lessons.length === 1 ? "" : "s"} drafted ·{" "}
+                {d.sourceId
+                  ? "linked for page rendering"
+                  : "no file linked — pages can be attached in the Lesson images step"}
+              </div>
+            </div>
+            <button
+              className="btn btn-small"
+              title="Analyze a different PDF — this replaces the whole draft"
+              onClick={() => setReplacing(true)}
+            >
+              Replace PDF…
+            </button>
+          </div>
+          {d.sourceNotes && (
+            <div className="notice notice-info" style={{ marginTop: 16, marginBottom: 0 }} dir="auto">
+              <strong>Notes from the analysis of “{d.sourceFileName}”</strong>
+              <br />
+              {d.sourceNotes}
+            </div>
+          )}
+        </Card>
+      </>
+    );
+  }
+
   return (
     <>
-      {props.hasDraft && (
+      {props.draft && (
         <div className="notice notice-info">
-          A draft is already in progress. Analyzing a new PDF will <strong>replace it</strong>.
+          A draft is already in progress. Analyzing a new PDF will <strong>replace it</strong>.{" "}
+          <button className="btn btn-small btn-ghost" onClick={() => setReplacing(false)}>
+            ← Keep the linked PDF
+          </button>
         </div>
       )}
       {error && <div className="notice notice-error">{error}</div>}

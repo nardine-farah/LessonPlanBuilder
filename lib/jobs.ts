@@ -24,6 +24,7 @@ import {
   rangesToPages,
   type PageRange,
 } from "./pages";
+import { persistSourcePdf, restoreSourcePdf } from "./sourceStore";
 
 /**
  * Resumable analysis jobs. An upload is keyed by the hash of its bytes +
@@ -144,6 +145,7 @@ export async function storeSourcePdf(
   });
   await fs.mkdir(CACHE_DIR, { recursive: true });
   await fs.writeFile(p.pdf(sourceId), bytes);
+  persistSourcePdf(sourceId, bytes); // durable copy — survives rollouts & pruning
   return { sourceId, pageCount };
 }
 
@@ -161,6 +163,7 @@ export async function registerUpload(
   await fs.mkdir(CACHE_DIR, { recursive: true });
   void pruneCache();
   await fs.writeFile(p.pdf(baseId), bytes);
+  persistSourcePdf(baseId, bytes); // durable copy — survives rollouts & pruning
 
   const cached = await readJson<Measurement>(p.measure(baseId));
   if (cached && cached.tokens > 0) return cached;
@@ -251,7 +254,16 @@ async function runJob(jobId: string) {
   try {
     const meta = await readJson<JobMeta>(p.meta(jobId));
     if (!meta) throw new AnalysisError("The job's cached files are missing — please upload the PDF again.", 410);
-    const bytes = new Uint8Array(await fs.readFile(p.pdf(meta.baseId)));
+    let bytes: Uint8Array;
+    try {
+      bytes = new Uint8Array(await fs.readFile(p.pdf(meta.baseId)));
+    } catch {
+      // Local cache lost (restart/prune mid-job) — the durable copy revives it.
+      if (!(await restoreSourcePdf(meta.baseId))) {
+        throw new AnalysisError("The job's cached PDF is gone from this server — upload the same PDF again to resume.", 410);
+      }
+      bytes = new Uint8Array(await fs.readFile(p.pdf(meta.baseId)));
+    }
 
     const client = new Anthropic();
     const totalPages = await getPageCount(bytes);

@@ -99,6 +99,15 @@ export default function PlansPage() {
 
   if (loading || !user) return null;
 
+  // "+ Start building" always opens a FRESH wizard. Any draft in the working
+  // slot is already synced to the profile (the builder flushes on unmount),
+  // so clearing the slot loses nothing — it just stops /builder from
+  // resuming the previous plan at its last step.
+  const startNewPlan = () => {
+    localStorage.removeItem(WORKING_KEY);
+    router.push("/builder");
+  };
+
   const download = (plan: StoredPlan) => {
     const draft = parseStoredDraft(plan);
     if (!draft) return;
@@ -133,13 +142,9 @@ export default function PlansPage() {
         router.push("/builder");
         return;
       }
-      if (
-        current &&
-        current.key !== plan.key &&
-        !confirm("Another draft is currently open in the builder — replace it with this plan? (The other draft stays saved in your profile.)")
-      ) {
-        return;
-      }
+      // A DIFFERENT draft in the slot needs no confirmation: the builder
+      // flushes edits to the profile on unmount, so switching between drafts
+      // is loss-free — just swap the working copy.
     }
     if (reopenCompleted) {
       const inLibrary = !!plan.publishedAt;
@@ -314,7 +319,7 @@ export default function PlansPage() {
             >
               {importing ? "Importing…" : "⤒ Import plan JSON"}
             </button>
-            <button className="btn btn-primary" onClick={() => router.push("/builder")}>
+            <button className="btn btn-primary" onClick={startNewPlan}>
               + Start building a new plan
             </button>
             <input
@@ -337,7 +342,7 @@ export default function PlansPage() {
                 No plans yet. Start your first one — upload a Biblica PDF and the builder walks
                 you from document to library-ready plan.
               </p>
-              <button className="btn btn-primary" onClick={() => router.push("/builder")}>
+              <button className="btn btn-primary" onClick={startNewPlan}>
                 + Start building a new plan
               </button>
             </div>
