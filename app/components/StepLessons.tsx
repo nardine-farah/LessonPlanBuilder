@@ -488,6 +488,11 @@ function VideoSection(props: {
               title="Teaching video preview"
               allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
+              // YouTube's player needs an identifiable embedding origin or it
+              // fails with error 153 — send only the origin (matches the
+              // Studio player's fix; also guards against a future global
+              // no-referrer policy here).
+              referrerPolicy="origin"
               style={{
                 display: "block",
                 maxWidth: 420,
