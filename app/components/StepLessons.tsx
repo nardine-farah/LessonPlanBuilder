@@ -10,7 +10,10 @@ import {
   fmtDuration,
   isVideoFile,
   probeVideoDuration,
+  unsupportedVideoHost,
   uploadVideoFile,
+  youTubeEmbedUrl,
+  youTubeVideoId,
 } from "@/lib/videoUpload";
 import { TextArea, TextField } from "./ui";
 
@@ -452,7 +455,21 @@ function VideoSection(props: {
     const url = urlInput.trim();
     setError("");
     if (!/^https:\/\/.+/i.test(url)) {
-      setError("Paste a full https:// link to a hosted video file.");
+      setError("Paste a full https:// link to a YouTube video or a hosted video file.");
+      return;
+    }
+    // YouTube links play through the official embed player (a watch URL is a
+    // web page — the native <video> element can't play it directly).
+    if (youTubeVideoId(url)) {
+      props.onAttach({ url, duration: null, fileName: "", sizeBytes: null });
+      setUrlInput("");
+      return;
+    }
+    const pageHost = unsupportedVideoHost(url);
+    if (pageHost) {
+      setError(
+        `${pageHost} links can't play inside the lesson player. Use a YouTube link, upload the video file, or paste a direct video-file URL (.mp4/.webm).`,
+      );
       return;
     }
     const duration = await probeVideoDuration(url);
@@ -465,20 +482,39 @@ function VideoSection(props: {
       <h3 style={{ fontSize: 16, marginBottom: 4 }}>Teaching video</h3>
       {video ? (
         <div style={{ marginTop: 10 }}>
-          <video
-            controls
-            preload="metadata"
-            src={video.url}
-            style={{
-              display: "block",
-              maxWidth: 420,
-              width: "100%",
-              borderRadius: 8,
-              border: "1px solid var(--line)",
-              background: "#0f2537",
-            }}
-          />
+          {youTubeVideoId(video.url) ? (
+            <iframe
+              src={youTubeEmbedUrl(youTubeVideoId(video.url)!)}
+              title="Teaching video preview"
+              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              style={{
+                display: "block",
+                maxWidth: 420,
+                width: "100%",
+                aspectRatio: "16 / 9",
+                borderRadius: 8,
+                border: "1px solid var(--line)",
+                background: "#0f2537",
+              }}
+            />
+          ) : (
+            <video
+              controls
+              preload="metadata"
+              src={video.url}
+              style={{
+                display: "block",
+                maxWidth: 420,
+                width: "100%",
+                borderRadius: 8,
+                border: "1px solid var(--line)",
+                background: "#0f2537",
+              }}
+            />
+          )}
           <div className="field-help" style={{ marginTop: 6 }}>
+            {youTubeVideoId(video.url) && <>YouTube · </>}
             {video.fileName || video.url}
             {fmtDuration(video.duration) && <> · {fmtDuration(video.duration)}</>}
             {fmtBytes(video.sizeBytes) && <> · {fmtBytes(video.sizeBytes)}</>}
@@ -506,7 +542,7 @@ function VideoSection(props: {
             <span className="field-help" style={{ marginTop: 0 }}>or</span>
             <input
               type="text"
-              placeholder="https://… hosted video URL"
+              placeholder="https://… YouTube link or video-file URL"
               value={urlInput}
               onChange={(e) => setUrlInput(e.target.value)}
               style={{ flex: "1 1 220px", maxWidth: 340 }}
@@ -523,8 +559,8 @@ function VideoSection(props: {
             />
           </div>
           <div className="field-help" style={{ marginTop: 6 }}>
-            Optional. Plays inside the lesson in Scripture Studio. MP4 (H.264) recommended; uploads
-            are stored with the plan’s other media.
+            Optional. Plays inside the lesson in Scripture Studio. Upload MP4 (H.264) files, or
+            paste a YouTube link (plays via the official embed) or a direct video-file URL.
           </div>
         </>
       )}

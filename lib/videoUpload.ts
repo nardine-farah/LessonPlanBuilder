@@ -85,6 +85,40 @@ export async function uploadVideoFile(
   return { url: (finish as { url: string }).url };
 }
 
+/** Extract the 11-char YouTube video id from any common link form (watch, youtu.be, shorts, live, embed). */
+export function youTubeVideoId(url: string): string | null {
+  const ok = (s: string | null | undefined) => (s && /^[\w-]{11}$/.test(s) ? s : null);
+  try {
+    const u = new URL(url);
+    const host = u.hostname.replace(/^(www|m)\./, "");
+    if (host === "youtu.be") return ok(u.pathname.split("/")[1]);
+    if (host === "youtube.com" || host === "youtube-nocookie.com") {
+      if (u.pathname === "/watch") return ok(u.searchParams.get("v"));
+      const m = u.pathname.match(/^\/(?:embed|shorts|live)\/([\w-]{11})/);
+      return m ? m[1] : null;
+    }
+  } catch {
+    /* not a URL */
+  }
+  return null;
+}
+
+export function youTubeEmbedUrl(id: string): string {
+  return `https://www.youtube-nocookie.com/embed/${id}`;
+}
+
+/** Hosts that serve pages, not video files — a native <video> can't play them. */
+const PAGE_HOSTS = ["vimeo.com", "facebook.com", "fb.watch", "instagram.com", "tiktok.com", "drive.google.com"];
+
+export function unsupportedVideoHost(url: string): string | null {
+  try {
+    const host = new URL(url).hostname.replace(/^www\./, "");
+    return PAGE_HOSTS.find((h) => host === h || host.endsWith(`.${h}`)) ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export function fmtDuration(seconds: number | null): string {
   if (!seconds || !Number.isFinite(seconds) || seconds <= 0) return "";
   const total = Math.round(seconds);
