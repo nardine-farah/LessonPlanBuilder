@@ -519,7 +519,9 @@ function LibrarySection({
 
       <p className="field-help" style={{ marginBottom: 12 }}>
         {matches.length} of {library.length} library plan{library.length === 1 ? "" : "s"}
-        {anyFilter ? " match" : ""} — plans published from this tool and plans seeded directly in the Studio.
+        {anyFilter ? " match" : ""} — {library.filter((p) => p.publishedBy).length} published from this
+        tool · {library.filter((p) => !p.publishedBy).length} seeded in the Studio (or published before
+        publisher tracking).
       </p>
 
       {library.length === 0 ? (
@@ -687,11 +689,11 @@ export default function AdminPage() {
                       <div className="stat-num">{totals.completed}</div>
                       <div className="stat-label">Completed</div>
                     </div>
-                    <div>
+                    <div title="Reviewers' plans that were published into the Studio library from this tool">
                       <div className="stat-num">{totals.published}</div>
-                      <div className="stat-label">Published</div>
+                      <div className="stat-label">Published from here</div>
                     </div>
-                    <div>
+                    <div title="Everything in the Studio library — including Studio seeds and plans published before publisher tracking">
                       <div className="stat-num">{totals.libraryPlans}</div>
                       <div className="stat-label">Library plans</div>
                     </div>
