@@ -56,7 +56,7 @@ const EXTRACTION_SCHEMA = {
         faithLevel: { type: "array", items: { type: "string", enum: ["scholars", "believers", "seekers", "new_to_faith"] } },
         audience: { type: "array", items: { type: "string", enum: ["women", "kids", "teens", "adults", "pastors"] } },
         focus: { type: "array", items: { type: "string", enum: ["discipleship", "trauma_healing", "bible_study", "devotional"] } },
-        lengthBand: { type: "string", enum: ["short", "full", "season", "open"], description: "short ≈5 lessons, full ≈8, season ≈10-12, open otherwise" },
+        lengthBand: { type: "string", enum: ["short", "full", "season", "open"], description: "short = 5 lessons or less, full = 6-10 (displays as Medium), season = more than 10 (displays as Long); never 'open' (leader-side wildcard)" },
         resources: { type: "array", items: { type: "string", enum: ["video", "audio", "reading", "printable"] }, description: "Only what the plan can genuinely deliver; text plans are ['reading']" },
       },
       required: ["faithLevel", "audience", "focus", "lengthBand", "resources"],
@@ -151,7 +151,7 @@ Follow Biblica's authoring rules exactly:
 3. REFERENCES: give every reference twice - 'ref' as the display form in ${langName}, and 'refEnglish' with the English book name and Western digits in 'Book C:V' or 'Book C:V-V' form (e.g. 'Judges 6:11-16', 'Psalm 56:11'). refEnglish must be verse-level: if the source cites a whole chapter or multi-chapter range, choose the most representative verse range within one chapter and note the narrowing in sourceNotes.
 4. STRUCTURE MAPPING: series/booklet title → title+subtitle; intro paragraph → summary; each session/day/week → one lesson; session anchor verse → keyVerse; full passage → passage; exposition → teaching[]; big idea → keyIdea; application question → reflectPrompt; 'scriptures to consider' → supportingScriptures; closing prayer → prayer.
 5. QUIZZES: many source PDFs have no multiple-choice check - draft one anyway for each lesson (the curator reviews every answer). The question must be answerable from the passage, exactly one option correct, distractors plausible, feedback accurate and kind.
-6. MATCH TAGS: pick every tag that genuinely applies; never invent values outside the allowed enums. lengthBand from lesson count: ~5=short, ~8=full, ~10-12=season, else open. resources: only what the plan actually delivers ('reading' always for text; add 'audio' only because reflection narration can be rendered later - include it if the content suits calm narration).
+6. MATCH TAGS: pick every tag that genuinely applies; never invent values outside the allowed enums. lengthBand from lesson count: 5 or less=short, 6-10=full, more than 10=season; never 'open' (that is the leader-side wildcard). resources: only what the plan actually delivers ('reading' always for text; add 'audio' only because reflection narration can be rendered later - include it if the content suits calm narration).
 7. LESSON ARTWORK: for each session, list in artPages the ORIGINAL page numbers that carry an illustration, photo, or piece of artwork a curator could crop into that session's lesson image. Only genuine artwork counts — skip logos, mastheads, decorative rules, and text-only pages. When you are viewing a partial or chunked document, translate the pages you see back to their original numbering using the page label given to you.
 8. HONESTY: use sourceNotes to flag everything you were unsure about, skipped, invented (like drafted quizzes), or narrowed.${chunkRules}`;
 }
@@ -299,7 +299,7 @@ export function mergeExtractions(parts: any[]): any {
     base.match[key] = [...new Set(parts.flatMap((p) => p.match?.[key] ?? []))];
   }
   const n = lessons.length;
-  base.match.lengthBand = n <= 6 ? "short" : n <= 9 ? "full" : n <= 13 ? "season" : "open";
+  base.match.lengthBand = n <= 5 ? "short" : n <= 10 ? "full" : "season";
   base.span = `${n} sessions`;
 
   base.sourceNotes = [
