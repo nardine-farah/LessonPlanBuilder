@@ -58,6 +58,7 @@ export async function PUT(req: NextRequest) {
   if (prior) {
     if (prior.publishedAt && plan.publishedAt === undefined) plan.publishedAt = prior.publishedAt;
     if (prior.publishedPlanId && plan.publishedPlanId === undefined) plan.publishedPlanId = prior.publishedPlanId;
+    if (prior.unpublishedAt && plan.unpublishedAt === undefined) plan.unpublishedAt = prior.unpublishedAt;
     if (prior.finishedAt && plan.finishedAt === undefined) plan.finishedAt = prior.finishedAt;
   }
 

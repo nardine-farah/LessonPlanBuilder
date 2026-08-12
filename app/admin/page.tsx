@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type {
   AdminLibraryPlan,
   AdminOverview,
@@ -9,6 +9,7 @@ import type {
   AdminUser,
   LessonProgress,
 } from "@/lib/adminData";
+import { STAGE_INFO, STAGE_ORDER, planStage, stageCounts } from "@/lib/planStage";
 import { authedFetch } from "@/lib/planStore";
 import { AUDIENCE_TAGS, FOCUS_TAGS } from "@/lib/schema";
 import { useAuth } from "../components/AuthProvider";
@@ -55,25 +56,11 @@ function lessonPillClass(lp: LessonProgress) {
 }
 
 function StatusBadges({ plan }: { plan: AdminPlanSummary }) {
+  const stage = planStage(plan);
   return (
-    <>
-      <span
-        className={`badge ${
-          plan.status === "in_progress" ? "badge-garnet" : plan.checklistDone ? "badge-moss" : "badge-gold"
-        }`}
-      >
-        {plan.status === "in_progress"
-          ? "in review"
-          : plan.checklistDone
-            ? "completed"
-            : "completed · checklist pending"}
-      </span>
-      {plan.publishedAt && (
-        <span className="badge badge-garnet" title={`Published ${new Date(plan.publishedAt).toLocaleString()}`}>
-          in library
-        </span>
-      )}
-    </>
+    <span className={`badge ${STAGE_INFO[stage].badge}`} title={STAGE_INFO[stage].hint}>
+      {STAGE_INFO[stage].label}
+    </span>
   );
 }
 
@@ -245,6 +232,7 @@ function ReviewerCard({
   const avg = scored.length
     ? Math.round(scored.reduce((sum, p) => sum + (p.progress?.percent ?? 0), 0) / scored.length)
     : null;
+  const stages = stageCounts(user.plans);
 
   return (
     <button className="reviewer-card" onClick={() => onOpen(user.uid)}>
@@ -260,15 +248,11 @@ function ReviewerCard({
         </div>
       </div>
       <div className="reviewer-card-badges">
-        {user.counts.inProgress > 0 && (
-          <span className="badge badge-garnet">{user.counts.inProgress} in review</span>
-        )}
-        {user.counts.completed > 0 && (
-          <span className="badge badge-moss">{user.counts.completed} completed</span>
-        )}
-        {user.counts.published > 0 && (
-          <span className="badge badge-gold">{user.counts.published} in library</span>
-        )}
+        {STAGE_ORDER.filter((s) => stages[s] > 0).map((s) => (
+          <span key={s} className={`badge ${STAGE_INFO[s].badge}`} title={STAGE_INFO[s].hint}>
+            {stages[s]} {STAGE_INFO[s].label.toLowerCase()}
+          </span>
+        ))}
         {!user.accountExists && <span className="badge badge-error">account removed</span>}
       </div>
       {avg !== null && (
@@ -329,8 +313,10 @@ function ReviewerDetail({
             </div>
           </div>
           <div className="admin-user-counts">
-            {user.counts.total} plan{user.counts.total === 1 ? "" : "s"} · {user.counts.inProgress} in review ·{" "}
-            {user.counts.completed} completed · {user.counts.published} in library
+            {user.counts.total} plan{user.counts.total === 1 ? "" : "s"}
+            {STAGE_ORDER.filter((s) => stageCounts(user.plans)[s] > 0)
+              .map((s) => ` · ${stageCounts(user.plans)[s]} ${STAGE_INFO[s].label.toLowerCase()}`)
+              .join("")}
             <div style={{ textAlign: "right" }}>last active {fmtDate(user.lastActive)}</div>
           </div>
         </div>
@@ -356,9 +342,13 @@ const prettyTag = (t: string) => t.replace(/_/g, " ");
 function LibraryCard({
   plan,
   onOpenReviewer,
+  onUnpublish,
+  unpublishing,
 }: {
   plan: AdminLibraryPlan;
   onOpenReviewer: (uid: string) => void;
+  onUnpublish: (plan: AdminLibraryPlan) => void;
+  unpublishing: boolean;
 }) {
   const publisherName = plan.publishedBy
     ? plan.publishedBy.displayName || plan.publishedBy.email || plan.publishedBy.uid
@@ -413,7 +403,22 @@ function LibraryCard({
         ) : (
           <span title="Seeded outside the builder (or published before publisher tracking)">Studio seed</span>
         )}
-        <span>{plan.publishedAt ? fmtDate(plan.publishedAt) : ""}</span>
+        {plan.status === "published" ? (
+          <span style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            {plan.publishedAt && <span>{fmtDate(plan.publishedAt)}</span>}
+            <button
+              className="btn btn-small"
+              style={{ color: "var(--error)", borderColor: "var(--error)" }}
+              title="Hide this plan from leaders in the Studio — it stays here as a draft and can be republished"
+              disabled={unpublishing}
+              onClick={() => onUnpublish(plan)}
+            >
+              {unpublishing ? "Unpublishing…" : "⇩ Unpublish"}
+            </button>
+          </span>
+        ) : (
+          <span>not live</span>
+        )}
       </div>
     </div>
   );
@@ -423,9 +428,13 @@ function LibraryCard({
 function LibrarySection({
   library,
   onOpenReviewer,
+  onUnpublish,
+  unpublishingId,
 }: {
   library: AdminLibraryPlan[];
   onOpenReviewer: (uid: string) => void;
+  onUnpublish: (plan: AdminLibraryPlan) => void;
+  unpublishingId: string;
 }) {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
@@ -535,7 +544,13 @@ function LibrarySection({
       ) : (
         <div className="reviewer-grid">
           {matches.map((plan) => (
-            <LibraryCard key={plan.planId} plan={plan} onOpenReviewer={onOpenReviewer} />
+            <LibraryCard
+              key={plan.planId}
+              plan={plan}
+              onOpenReviewer={onOpenReviewer}
+              onUnpublish={onUnpublish}
+              unpublishing={unpublishingId === plan.planId}
+            />
           ))}
         </div>
       )}
@@ -553,30 +568,33 @@ export default function AdminPage() {
   const [filter, setFilter] = useState("");
   const [selectedUid, setSelectedUid] = useState<string | null>(null);
   const [downloadingKey, setDownloadingKey] = useState("");
+  const [unpublishingId, setUnpublishingId] = useState("");
 
   useEffect(() => {
     if (!loading && !user) router.replace("/");
   }, [loading, user, router]);
 
+  const loadOverview = useCallback(async () => {
+    try {
+      const res = await authedFetch("/api/admin/overview");
+      if (res.status === 401 || res.status === 403) {
+        setDenied(true);
+        return;
+      }
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error ?? `Load failed (HTTP ${res.status}).`);
+      }
+      setOverview((await res.json()) as AdminOverview);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Couldn’t load the dashboard — reload to retry.");
+    }
+  }, []);
+
   useEffect(() => {
     if (!user) return;
-    (async () => {
-      try {
-        const res = await authedFetch("/api/admin/overview");
-        if (res.status === 401 || res.status === 403) {
-          setDenied(true);
-          return;
-        }
-        if (!res.ok) {
-          const body = await res.json().catch(() => null);
-          throw new Error(body?.error ?? `Load failed (HTTP ${res.status}).`);
-        }
-        setOverview((await res.json()) as AdminOverview);
-      } catch (e) {
-        setError(e instanceof Error ? e.message : "Couldn’t load the dashboard — reload to retry.");
-      }
-    })();
-  }, [user]);
+    void loadOverview();
+  }, [user, loadOverview]);
 
   if (loading || !user) return null;
 
@@ -600,6 +618,35 @@ export default function AdminPage() {
       setError(e instanceof Error ? e.message : "Couldn’t download that plan’s JSON.");
     } finally {
       setDownloadingKey("");
+    }
+  };
+
+  // The admin dashboard's only write action: hide a plan from leaders in the
+  // Studio (library doc → status "draft"); the owner's plan becomes "Ready to
+  // publish" and republishing brings it back.
+  const unpublish = async (plan: AdminLibraryPlan) => {
+    if (
+      !confirm(
+        `Unpublish “${plan.title}” from the Studio library?\n\nLeaders stop seeing it immediately. It stays here as a draft, and the reviewer's plan becomes “Ready to publish” — republishing brings it back.`,
+      )
+    ) {
+      return;
+    }
+    setError("");
+    setUnpublishingId(plan.planId);
+    try {
+      const res = await authedFetch("/api/admin/unpublish", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ planId: plan.planId }),
+      });
+      const body = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(body?.error ?? `Unpublish failed (HTTP ${res.status}).`);
+      await loadOverview();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Couldn’t unpublish that plan — try again.");
+    } finally {
+      setUnpublishingId("");
     }
   };
 
@@ -681,18 +728,15 @@ export default function AdminPage() {
                       <div className="stat-num">{totals.plans}</div>
                       <div className="stat-label">Plans</div>
                     </div>
-                    <div>
-                      <div className="stat-num">{totals.inProgress}</div>
-                      <div className="stat-label">In review</div>
-                    </div>
-                    <div>
-                      <div className="stat-num">{totals.completed}</div>
-                      <div className="stat-label">Completed</div>
-                    </div>
-                    <div title="Reviewers' plans that were published into the Studio library from this tool">
-                      <div className="stat-num">{totals.published}</div>
-                      <div className="stat-label">Published from here</div>
-                    </div>
+                    {(() => {
+                      const stages = stageCounts(overview.users.flatMap((u) => u.plans));
+                      return STAGE_ORDER.map((s) => (
+                        <div key={s} title={STAGE_INFO[s].hint}>
+                          <div className="stat-num">{stages[s]}</div>
+                          <div className="stat-label">{STAGE_INFO[s].label}</div>
+                        </div>
+                      ));
+                    })()}
                     <div title="Everything in the Studio library — including Studio seeds and plans published before publisher tracking">
                       <div className="stat-num">{totals.libraryPlans}</div>
                       <div className="stat-label">Library plans</div>
@@ -768,6 +812,8 @@ export default function AdminPage() {
                       setTab("reviewers");
                       setSelectedUid(uid);
                     }}
+                    onUnpublish={unpublish}
+                    unpublishingId={unpublishingId}
                   />
                 )}
               </>

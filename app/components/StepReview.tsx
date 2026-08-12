@@ -1,29 +1,70 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { planProgress, type LessonProgress } from "@/lib/adminData";
 import { lessonPlanDocSchema } from "@/lib/schema";
 import { buildPlanDoc, type Draft } from "@/lib/types";
 import { Card } from "./ui";
 
-const CHECKLIST = [
-  "planId is a clean slug and will be the file name.",
-  "Match tags honestly reflect audience, focus, and length.",
-  "Resources list only what the plan actually delivers.",
-  "Every lesson has a real passage reference and correct USFM code.",
-  "No verbatim Scripture pasted into teaching, key ideas, or reflection scripts.",
-  "Every quiz's correct answer and feedback verified against the passage (especially AI-drafted quizzes).",
-  "Reflection scripts read well aloud and are pastoral in tone.",
-  "Provenance recorded in reviewedBy.",
+/**
+ * The HUMAN judgments a machine can't make — everything mechanical (slug
+ * shape, USFM format, lesson caps, schema) is checked automatically above
+ * this list. Publishing requires the schema to pass AND all of these ticked.
+ */
+const CHECKLIST: { text: string; hint: string }[] = [
+  {
+    text: "Every lesson says what the source booklet says.",
+    hint: "Passages, teaching, and key ideas compared against the PDF — nothing invented, nothing lost in translation.",
+  },
+  {
+    text: "Every quiz's marked answer is truly correct.",
+    hint: "Checked against the passage itself — especially quizzes the analysis drafted rather than found.",
+  },
+  {
+    text: "No Scripture is pasted word-for-word anywhere.",
+    hint: "Teaching, key ideas, and reflection scripts are our own words; the app fetches the verse text live from the reference.",
+  },
+  {
+    text: "It reads naturally in the plan's language.",
+    hint: "Title, summary, and teaching flow well; reflection scripts sound right read slowly, out loud.",
+  },
+  {
+    text: "The tags are honest, and the reviewer is named.",
+    hint: "Audience/focus/length/resources describe what this plan really is and offers; reviewedBy records who checked it.",
+  },
 ];
+
+function lessonPillClass(lp: LessonProgress) {
+  if (lp.core && lp.teaching && lp.keyIdea) return "lesson-pill complete";
+  if (lp.core || lp.teaching || lp.keyIdea || lp.reflection || lp.prayer) return "lesson-pill partial";
+  return "lesson-pill empty";
+}
+
+function lessonTooltip(lp: LessonProgress) {
+  const missing = [
+    !lp.core && "passage/title",
+    !lp.teaching && "teaching",
+    !lp.keyIdea && "key idea",
+    !lp.reflection && "reflection",
+    !lp.prayer && "prayer",
+  ]
+    .filter(Boolean)
+    .join(", ");
+  return `${lp.n}. ${lp.title}${missing ? ` — missing: ${missing}` : " — fully drafted"}`;
+}
 
 export default function StepReview(props: {
   draft: Draft;
+  /** True when this plan's checklist was completed before a reopen — boxes start ticked for a re-confirm. */
+  initialAllChecked?: boolean;
   onStartOver: () => void;
   onFinish: (checklistDone: boolean) => void;
 }) {
   const { draft } = props;
-  const [checked, setChecked] = useState<boolean[]>(CHECKLIST.map(() => false));
+  const [checked, setChecked] = useState<boolean[]>(CHECKLIST.map(() => !!props.initialAllChecked));
   const [showJson, setShowJson] = useState(false);
+
+  const progress = useMemo(() => planProgress(draft, "in_progress", false), [draft]);
 
   const { doc, errors } = useMemo(() => {
     const doc = buildPlanDoc(draft);
@@ -82,6 +123,46 @@ export default function StepReview(props: {
         </p>
       </Card>
 
+      <Card
+        title="What the machine checked"
+        note="Computed automatically — the same measure the admin dashboard shows. The reviewer checklist below covers only what a human must judge."
+      >
+        <div className="plan-detail-cols">
+          <ul className="detail-list">
+            <li>{progress.details ? "✓" : "○"} Plan details ({progress.detailsFilled}/{progress.detailsTotal} fields)</li>
+            <li>{progress.audience ? "✓" : "○"} Audience tags</li>
+            <li>
+              {progress.lessonsComplete === progress.lessonsTotal && progress.lessonsTotal > 0 ? "✓" : "○"} Lessons
+              drafted {progress.lessonsComplete}/{progress.lessonsTotal}
+            </li>
+            <li>○ Images {progress.imagesChosen}/{progress.lessonsTotal} <span className="detail-soft">(optional)</span></li>
+            <li>○ Videos {progress.videosAdded}/{progress.lessonsTotal} <span className="detail-soft">(optional)</span></li>
+            <li>{progress.quizzesOk > 0 ? "✓" : "○"} Quizzes ready: {progress.quizzesOk}</li>
+            <li>
+              {valid ? (
+                <>✓ Passes the Studio schema</>
+              ) : (
+                <span style={{ color: "var(--error)" }}>✗ Studio schema — {errors.length} issue{errors.length === 1 ? "" : "s"} (below)</span>
+              )}
+            </li>
+          </ul>
+          <div style={{ flex: 1, minWidth: 240 }}>
+            <div className="detail-caption">
+              Lessons — <span className="pill-dot complete" /> drafted · <span className="pill-dot partial" /> partial ·{" "}
+              <span className="pill-dot empty" /> empty (hover for detail)
+            </div>
+            <div className="lesson-grid">
+              {progress.lessons.map((lp) => (
+                <span key={lp.n} className={lessonPillClass(lp)} title={lessonTooltip(lp)}>
+                  {lp.n}
+                </span>
+              ))}
+              {progress.lessons.length === 0 && <span className="detail-soft">No lessons yet.</span>}
+            </div>
+          </div>
+        </div>
+      </Card>
+
       {valid ? (
         <div className="notice notice-ok">
           ✓ The plan passes the Scripture Studio schema — the seeder will accept it as-is.
@@ -106,8 +187,14 @@ export default function StepReview(props: {
 
       <Card
         title="Reviewer checklist"
-        note="From LESSON_PLAN_AUTHORING.md §13 — work through it before handing the file to review."
+        note="Five things only you can judge — publishing to the Studio requires all of them. Tick each one only after actually checking it."
       >
+        {props.initialAllChecked && (
+          <div className="notice notice-info" style={{ marginBottom: 12 }}>
+            This checklist was completed before the plan was reopened, so the boxes start
+            ticked — glance through them again and untick anything your edits put in doubt.
+          </div>
+        )}
         {CHECKLIST.map((item, i) => (
           <label className="check-item" key={i}>
             <input
@@ -115,7 +202,10 @@ export default function StepReview(props: {
               checked={checked[i]}
               onChange={(e) => setChecked(checked.map((c, j) => (j === i ? e.target.checked : c)))}
             />
-            <span>{item}</span>
+            <span>
+              <strong>{item.text}</strong>
+              <div className="field-help" style={{ marginTop: 2 }}>{item.hint}</div>
+            </span>
           </label>
         ))}
       </Card>

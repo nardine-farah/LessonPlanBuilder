@@ -30,6 +30,8 @@ export interface StoredPlan {
   /** Set by /api/publish when the plan is written into the Studio library. */
   publishedAt?: string;
   publishedPlanId?: string;
+  /** Set by an admin unpublish (publishedAt is cleared; attribution stays). */
+  unpublishedAt?: string;
 }
 
 export class PublishConflictError extends Error {

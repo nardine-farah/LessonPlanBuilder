@@ -62,10 +62,14 @@ export default function BuilderPage() {
   const [loaded, setLoaded] = useState(false);
   const [planKey, setPlanKey] = useState<string>("");
   const [createdAt, setCreatedAt] = useState<string>("");
+  // True when this plan's reviewer checklist was completed before (a reopen):
+  // autosaves keep the flag, and the Review step pre-ticks the boxes for a
+  // conscious re-confirm instead of a full re-tick after every small edit.
+  const [checklistCarried, setChecklistCarried] = useState(false);
   const [sync, setSync] = useState<SyncState>("local");
   const syncTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const syncEpoch = useRef(0);
-  const dirtyRef = useRef<{ key: string; draft: Draft; createdAt: string } | null>(null);
+  const dirtyRef = useRef<{ key: string; draft: Draft; createdAt: string; checklistDone: boolean } | null>(null);
 
   useEffect(() => {
     if (!loading && !user) router.replace("/");
@@ -84,6 +88,7 @@ export default function BuilderPage() {
           setStep(Number.isInteger(restored) ? Math.min(Math.max(restored, 0), 5) : 1);
           setPlanKey(saved.key ?? newPlanKey(saved.draft));
           setCreatedAt(saved.createdAt ?? new Date().toISOString());
+          setChecklistCarried(!!saved.checklistDone);
         }
       }
     } catch {
@@ -95,11 +100,14 @@ export default function BuilderPage() {
   useEffect(() => {
     if (!loaded) return;
     if (draft) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ draft, step, key: planKey, createdAt }));
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ draft, step, key: planKey, createdAt, checklistDone: checklistCarried }),
+      );
     } else {
       localStorage.removeItem(STORAGE_KEY);
     }
-  }, [draft, step, planKey, createdAt, loaded]);
+  }, [draft, step, planKey, createdAt, checklistCarried, loaded]);
 
   // Debounced sync of the working draft to the reviewer's profile. The epoch
   // ref invalidates pending saves when the draft is finished or discarded, so
@@ -108,13 +116,13 @@ export default function BuilderPage() {
   useEffect(() => {
     if (!loaded || !user || !draft || !planKey) return;
     setSync("saving");
-    dirtyRef.current = { key: planKey, draft, createdAt };
+    dirtyRef.current = { key: planKey, draft, createdAt, checklistDone: checklistCarried };
     const epoch = syncEpoch.current;
     if (syncTimer.current) clearTimeout(syncTimer.current);
     syncTimer.current = setTimeout(async () => {
       if (epoch !== syncEpoch.current) return; // finished/discarded meanwhile
       try {
-        await savePlan(planRecord(planKey, draft, "in_progress", false, createdAt));
+        await savePlan(planRecord(planKey, draft, "in_progress", checklistCarried, createdAt));
         if (epoch === syncEpoch.current) {
           dirtyRef.current = null;
           setSync("synced");
@@ -136,9 +144,9 @@ export default function BuilderPage() {
       const pending = dirtyRef.current;
       if (pending && user) {
         dirtyRef.current = null;
-        void savePlan(planRecord(pending.key, pending.draft, "in_progress", false, pending.createdAt)).catch(
-          () => {},
-        );
+        void savePlan(
+          planRecord(pending.key, pending.draft, "in_progress", pending.checklistDone, pending.createdAt),
+        ).catch(() => {});
       }
     };
   }, [user]);
@@ -159,6 +167,7 @@ export default function BuilderPage() {
     setDraft(null);
     setPlanKey("");
     setCreatedAt("");
+    setChecklistCarried(false);
     setStep(0);
     setSync("local");
   };
@@ -256,6 +265,7 @@ export default function BuilderPage() {
               setDraft(d);
               setPlanKey(newPlanKey(d));
               setCreatedAt(new Date().toISOString());
+              setChecklistCarried(false);
               setStep(1);
             }}
           />
@@ -265,7 +275,12 @@ export default function BuilderPage() {
         {step === 3 && draft && <StepLessons draft={draft} update={update} />}
         {step === 4 && draft && <StepImages draft={draft} update={update} />}
         {step === 5 && draft && (
-          <StepReview draft={draft} onStartOver={startOver} onFinish={finishPlan} />
+          <StepReview
+            draft={draft}
+            initialAllChecked={checklistCarried}
+            onStartOver={startOver}
+            onFinish={finishPlan}
+          />
         )}
 
         {draft && step > 0 && step < 5 && (

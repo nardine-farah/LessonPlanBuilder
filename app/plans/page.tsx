@@ -16,6 +16,7 @@ import {
   savePlan,
   type StoredPlan,
 } from "@/lib/planStore";
+import { STAGE_INFO, planStage } from "@/lib/planStage";
 import { useAuth } from "../components/AuthProvider";
 
 const WORKING_KEY = "lpb-draft-v1";
@@ -167,7 +168,15 @@ export default function PlansPage() {
     }
     localStorage.setItem(
       WORKING_KEY,
-      JSON.stringify({ draft, step: 1, key: plan.key, createdAt: plan.createdAt }),
+      JSON.stringify({
+        draft,
+        step: 1,
+        key: plan.key,
+        createdAt: plan.createdAt,
+        // A once-completed checklist survives the reopen: the Review step
+        // pre-ticks it for a conscious re-confirm instead of a full re-tick.
+        checklistDone: !!plan.checklistDone,
+      }),
     );
     router.push("/builder");
   };
@@ -242,7 +251,17 @@ export default function PlansPage() {
   };
 
   const remove = async (plan: StoredPlan) => {
-    if (!confirm(`Remove “${plan.title}” from your profile? This can't be undone.`)) return;
+    const live = !!plan.publishedAt;
+    if (
+      !confirm(
+        `Remove “${plan.title}” from your profile? This can't be undone.${
+          live
+            ? "\n\nNote: the published copy stays live in the Studio library — an admin can unpublish it from the admin dashboard if it should come down."
+            : ""
+        }`,
+      )
+    )
+      return;
     try {
       await deletePlan(plan.key);
       const working = localStorage.getItem(WORKING_KEY);
@@ -347,31 +366,16 @@ export default function PlansPage() {
               </button>
             </div>
           ) : (
-            plans.map((plan) => (
+            plans.map((plan) => {
+              const stage = planStage(plan);
+              return (
               <div className="plan-row" key={plan.key}>
                 <div className="plan-row-main">
                   <div className="plan-row-title" dir="auto">
                     {plan.title}
-                    <span
-                      className={`badge ${
-                        plan.status === "in_progress"
-                          ? "badge-garnet"
-                          : plan.checklistDone
-                            ? "badge-moss"
-                            : "badge-gold"
-                      }`}
-                    >
-                      {plan.status === "in_progress"
-                        ? "in review"
-                        : plan.checklistDone
-                          ? "completed"
-                          : "completed · checklist pending"}
+                    <span className={`badge ${STAGE_INFO[stage].badge}`} title={STAGE_INFO[stage].hint}>
+                      {STAGE_INFO[stage].label}
                     </span>
-                    {plan.publishedAt && (
-                      <span className="badge badge-garnet" title={`Published ${new Date(plan.publishedAt).toLocaleString()}`}>
-                        in library
-                      </span>
-                    )}
                   </div>
                   <div className="plan-row-meta">
                     <span className="mono">{plan.planId || "no-slug"}</span> · {plan.lessonCount}{" "}
@@ -379,6 +383,10 @@ export default function PlansPage() {
                     {plan.status === "completed" && plan.finishedAt
                       ? `finished ${new Date(plan.finishedAt).toLocaleDateString()}`
                       : `updated ${new Date(plan.updatedAt).toLocaleDateString()}`}
+                    {plan.publishedAt ? <> · published {new Date(plan.publishedAt).toLocaleDateString()}</> : null}
+                    {!plan.publishedAt && plan.unpublishedAt ? (
+                      <> · unpublished {new Date(plan.unpublishedAt).toLocaleDateString()}</>
+                    ) : null}
                     {plan.sourceFileName ? <> · from “{plan.sourceFileName}”</> : null}
                   </div>
                 </div>
@@ -420,7 +428,8 @@ export default function PlansPage() {
                   </button>
                 </div>
               </div>
-            ))
+              );
+            })
           )}
         </section>
       </main>

@@ -373,6 +373,9 @@ textarea { resize: vertical; min-height: 74px; }
 .badge-moss { background: var(--moss-wash); color: var(--moss); }
 .badge-garnet { background: var(--garnet-wash); color: var(--garnet); }
 .badge-error { background: var(--error-wash); color: var(--error); }
+/* plan lifecycle: Published (calm) and Needs republish (attention) */
+.badge-trust { background: var(--trust-wash); color: #1c5875; }
+.badge-amber { background: #fdeeda; color: #8a5416; }
 
 .notice {
   border-radius: var(--radius);

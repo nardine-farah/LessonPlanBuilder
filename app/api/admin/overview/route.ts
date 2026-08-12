@@ -36,6 +36,7 @@ interface StoredPlanDoc {
   finishedAt?: string;
   publishedAt?: string;
   publishedPlanId?: string;
+  unpublishedAt?: string;
 }
 
 function toSummary(docId: string, data: StoredPlanDoc): AdminPlanSummary {
@@ -62,6 +63,7 @@ function toSummary(docId: string, data: StoredPlanDoc): AdminPlanSummary {
     finishedAt: data.finishedAt,
     publishedAt: data.publishedAt,
     publishedPlanId: data.publishedPlanId,
+    unpublishedAt: data.unpublishedAt,
     progress,
   };
 }
@@ -130,13 +132,16 @@ export async function GET(req: NextRequest) {
   users.sort((a, b) => b.lastActive.localeCompare(a.lastActive));
 
   // planId → the profile that most recently published it, for the library join.
-  const publisherByPlanId = new Map<string, { uid: string; publishedAt: string }>();
+  // publishedAt is cleared by an admin unpublish, but publishedPlanId stays —
+  // fall back to unpublishedAt so attribution survives the round trip.
+  const publisherByPlanId = new Map<string, { uid: string; publishedAt: string; live: boolean }>();
   for (const u of users) {
     for (const p of u.plans) {
-      if (!p.publishedPlanId || !p.publishedAt) continue;
+      const at = p.publishedAt ?? p.unpublishedAt;
+      if (!p.publishedPlanId || !at) continue;
       const current = publisherByPlanId.get(p.publishedPlanId);
-      if (!current || p.publishedAt > current.publishedAt) {
-        publisherByPlanId.set(p.publishedPlanId, { uid: u.uid, publishedAt: p.publishedAt });
+      if (!current || at > current.publishedAt) {
+        publisherByPlanId.set(p.publishedPlanId, { uid: u.uid, publishedAt: at, live: !!p.publishedAt });
       }
     }
   }
@@ -174,7 +179,7 @@ export async function GET(req: NextRequest) {
               displayName: account?.displayName ?? "",
             }
           : null,
-        publishedAt: publisher?.publishedAt ?? null,
+        publishedAt: publisher?.live ? publisher.publishedAt : null,
       };
     })
     .sort((a, b) => a.title.localeCompare(b.title));

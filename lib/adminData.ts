@@ -60,6 +60,7 @@ export interface AdminPlanSummary {
   finishedAt?: string;
   publishedAt?: string;
   publishedPlanId?: string;
+  unpublishedAt?: string;
   /** Null when the stored draftJson couldn't be parsed. */
   progress: PlanProgress | null;
 }

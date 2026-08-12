@@ -122,8 +122,19 @@ TS 7 / native compiler otherwise, which breaks next.config.ts loading). Key modu
 - `POST /api/source` — authed; attach a PDF to the render cache (no analysis).
 - `GET/PUT/DELETE /api/plans` — authed; PUT has an **updatedAt out-of-order write
   guard** (stale autosave can't regress a finished plan) and **preserves
-  publishedAt/publishedPlanId/finishedAt across rewrites** (builder autosaves build
-  fresh records; a 2026-07-16 bug wiped the "in library" marker on reopen — fixed).
+  publishedAt/publishedPlanId/unpublishedAt/finishedAt across rewrites** (builder
+  autosaves build fresh records; a 2026-07-16 bug wiped the "in library" marker on
+  reopen — fixed).
+- **Plan lifecycle is a DERIVED five-stage vocabulary** (`lib/planStage.ts`,
+  added 2026-08-12; nothing new stored): in_progress → awaiting_checklist →
+  ready → published → needs_republish (published && updatedAt > publishedAt).
+  One badge everywhere (/plans rows, admin cards/detail/stats). `checklistDone`
+  now SURVIVES reopen (carried through the working slot + autosaves; StepReview
+  pre-ticks for a re-confirm), so refinishing a republish is one glance, not a
+  full re-tick. StepReview: 5-item plain-language HUMAN checklist + an automated
+  "what the machine checked" panel (reuses lib/adminData progress + lesson
+  pills — same measure the admin sees). Publish gate unchanged
+  (completed + checklistDone + schema).
   Reopening a completed plan asks for confirmation and explains the published
   library copy stays live until Republish.
 - `POST /api/publish` — authed + **email must end `@biblica.com`**
@@ -144,7 +155,13 @@ TS 7 / native compiler otherwise, which breaks next.config.ts loading). Key modu
   safeParse; raw draftJson never sent to the browser) + the whole
   `lessonPlans` library (select() — lessons stay in Firestore) joined to the
   publishing profile via `publishedPlanId`. `plan-json` = on-demand seed-file
-  export of any profile's plan. All admin routes are READ-ONLY.
+  export of any profile's plan. Admin routes are read-only EXCEPT
+  `POST /api/admin/unpublish` (added 2026-08-12): flips `lessonPlans/{planId}`
+  status→draft (the Studio lists only status=="published", so leaders stop
+  seeing it; the doc stays for admins) and clears the owner's `publishedAt`
+  (stamps `unpublishedAt`, keeps `publishedPlanId` for attribution) — found
+  via per-profile queries, NOT a collectionGroup filter (would need a
+  manually-enabled CG index). Republish brings it back (409 overwrite flow).
 
 ### Reviewer profiles / auth
 
