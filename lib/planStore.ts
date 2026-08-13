@@ -119,7 +119,9 @@ export async function deletePlan(key: string): Promise<void> {
 }
 
 export interface PublishAudioSummary {
-  rendered: number;
+  /** Narrations carried from builder-time renders (publish never synthesizes). */
+  fromBuilder: number;
+  /** Legacy grace: unchanged scripts keeping the narration a past publish rendered. */
   reused: number;
   warnings: string[];
 }
