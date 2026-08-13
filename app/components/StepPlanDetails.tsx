@@ -11,14 +11,7 @@ export default function StepPlanDetails(props: {
 
   return (
     <>
-      {draft.sourceNotes && (
-        <div className="notice notice-info">
-          <strong>Notes from the analysis of “{draft.sourceFileName}”</strong>
-          {draft.detectedLanguage && <> (source language: {draft.detectedLanguage})</>}:{" "}
-          {draft.sourceNotes}
-        </div>
-      )}
-
+      {/* The analysis notes live with the linked source PDF on step 1 — one place, not two. */}
       <Card
         title="How the plan appears in the library"
         note="These fields drive the recommendation card leaders see in the Studio. Everything was proposed from the PDF — edit freely."

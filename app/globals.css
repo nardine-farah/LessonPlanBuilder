@@ -960,6 +960,15 @@ pre.json-preview {
   overflow-wrap: anywhere;
 }
 
+/* Analysis notes are written in the SOURCE language: dir="auto" picks the
+   direction from the text itself, and text-align: start follows it (so
+   Arabic notes sit right-aligned, English left-aligned). */
+.source-notes {
+  margin-top: 6px;
+  text-align: start;
+  line-height: 1.7;
+}
+
 /* ——— admin dashboard ——— */
 
 .tab-row {

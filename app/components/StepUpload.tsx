@@ -341,10 +341,14 @@ export default function StepUpload(props: {
             </button>
           </div>
           {d.sourceNotes && (
-            <div className="notice notice-info" style={{ marginTop: 16, marginBottom: 0 }} dir="auto">
+            <div className="notice notice-info" style={{ marginTop: 16, marginBottom: 0 }}>
+              {/* The heading is English, the notes are in the SOURCE language — they
+                  need separate elements, or dir="auto" resolves the whole block from
+                  the English heading and lays Arabic notes out left-to-right. */}
               <strong>Notes from the analysis of “{d.sourceFileName}”</strong>
-              <br />
-              {d.sourceNotes}
+              <p className="source-notes" dir="auto">
+                {d.sourceNotes}
+              </p>
             </div>
           )}
         </Card>

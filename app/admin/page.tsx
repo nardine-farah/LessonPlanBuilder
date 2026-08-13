@@ -81,8 +81,9 @@ function PlanBlock({
     <div className="admin-plan">
       <div className="admin-plan-row">
         <div className="plan-row-main">
-          <div className="plan-row-title" dir="auto">
-            {plan.title}
+          <div className="plan-row-title">
+            {/* Title-only dir="auto": an Arabic title must not flip the badges. */}
+            <span dir="auto">{plan.title}</span>
             <StatusBadges plan={plan} />
             {!p && <span className="badge badge-error">draft unreadable</span>}
           </div>
@@ -355,8 +356,8 @@ function LibraryCard({
     : "";
   return (
     <div className="reviewer-card library-card">
-      <div className="plan-row-title" dir="auto">
-        {plan.title}
+      <div className="plan-row-title">
+        <span dir="auto">{plan.title}</span>
         <span className={`badge ${plan.status === "published" ? "badge-moss" : "badge-gold"}`}>{plan.status}</span>
         {plan.language && <span className="badge badge-garnet">{plan.language.toUpperCase()}</span>}
       </div>

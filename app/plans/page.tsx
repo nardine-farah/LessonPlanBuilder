@@ -371,8 +371,10 @@ export default function PlansPage() {
               return (
               <div className="plan-row" key={plan.key}>
                 <div className="plan-row-main">
-                  <div className="plan-row-title" dir="auto">
-                    {plan.title}
+                  <div className="plan-row-title">
+                    {/* dir="auto" wraps the TITLE only — on the row itself an Arabic
+                        title would flip the whole line and move the badge to the left. */}
+                    <span dir="auto">{plan.title}</span>
                     <span className={`badge ${STAGE_INFO[stage].badge}`} title={STAGE_INFO[stage].hint}>
                       {STAGE_INFO[stage].label}
                     </span>
