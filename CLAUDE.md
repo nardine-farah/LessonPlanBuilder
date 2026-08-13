@@ -65,11 +65,16 @@ TS 7 / native compiler otherwise, which breaks next.config.ts loading). Key modu
   after server restart (GET poll detects); prune >14 days; `storeSourcePdf` =
   attach-PDF-without-analysis. Failed token counts retried once, never cached.
   **Source PDFs are durable** (2026-08-11, `lib/sourceStore.ts`): every PDF
-  entering the cache is also persisted fire-and-forget to Storage
-  `source-pdfs/{sourceId}.pdf` (content-addressed, deduped); job revival and
-  page rendering (`lib/render.ts`) restore from there on local cache miss, so
-  plans stay linked to their PDFs across rollouts/pruning — the attach-PDF
-  banner remains only for plans whose PDFs predate persistence.
+  entering the cache is also persisted to Storage `source-pdfs/{sourceId}.pdf`
+  (content-addressed, deduped); job revival and page rendering
+  (`lib/render.ts`) restore from there on local cache miss, so plans stay
+  linked to their PDFs across rollouts/pruning.
+  **The persist MUST be awaited** — it shipped fire-and-forget on 2026-08-11
+  and silently never completed in production (Cloud Run throttles CPU the
+  moment the response is sent), so attaches looked successful yet vanished on
+  the next rollout; fixed 2026-08-12, `storeSourcePdf` now returns
+  `durable: boolean` from the actual upload. Never background a Storage write
+  inside a request handler here.
 - `lib/render.ts` — mupdf WASM page rendering (**lazy `import("mupdf")` — it's
   ESM-only with top-level await; static import breaks CJS server build**); 3-render
   semaphore; pixmap clamped on BOTH axes; `RenderError` carries machine `code`
@@ -119,7 +124,11 @@ TS 7 / native compiler otherwise, which breaks next.config.ts loading). Key modu
   `lesson-videos/{uid}/{uploadId}-{name}` (download-token URL; emulator-aware).
   Guards verified: 401/413/415/409. `storageBucket()` skips the exists() probe
   under `FIREBASE_STORAGE_EMULATOR_HOST` (emulator buckets materialize on write).
-- `POST /api/source` — authed; attach a PDF to the render cache (no analysis).
+- `POST /api/source` — authed; attach a PDF to the render cache (no analysis);
+  returns `{sourceId, pageCount, durable}` where `durable` reflects the awaited
+  Storage write. `GET /api/source?sourceId=` — authed link probe returning
+  `{cached, durable}`, so builder step 1 states the truth ("stored with the
+  plan" vs "attach it once…") instead of assuming a sourceId means a usable file.
 - `GET/PUT/DELETE /api/plans` — authed; PUT has an **updatedAt out-of-order write
   guard** (stale autosave can't regress a finished plan) and **preserves
   publishedAt/publishedPlanId/unpublishedAt/finishedAt across rewrites** (builder

@@ -138,15 +138,18 @@ async function pruneCache() {
 export async function storeSourcePdf(
   bytes: Uint8Array,
   language: string,
-): Promise<{ sourceId: string; pageCount: number }> {
+): Promise<{ sourceId: string; pageCount: number; durable: boolean }> {
   const sourceId = hashUpload(bytes, language);
   const pageCount = await getPageCount(bytes).catch(() => {
     throw new AnalysisError("This PDF could not be read — it may be corrupted or malformed.", 422);
   });
   await fs.mkdir(CACHE_DIR, { recursive: true });
   await fs.writeFile(p.pdf(sourceId), bytes);
-  persistSourcePdf(sourceId, bytes); // durable copy — survives rollouts & pruning
-  return { sourceId, pageCount };
+  // Awaited, not fire-and-forget: this is the request that promises the
+  // curator their PDF is linked for good, so the durable write must actually
+  // finish before we answer (Cloud Run freezes the instance after the response).
+  const durable = await persistSourcePdf(sourceId, bytes);
+  return { sourceId, pageCount, durable };
 }
 
 /**
@@ -163,7 +166,9 @@ export async function registerUpload(
   await fs.mkdir(CACHE_DIR, { recursive: true });
   void pruneCache();
   await fs.writeFile(p.pdf(baseId), bytes);
-  persistSourcePdf(baseId, bytes); // durable copy — survives rollouts & pruning
+  // Awaited (see storeSourcePdf): a background upload would be killed by
+  // Cloud Run's post-response CPU throttling, leaving the plan un-linked.
+  await persistSourcePdf(baseId, bytes);
 
   const cached = await readJson<Measurement>(p.measure(baseId));
   if (cached && cached.tokens > 0) return cached;

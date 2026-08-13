@@ -69,9 +69,15 @@ export default function StepImages(props: {
 }) {
   const { draft, update } = props;
   const [cropTarget, setCropTarget] = useState<CropTarget | null>(null);
-  const [attachedPages, setAttachedPages] = useState<number | null>(null);
+  const [attached, setAttached] = useState<{ pageCount: number; durable: boolean } | null>(null);
   const [cacheMissing, setCacheMissing] = useState(false);
   const [renderEpoch, setRenderEpoch] = useState(0);
+
+  // The analysis leaves artPages empty when a booklet's pages carry only
+  // decorative borders/section icons rather than real illustrations — say so,
+  // instead of promising flagged artwork that was never there.
+  const suggestedPages = draft.lessons.reduce((sum, l) => sum + l.artPages.length, 0);
+  const chosenImages = draft.lessons.filter((l) => l.image).length;
 
   const setLesson = (n: number, patch: Partial<DraftLesson>) => {
     update({ lessons: draft.lessons.map((l) => (l.n === n ? { ...l, ...patch } : l)) });
@@ -101,24 +107,35 @@ export default function StepImages(props: {
         <AttachSource
           language={draft.language}
           cacheMissing={cacheMissing}
-          onAttached={(sourceId, pageCount) => {
+          onAttached={(sourceId, pageCount, durable) => {
             update({ sourceId });
-            setAttachedPages(pageCount);
+            setAttached({ pageCount, durable });
             setCacheMissing(false);
             setRenderEpoch((e) => e + 1); // remount thumbnails against the restored cache
           }}
         />
       ) : (
         <div className="notice notice-info">
-          {attachedPages !== null ? (
+          {attached ? (
             <>
-              ✓ Source PDF attached ({attachedPages} pages). Add each lesson's artwork page
-              below —{" "}
+              ✓ Source PDF attached ({attached.pageCount} pages)
+              {attached.durable
+                ? " and stored with the plan — it stays linked from now on"
+                : " for this session (the permanent copy couldn't be saved — it may need re-attaching after the next update)"}
+              . Add each lesson's artwork page below —{" "}
+            </>
+          ) : suggestedPages === 0 ? (
+            <>
+              The analysis didn’t flag artwork for any lesson in this plan — many Biblica
+              booklets use decorative borders and section icons rather than illustrations. Add a
+              page number to see it rendered, or upload your own image per lesson —{" "}
             </>
           ) : (
             <>
-              The analysis flagged pages that carry real artwork for each session. Click a page
-              to crop the illustration you want —{" "}
+              The analysis flagged {suggestedPages} page{suggestedPages === 1 ? "" : "s"} that
+              may carry real artwork
+              {chosenImages > 0 ? `; ${chosenImages} lesson${chosenImages === 1 ? "" : "s"} already has an image` : ""}.
+              Click a page to crop the illustration you want —{" "}
             </>
           )}
           images are optional, and lessons without one simply show no artwork in the Studio.{" "}
@@ -242,7 +259,7 @@ function PdfCrop(props: {
 function AttachSource(props: {
   language: string;
   cacheMissing?: boolean;
-  onAttached: (sourceId: string, pageCount: number) => void;
+  onAttached: (sourceId: string, pageCount: number, durable: boolean) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
@@ -259,7 +276,7 @@ function AttachSource(props: {
       const res = await authedFetch("/api/source", { method: "POST", body: form });
       const body = await res.json().catch(() => null);
       if (!res.ok) throw new Error(body?.error ?? `Attaching failed (HTTP ${res.status}).`);
-      props.onAttached(body.sourceId as string, body.pageCount as number);
+      props.onAttached(body.sourceId as string, body.pageCount as number, body.durable !== false);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Attaching failed — try again.");
     } finally {

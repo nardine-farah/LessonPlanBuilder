@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Draft } from "@/lib/types";
 import { formatRanges, parsePageSpec } from "@/lib/pages";
+import { authedFetch } from "@/lib/planStore";
 import { Card } from "./ui";
 
 const JOB_KEY = "lpb-job-v1";
@@ -47,6 +48,7 @@ export default function StepUpload(props: {
   // A draft opens on its LINKED source; the dropzone appears only for new
   // plans or after an explicit "Replace" — no accidental re-analysis.
   const [replacing, setReplacing] = useState(false);
+  const [link, setLink] = useState<{ durable: boolean; cached: boolean } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const activeJob = useRef<string | null>(null);
 
@@ -118,6 +120,29 @@ export default function StepUpload(props: {
       }
     }
   };
+
+  // Is the linked PDF really usable? A sourceId alone doesn't prove the file
+  // is still on the server (or ever reached durable storage).
+  const sourceId = props.draft?.sourceId ?? "";
+  useEffect(() => {
+    if (!sourceId) {
+      setLink(null);
+      return;
+    }
+    let alive = true;
+    (async () => {
+      try {
+        const res = await authedFetch(`/api/source?sourceId=${encodeURIComponent(sourceId)}`);
+        const body = res.ok ? await res.json() : null;
+        if (alive && body) setLink({ durable: !!body.durable, cached: !!body.cached });
+      } catch {
+        /* leave the status unknown rather than claiming either way */
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [sourceId]);
 
   // Reattach to an in-flight job after a page reload.
   useEffect(() => {
@@ -327,9 +352,15 @@ export default function StepUpload(props: {
               <div className="field-help" style={{ marginTop: 2 }}>
                 {d.detectedLanguage && <>Source language: {d.detectedLanguage} · </>}
                 {d.lessons.length} lesson{d.lessons.length === 1 ? "" : "s"} drafted ·{" "}
-                {d.sourceId
-                  ? "linked for page rendering"
-                  : "no file linked — pages can be attached in the Lesson images step"}
+                {!d.sourceId
+                  ? "no file linked — attach it in the Lesson images step to render pages"
+                  : link === null
+                    ? "checking the linked file…"
+                    : link.durable
+                      ? "stored with the plan — pages render after any update"
+                      : link.cached
+                        ? "on this server for now — attach it once in the Lesson images step to store it permanently"
+                        : "the file isn’t on the server — attach it in the Lesson images step (no re-analysis, no AI cost)"}
               </div>
             </div>
             <button

@@ -21,22 +21,40 @@ const objectPath = (sourceId: string) => `source-pdfs/${sourceId}.pdf`;
 const localPath = (sourceId: string) => path.join(CACHE_DIR, `${sourceId}.pdf`);
 
 /**
- * Persist a source PDF to Storage, fire-and-forget: analysis never waits on
- * (or fails because of) the durable copy. Content-addressed, so overwrites
- * are idempotent.
+ * Persist a source PDF to Storage. Content-addressed, so re-saving the same
+ * document is idempotent.
+ *
+ * MUST be awaited by callers: on Cloud Run the instance's CPU is throttled as
+ * soon as the response is sent, so a fire-and-forget upload started during a
+ * request routinely never completes — which silently left plans un-linked
+ * (they asked to re-attach again after the next rollout). Failures resolve
+ * false instead of throwing: a missing durable copy degrades to the old
+ * attach-PDF prompt, it must never fail the analysis or the attach.
  */
-export function persistSourcePdf(sourceId: string, bytes: Uint8Array): void {
-  if (!SOURCE_ID_PATTERN.test(sourceId)) return;
-  void storageBucket()
-    .then((bucket) =>
-      bucket.file(objectPath(sourceId)).save(Buffer.from(bytes), {
-        contentType: "application/pdf",
-        resumable: false,
-      }),
-    )
-    .catch((e) => {
-      console.warn(`[source-pdfs] persist failed for ${sourceId}: ${e instanceof Error ? e.message : e}`);
+export async function persistSourcePdf(sourceId: string, bytes: Uint8Array): Promise<boolean> {
+  if (!SOURCE_ID_PATTERN.test(sourceId)) return false;
+  try {
+    const bucket = await storageBucket();
+    await bucket.file(objectPath(sourceId)).save(Buffer.from(bytes), {
+      contentType: "application/pdf",
+      resumable: false,
     });
+    return true;
+  } catch (e) {
+    console.warn(`[source-pdfs] persist failed for ${sourceId}: ${e instanceof Error ? e.message : e}`);
+    return false;
+  }
+}
+
+/** True when a durable copy of this source PDF already exists in Storage. */
+export async function hasDurableSourcePdf(sourceId: string): Promise<boolean> {
+  if (!SOURCE_ID_PATTERN.test(sourceId)) return false;
+  try {
+    const [exists] = await (await storageBucket()).file(objectPath(sourceId)).exists();
+    return exists;
+  } catch {
+    return false;
+  }
 }
 
 /**
