@@ -74,6 +74,16 @@ function draftFromDocShape(doc: any): Draft {
     quiz: quizFromMc(l?.quiz),
     artPages: [],
     image: str(l?.media?.image?.asset) ? { url: str(l.media.image.asset), page: null } : null,
+    reflectionAudio:
+      str(l?.media?.reflectionAudio?.asset) && str(l?.reflectionScript)
+        ? {
+            url: str(l.media.reflectionAudio.asset),
+            duration: typeof l.media.reflectionAudio.duration === "number" ? l.media.reflectionAudio.duration : 0,
+            // The seed file's audio was rendered from its own script — import as fresh.
+            script: str(l.reflectionScript),
+            voice: "",
+          }
+        : null,
     video: str(l?.media?.video?.asset)
       ? {
           url: str(l.media.video.asset),
@@ -148,6 +158,23 @@ function draftFromDraftShape(obj: any): Draft {
         ? { url: str(l.image.url), page: Number.isInteger(l.image.page) ? l.image.page : null }
         : str(l?.media?.image?.asset)
           ? { url: str(l.media.image.asset), page: null }
+          : null,
+    reflectionAudio:
+      l?.reflectionAudio && str(l.reflectionAudio.url)
+        ? {
+            url: str(l.reflectionAudio.url),
+            duration: typeof l.reflectionAudio.duration === "number" ? l.reflectionAudio.duration : 0,
+            script: str(l.reflectionAudio.script),
+            voice: str(l.reflectionAudio.voice),
+          }
+        : str(l?.media?.reflectionAudio?.asset) && str(l?.reflectionScript)
+          ? {
+              url: str(l.media.reflectionAudio.asset),
+              duration:
+                typeof l.media.reflectionAudio.duration === "number" ? l.media.reflectionAudio.duration : 0,
+              script: str(l.reflectionScript),
+              voice: "",
+            }
           : null,
     video:
       l?.video && str(l.video.url)

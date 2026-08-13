@@ -1,10 +1,10 @@
 import { NextRequest } from "next/server";
 import { lessonPlanDocSchema } from "@/lib/schema";
 import { buildPlanDoc, type Draft } from "@/lib/types";
-import { adminDb, identityFromRequest, uploadLessonAudio } from "@/lib/firestore-server";
-import { audioSignature, synthesize } from "@/lib/tts";
+import { adminDb, identityFromRequest } from "@/lib/firestore-server";
+import { audioSignature } from "@/lib/tts";
 
-export const maxDuration = 600;
+export const maxDuration = 120;
 
 export const runtime = "nodejs";
 
@@ -121,10 +121,12 @@ export async function POST(req: NextRequest) {
       try {
         const doc = parsed.data;
         const scripted = doc.lessons.filter((l) => l.reflectionScript);
-        // Weighting: the gates are done (10%), narration owns the long middle
-        // (10→85%), and the two Firestore writes finish it off.
-        const AUDIO_FROM = 10;
-        const AUDIO_TO = 85;
+        // Narration is RENDERED IN THE BUILDER now (the Review step blocks
+        // finishing until every script has fresh audio), so publish only
+        // carries recordings — it never synthesizes. The audio pass is a
+        // quick check, not the long middle it used to be.
+        const AUDIO_FROM = 15;
+        const AUDIO_TO = 60;
         const audioPercent = (done: number) =>
           scripted.length ? AUDIO_FROM + ((AUDIO_TO - AUDIO_FROM) * done) / scripted.length : AUDIO_TO;
 
@@ -134,70 +136,62 @@ export async function POST(req: NextRequest) {
           stage: "validated",
           message: `“${doc.title}” passes the Studio schema`,
           detail: `${doc.lessons.length} lesson${doc.lessons.length === 1 ? "" : "s"}${
-            scripted.length ? ` · ${scripted.length} with reflection narration` : " · no narration to render"
+            scripted.length ? ` · ${scripted.length} with reflection narration` : " · no narration"
           }`,
         });
 
-        // Render reflection narration automatically (LESSON_PLAN_PLAN.md §6, but
-        // hosted on Firebase Storage instead of the Studio's public/ folder — the
-        // player takes the URL as-is). Unchanged scripts on a republish reuse the
-        // already-rendered asset; failures never block the publish, since the
-        // runtime simply hides a missing player.
-        const audio = { rendered: 0, reused: 0, warnings: [] as string[] };
+        const audio = { fromBuilder: 0, reused: 0, warnings: [] as string[] };
         const previousLessons: any[] = existing.exists ? ((existing.data() as any)?.lessons ?? []) : [];
         const voiceSig = audioSignature(doc.language);
         let handled = 0;
         for (const lesson of doc.lessons) {
           if (!lesson.reflectionScript) continue;
+          handled++;
+          // buildPlanDoc already placed the builder-rendered recording (only
+          // when fresh for its script) into media.reflectionAudio.
+          if (typeof lesson.media?.reflectionAudio?.asset === "string") {
+            audio.fromBuilder++;
+            send({
+              type: "progress",
+              percent: audioPercent(handled),
+              stage: "audio",
+              message: `Using the narration rendered in the builder — lesson ${lesson.n}`,
+              detail: `${handled} of ${scripted.length} checked`,
+            });
+            continue;
+          }
+          // Legacy grace: plans finished before in-editor rendering existed.
+          // An unchanged script keeps the narration the last publish rendered
+          // (same voice only — the filename carries the voice signature).
           const prev = previousLessons.find((l) => l?.n === lesson.n);
           const prevAudio = prev?.media?.reflectionAudio;
           if (
             prev?.reflectionScript === lesson.reflectionScript &&
             typeof prevAudio?.asset === "string" &&
             prevAudio.asset.startsWith("http") &&
-            // Reuse only recordings made with the CURRENT voice setup — a voice
-            // upgrade re-renders everything on the next republish.
             prevAudio.asset.includes(`-${voiceSig}.mp3`)
           ) {
             lesson.media = { ...(lesson.media ?? {}), reflectionAudio: prevAudio };
             audio.reused++;
-            handled++;
             send({
               type: "progress",
               percent: audioPercent(handled),
               stage: "audio",
-              message: `Reusing narration for lesson ${lesson.n} of ${doc.lessons.length}`,
+              message: `Keeping the previously published narration — lesson ${lesson.n}`,
               detail: "Its reflection script hasn't changed since the last publish",
             });
             continue;
           }
+          audio.warnings.push(
+            `Lesson ${lesson.n} has a reflection script but no rendered narration — reopen the plan, render it in the Lessons step, and republish.`,
+          );
           send({
             type: "progress",
             percent: audioPercent(handled),
             stage: "audio",
-            message: `Recording narration for lesson ${lesson.n} of ${doc.lessons.length}`,
-            detail: `${handled} of ${scripted.length} narrations done`,
+            message: `No narration for lesson ${lesson.n} — publishing without it`,
+            detail: "Render it in the Lessons step and republish to add the audio",
           });
-          try {
-            const { mp3, durationSec } = await synthesize(lesson.reflectionScript, doc.language);
-            const url = await uploadLessonAudio(doc.planId, lesson.n, mp3, voiceSig);
-            lesson.media = { ...(lesson.media ?? {}), reflectionAudio: { asset: url, duration: durationSec } };
-            audio.rendered++;
-          } catch (e) {
-            audio.warnings.push(`Lesson ${lesson.n}: ${e instanceof Error ? e.message : String(e)}`);
-            if (audio.warnings.length >= 3) {
-              audio.warnings.push("Stopped rendering after repeated failures — the plan publishes without the remaining narration audio.");
-              send({
-                type: "progress",
-                percent: AUDIO_TO,
-                stage: "audio",
-                message: "Narration stopped after repeated failures",
-                detail: "The plan still publishes; missing narration players are simply hidden",
-              });
-              break;
-            }
-          }
-          handled++;
         }
 
         send({

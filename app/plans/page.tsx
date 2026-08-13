@@ -224,11 +224,11 @@ export default function PlansPage() {
     setError("");
     setNotice("");
     setPublishing(plan.key);
-    const audioNote = (audio?: { rendered: number; reused: number; warnings: string[] }) => {
-      if (!audio || (audio.rendered === 0 && audio.reused === 0 && audio.warnings.length === 0)) return "";
+    const audioNote = (audio?: { fromBuilder: number; reused: number; warnings: string[] }) => {
+      if (!audio || (audio.fromBuilder === 0 && audio.reused === 0 && audio.warnings.length === 0)) return "";
       const bits: string[] = [];
-      if (audio.rendered) bits.push(`${audio.rendered} narration${audio.rendered === 1 ? "" : "s"} rendered`);
-      if (audio.reused) bits.push(`${audio.reused} reused`);
+      if (audio.fromBuilder) bits.push(`${audio.fromBuilder} narration${audio.fromBuilder === 1 ? "" : "s"} from the builder`);
+      if (audio.reused) bits.push(`${audio.reused} kept from the last publish`);
       let note = bits.length ? ` Audio: ${bits.join(", ")}.` : "";
       if (audio.warnings.length) note += ` ⚠ ${audio.warnings[0]}`;
       return note;

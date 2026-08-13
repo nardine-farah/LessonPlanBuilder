@@ -924,6 +924,16 @@ pre.json-preview {
 
 .rail-link:hover { text-decoration: underline; }
 
+/* ——— in-editor narration ——— */
+
+.narration-box {
+  border: 1px dashed var(--line-strong);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin: 4px 0 16px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
 /* ——— publish progress overlay ——— */
 
 .publish-backdrop {

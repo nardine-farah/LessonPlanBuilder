@@ -33,6 +33,17 @@ export interface DraftLessonImage {
   page: number | null;
 }
 
+export interface DraftLessonAudio {
+  /** Public URL of the rendered narration MP3 (Firebase Storage, unique per render). */
+  url: string;
+  /** Estimated length in seconds. */
+  duration: number;
+  /** The exact reflection script this was rendered from — editing the script makes the audio stale. */
+  script: string;
+  /** Voice signature at render time (folded into the filename; republish tooling reads it). */
+  voice: string;
+}
+
 export interface DraftLessonVideo {
   /** Public URL of the teaching video (Firebase Storage upload or a hosted link). */
   url: string;
@@ -62,6 +73,8 @@ export interface DraftLesson {
   image: DraftLessonImage | null;
   /** The curator's attached teaching video, if any. */
   video: DraftLessonVideo | null;
+  /** Narration rendered in the builder for reflectionScript (listen-and-iterate; publish uses it as-is). */
+  reflectionAudio: DraftLessonAudio | null;
 }
 
 export interface Draft {
@@ -127,6 +140,7 @@ export function emptyLesson(n: number): DraftLesson {
     artPages: [],
     image: null,
     video: null,
+    reflectionAudio: null,
   };
 }
 
@@ -164,8 +178,15 @@ export function normalizeDraft(draft: Draft): Draft {
       artPages: Array.isArray(l.artPages) ? l.artPages : [],
       image: l.image && typeof l.image.url === "string" ? l.image : null,
       video: l.video && typeof l.video.url === "string" ? l.video : null,
+      reflectionAudio:
+        l.reflectionAudio && typeof l.reflectionAudio.url === "string" ? l.reflectionAudio : null,
     })),
   };
+}
+
+/** True when a lesson's rendered narration matches its current reflection script. */
+export function narrationFresh(l: DraftLesson): boolean {
+  return !!l.reflectionAudio?.url && l.reflectionAudio.script.trim() === l.reflectionScript.trim();
 }
 
 /**
@@ -210,6 +231,12 @@ export function buildPlanDoc(draft: Draft): Record<string, unknown> {
     if (trimmed(l.prayer)) lesson.prayer = trimmed(l.prayer);
     const media: Record<string, unknown> = {};
     if (offersAudio) media.scriptureAudio = true;
+    // Narration rendered in the builder ships with the plan — publish does
+    // not synthesize. Stale audio (script edited after rendering) is omitted;
+    // the Review step blocks finishing until it's re-rendered.
+    if (narrationFresh(l) && l.reflectionAudio!.duration > 0) {
+      media.reflectionAudio = { asset: l.reflectionAudio!.url, duration: l.reflectionAudio!.duration };
+    }
     if (l.video?.url) {
       media.video = {
         asset: l.video.url,

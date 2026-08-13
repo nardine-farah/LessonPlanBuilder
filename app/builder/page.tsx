@@ -278,6 +278,7 @@ export default function BuilderPage() {
           <StepReview
             draft={draft}
             initialAllChecked={checklistCarried}
+            update={update}
             onStartOver={startOver}
             onFinish={finishPlan}
           />

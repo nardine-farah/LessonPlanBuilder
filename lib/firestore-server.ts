@@ -134,9 +134,17 @@ export async function uploadLessonAudio(
   n: number,
   mp3: Buffer,
   voiceSignature: string,
+  /**
+   * Builder-time renders pass true: each render gets its own object, so a
+   * re-render can never clobber a URL that an already-published plan still
+   * serves. The `-{voiceSignature}.mp3` suffix is kept in every shape — the
+   * republish reuse check reads the voice out of the filename.
+   */
+  unique = false,
 ): Promise<string> {
   const bucket = await storageBucket();
-  const objectPath = `lesson-audio/${planId}/${n}-${voiceSignature}.mp3`;
+  const uniquePart = unique ? `${randomUUID().slice(0, 8)}-` : "";
+  const objectPath = `lesson-audio/${planId}/${n}-${uniquePart}${voiceSignature}.mp3`;
   const token = randomUUID();
   await bucket.file(objectPath).save(mp3, {
     contentType: "audio/mpeg",

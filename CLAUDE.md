@@ -17,7 +17,11 @@ for the Scripture Studio library, via a 6-step wizard:
 2. **Plan details** — title/subtitle/summary/planId/span/translation/reviewedBy.
 3. **Who it's for** — match tags (exact enums the Studio matcher scores).
 4. **Lessons** — per-lesson editor (passage + USFM, teaching, key idea, quiz with
-   exactly-one-correct enforcement, prayer, reflectionScript, supporting scriptures,
+   exactly-one-correct enforcement, prayer, reflectionScript **with in-editor
+   narration** [🎙 render → listen → iterate; audio goes STALE when the script
+   changes and must be re-rendered; draft stores {url, duration, script, voice};
+   finishing is BLOCKED until every scripted lesson has fresh audio — StepReview
+   shows the gate + a bulk "render all missing" button], supporting scriptures,
    **teaching video** — upload [chunked, at attach time, survives cache expiry] or
    paste an https URL; duration probed client-side from metadata; first attach
    auto-ticks the "video" resource tag; export = `media.video {asset, duration?}`,
@@ -155,10 +159,24 @@ TS 7 / native compiler otherwise, which breaks next.config.ts loading). Key modu
   **Two-phase response** (2026-08-13): the gates answer with ordinary JSON
   status codes (401/403/404/422/409), then the committing phase streams
   **NDJSON progress** (`{type: progress|done|error, percent, stage, message,
-  detail}`; stages validated → audio → library → marker → done; narration owns
-  10–85%) which `publishPlan(key, overwrite, onProgress)` parses into the
-  plans-page overlay. Falls back to a single JSON object if a response isn't
-  NDJSON, so the client tolerates either shape.
+  detail}`; stages validated → audio → library → marker → done) which
+  `publishPlan(key, overwrite, onProgress)` parses into the plans-page
+  overlay. Falls back to a single JSON object if a response isn't NDJSON.
+  **Publish NEVER synthesizes narration** (2026-08-13): buildPlanDoc ships the
+  builder-rendered recordings (media.reflectionAudio, only when fresh); the
+  audio pass just counts `fromBuilder`, falls back to the previous library
+  copy for unchanged legacy scripts (`reused` — filename must carry the
+  current voice signature), and warns (`warnings`) for scripted lessons with
+  no narration ("reopen → render → republish"). Summary keys are
+  {fromBuilder, reused, warnings}.
+- `POST /api/lesson-audio` — authed **in-editor narration render** (added
+  2026-08-13): {script ≤2000 chars, language, planId, n} → synthesize via
+  lib/tts → upload UNIQUE object `lesson-audio/{planId|drafts-{uid}}/
+  {n}-{rand8}-{voiceSig}.mp3` (unique so a re-render never clobbers a URL a
+  published plan still serves; the `-{voiceSig}.mp3` suffix is preserved for
+  the legacy reuse check) → {url, duration, script, voice}. Old renders
+  orphan in Storage — tiny MP3s, accepted. Voice upgrades now reach plans by
+  re-rendering in the builder, not automatically at republish.
 - `GET /api/admin` (am-I-admin probe) / `GET /api/admin/overview` /
   `GET /api/admin/plan-json?uid&key` — **admin-only** (added 2026-08-10):
   `requireAdmin` gates on the `ADMIN_EMAILS` allowlist (comma-separated; code

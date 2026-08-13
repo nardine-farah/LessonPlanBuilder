@@ -42,6 +42,8 @@ function lessonTooltip(lp: LessonProgress) {
     lp.quiz === "partial" && "quiz incomplete",
     lp.image && "image ✓",
     lp.video && "video ✓",
+    lp.narration === "ready" && "narration ✓",
+    lp.narration === "missing" && "narration missing",
     lp.supporting > 0 && `${lp.supporting} supporting`,
   ]
     .filter(Boolean)
@@ -137,6 +139,17 @@ function PlanBlock({
               <li>○ Images {p.imagesChosen}/{p.lessonsTotal} <span className="detail-soft">(optional)</span></li>
               <li>○ Videos {p.videosAdded}/{p.lessonsTotal} <span className="detail-soft">(optional)</span></li>
               <li>{p.quizzesOk > 0 ? "✓" : "○"} Quizzes ready: {p.quizzesOk}</li>
+              <li>
+                {p.narrationsNeeded === 0 ? (
+                  <>○ Narration <span className="detail-soft">(no reflection scripts)</span></>
+                ) : p.narrationsReady === p.narrationsNeeded ? (
+                  <>✓ Narration rendered {p.narrationsReady}/{p.narrationsNeeded}</>
+                ) : (
+                  <span style={{ color: "var(--error)" }}>
+                    ✗ Narration rendered {p.narrationsReady}/{p.narrationsNeeded}
+                  </span>
+                )}
+              </li>
               <li>
                 {plan.status === "completed" ? "✓" : "○"} Finished
                 {plan.finishedAt ? ` ${fmtDate(plan.finishedAt)}` : ""}

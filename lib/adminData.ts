@@ -1,5 +1,5 @@
 import { lessonPlanDocSchema } from "./schema";
-import { buildPlanDoc, normalizeDraft, type Draft, type DraftLesson } from "./types";
+import { buildPlanDoc, narrationFresh, normalizeDraft, type Draft, type DraftLesson } from "./types";
 
 /**
  * Admin dashboard data — the shapes /api/admin/* returns and the progress
@@ -23,6 +23,8 @@ export interface LessonProgress {
   quiz: "ok" | "partial" | "off";
   image: boolean;
   video: boolean;
+  /** "ready" = audio rendered from the current script; "missing" blocks finishing; "none" = no script. */
+  narration: "ready" | "missing" | "none";
   supporting: number;
 }
 
@@ -39,6 +41,9 @@ export interface PlanProgress {
   imagesChosen: number;
   videosAdded: number;
   quizzesOk: number;
+  /** Lessons whose reflection script has fresh rendered narration / lessons with a script. */
+  narrationsReady: number;
+  narrationsNeeded: number;
   schemaValid: boolean;
   schemaIssueCount: number;
   /** First few issues, prettified like the publish route's messages. */
@@ -134,6 +139,7 @@ export function lessonProgress(l: DraftLesson): LessonProgress {
     quiz: quiz.enabled ? (quizOk ? "ok" : "partial") : "off",
     image: !!l.image?.url,
     video: !!l.video?.url,
+    narration: !has(l.reflectionScript) ? "none" : narrationFresh(l) ? "ready" : "missing",
     supporting: (l.supportingScriptures ?? []).filter((s) => has(s.ref) && has(s.usfm)).length,
   };
 }
@@ -208,6 +214,8 @@ export function planProgress(draftIn: Draft, status: string, checklistDone: bool
     imagesChosen: lessons.filter((lp) => lp.image).length,
     videosAdded: lessons.filter((lp) => lp.video).length,
     quizzesOk: lessons.filter((lp) => lp.quiz === "ok").length,
+    narrationsReady: lessons.filter((lp) => lp.narration === "ready").length,
+    narrationsNeeded: lessons.filter((lp) => lp.narration !== "none").length,
     schemaValid,
     schemaIssueCount: issues.length,
     schemaIssues: issues.slice(0, 12),

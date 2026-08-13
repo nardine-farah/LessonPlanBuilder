@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, useState } from "react";
-import type { Draft, DraftLesson, DraftLessonVideo } from "@/lib/types";
-import { emptyLesson } from "@/lib/types";
+import { renderNarration } from "@/lib/narration";
+import type { Draft, DraftLesson, DraftLessonAudio, DraftLessonVideo } from "@/lib/types";
+import { emptyLesson, narrationFresh } from "@/lib/types";
 import { parseReference, isValidUsfm } from "@/lib/usfm";
 import {
   VIDEO_ACCEPT,
@@ -55,6 +56,8 @@ export default function StepLessons(props: {
         <LessonEditor
           key={lesson.n}
           lesson={lesson}
+          planId={draft.planId}
+          language={draft.language}
           isOpen={open === lesson.n}
           onToggle={() => setOpen(open === lesson.n ? null : lesson.n)}
           onChange={(patch) => setLesson(lesson.n, patch)}
@@ -79,6 +82,8 @@ export default function StepLessons(props: {
 
 function LessonEditor(props: {
   lesson: DraftLesson;
+  planId: string;
+  language: "en" | "ar";
   isOpen: boolean;
   onToggle: () => void;
   onChange: (patch: Partial<DraftLesson>) => void;
@@ -213,7 +218,13 @@ function LessonEditor(props: {
             onChange={(v) => onChange({ reflectionScript: v })}
             max={2000}
             rows={3}
-            help="Optional ~20–45s guided reflection a calm narrator reads. Your prose, never Scripture text. Rendered to MP3 later via tts:render."
+            help="Optional ~20–45s guided reflection a calm narrator reads. Your prose, never Scripture text."
+          />
+          <NarrationSection
+            lesson={l}
+            planId={props.planId}
+            language={props.language}
+            onRendered={(audio) => onChange({ reflectionAudio: audio })}
           />
 
           <hr className="divider" />
@@ -408,6 +419,78 @@ function LessonEditor(props: {
               Remove this lesson
             </button>
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * In-editor narration: render the reflection script to MP3 and listen right
+ * here, so script problems are heard and fixed BEFORE finishing. The audio
+ * goes stale the moment the script changes; the Review step blocks Finish
+ * until every scripted lesson has fresh audio, and publishing uses these
+ * recordings as-is (it no longer synthesizes anything).
+ */
+function NarrationSection(props: {
+  lesson: DraftLesson;
+  planId: string;
+  language: "en" | "ar";
+  onRendered: (audio: DraftLessonAudio) => void;
+}) {
+  const { lesson } = props;
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  if (!lesson.reflectionScript.trim()) return null;
+  const fresh = narrationFresh(lesson);
+  const audio = lesson.reflectionAudio;
+
+  const render = async () => {
+    setBusy(true);
+    setError("");
+    try {
+      props.onRendered(await renderNarration(lesson, props.planId, props.language));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Narration failed — try again.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="narration-box">
+      {audio && (
+        <audio controls preload="metadata" src={audio.url} style={{ width: "100%", maxWidth: 420, display: "block" }} />
+      )}
+      <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap", marginTop: audio ? 8 : 0 }}>
+        <button className="btn btn-small" disabled={busy} onClick={render}>
+          {busy ? "Recording…" : audio ? "🎙 Re-render narration" : "🎙 Render narration"}
+        </button>
+        {audio && fresh && (
+          <span className="badge badge-moss" title={`Rendered from this exact script${audio.duration ? ` · ~${Math.round(audio.duration)}s` : ""}`}>
+            narration ready
+          </span>
+        )}
+        {audio && !fresh && (
+          <span className="badge badge-amber" title="The reflection script changed after this was recorded">
+            script changed — re-render
+          </span>
+        )}
+        {!audio && (
+          <span className="field-help" style={{ marginTop: 0 }}>
+            Listen before you finish — narration is required for every reflection script.
+          </span>
+        )}
+      </div>
+      {busy && (
+        <div className="field-help" style={{ marginTop: 6 }}>
+          Recording with the natural voice — a few seconds per lesson…
+        </div>
+      )}
+      {error && (
+        <div className="notice notice-error" style={{ marginTop: 10, marginBottom: 0 }}>
+          {error}
         </div>
       )}
     </div>

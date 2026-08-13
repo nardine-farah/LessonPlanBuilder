@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { planProgress, type LessonProgress } from "@/lib/adminData";
+import { renderNarration } from "@/lib/narration";
 import { lessonPlanDocSchema } from "@/lib/schema";
-import { buildPlanDoc, type Draft } from "@/lib/types";
+import { buildPlanDoc, narrationFresh, type Draft } from "@/lib/types";
 import { Card } from "./ui";
 
 /**
@@ -57,14 +58,40 @@ export default function StepReview(props: {
   draft: Draft;
   /** True when this plan's checklist was completed before a reopen — boxes start ticked for a re-confirm. */
   initialAllChecked?: boolean;
+  update: (patch: Partial<Draft>) => void;
   onStartOver: () => void;
   onFinish: (checklistDone: boolean) => void;
 }) {
   const { draft } = props;
   const [checked, setChecked] = useState<boolean[]>(CHECKLIST.map(() => !!props.initialAllChecked));
   const [showJson, setShowJson] = useState(false);
+  const [bulkRender, setBulkRender] = useState<{ done: number; total: number } | null>(null);
+  const [bulkError, setBulkError] = useState("");
 
   const progress = useMemo(() => planProgress(draft, "in_progress", false), [draft]);
+
+  // Narration gate: every lesson with a reflection script needs audio
+  // rendered from EXACTLY that script — publish uses these recordings as-is.
+  const scripted = draft.lessons.filter((l) => l.reflectionScript.trim());
+  const narrationMissing = scripted.filter((l) => !narrationFresh(l));
+
+  const renderMissing = async () => {
+    setBulkError("");
+    setBulkRender({ done: 0, total: narrationMissing.length });
+    let lessons = draft.lessons;
+    try {
+      for (const [i, lesson] of narrationMissing.entries()) {
+        const audio = await renderNarration(lesson, draft.planId, draft.language);
+        lessons = lessons.map((l) => (l.n === lesson.n ? { ...l, reflectionAudio: audio } : l));
+        props.update({ lessons });
+        setBulkRender({ done: i + 1, total: narrationMissing.length });
+      }
+    } catch (e) {
+      setBulkError(e instanceof Error ? e.message : "Narration failed — try again.");
+    } finally {
+      setBulkRender(null);
+    }
+  };
 
   const { doc, errors } = useMemo(() => {
     const doc = buildPlanDoc(draft);
@@ -139,6 +166,17 @@ export default function StepReview(props: {
             <li>○ Videos {progress.videosAdded}/{progress.lessonsTotal} <span className="detail-soft">(optional)</span></li>
             <li>{progress.quizzesOk > 0 ? "✓" : "○"} Quizzes ready: {progress.quizzesOk}</li>
             <li>
+              {scripted.length === 0 ? (
+                <>○ Narration <span className="detail-soft">(no reflection scripts)</span></>
+              ) : narrationMissing.length === 0 ? (
+                <>✓ Narration rendered {scripted.length}/{scripted.length}</>
+              ) : (
+                <span style={{ color: "var(--error)" }}>
+                  ✗ Narration rendered {scripted.length - narrationMissing.length}/{scripted.length} — required to finish
+                </span>
+              )}
+            </li>
+            <li>
               {valid ? (
                 <>✓ Passes the Studio schema</>
               ) : (
@@ -162,6 +200,25 @@ export default function StepReview(props: {
           </div>
         </div>
       </Card>
+
+      {narrationMissing.length > 0 && (
+        <Card
+          title="Narration to render"
+          note="Publishing uses the recordings made in the builder — nothing is synthesized at publish time, so every reflection script needs its audio rendered (and re-rendered after script edits) before the plan can be finished."
+        >
+          <p className="field-help" style={{ marginBottom: 12 }}>
+            Missing or out of date:{" "}
+            {narrationMissing.map((l) => `lesson ${l.n}`).join(", ")}. Render them one by one in
+            the Lessons step to listen and check each script — or render all of them here.
+          </p>
+          {bulkError && <div className="notice notice-error">{bulkError}</div>}
+          <button className="btn btn-primary" disabled={!!bulkRender} onClick={renderMissing}>
+            {bulkRender
+              ? `Recording ${Math.min(bulkRender.done + 1, bulkRender.total)} of ${bulkRender.total}…`
+              : `🎙 Render ${narrationMissing.length} narration${narrationMissing.length === 1 ? "" : "s"}`}
+          </button>
+        </Card>
+      )}
 
       {valid ? (
         <div className="notice notice-ok">
@@ -259,7 +316,7 @@ export default function StepReview(props: {
         <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
           <button
             className="btn btn-primary"
-            disabled={!valid}
+            disabled={!valid || narrationMissing.length > 0}
             onClick={() => {
               if (
                 allChecked ||
@@ -275,6 +332,11 @@ export default function StepReview(props: {
           </button>
           {!valid && (
             <span className="field-help">Fix the schema errors above before finishing.</span>
+          )}
+          {valid && narrationMissing.length > 0 && (
+            <span className="field-help">
+              Render the {narrationMissing.length === 1 ? "missing narration" : `${narrationMissing.length} missing narrations`} above before finishing.
+            </span>
           )}
           {valid && !allChecked && (
             <span className="badge badge-gold">checklist incomplete</span>
