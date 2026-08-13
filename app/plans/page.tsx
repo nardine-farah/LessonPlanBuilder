@@ -14,6 +14,7 @@ import {
   planRecord,
   publishPlan,
   savePlan,
+  type PublishProgress,
   type StoredPlan,
 } from "@/lib/planStore";
 import { STAGE_INFO, planStage } from "@/lib/planStage";
@@ -31,6 +32,9 @@ export default function PlansPage() {
   const [error, setError] = useState("");
   const [importing, setImporting] = useState(false);
   const [publishing, setPublishing] = useState("");
+  const [publishProgress, setPublishProgress] = useState<
+    (PublishProgress & { title: string }) | null
+  >(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const importInput = useRef<HTMLInputElement>(null);
 
@@ -229,14 +233,20 @@ export default function PlansPage() {
       if (audio.warnings.length) note += ` ⚠ ${audio.warnings[0]}`;
       return note;
     };
+    // The server streams stage-by-stage progress (narration is the slow part),
+    // so the overlay can say what's actually happening.
+    const track = (p: PublishProgress) => setPublishProgress({ ...p, title: plan.title });
+    track({ percent: 3, stage: "starting", message: "Checking the plan before publishing…" });
     try {
       try {
-        const res = await publishPlan(plan.key, republish);
+        const res = await publishPlan(plan.key, republish, track);
         setNotice(`✓ “${plan.title}” is live in the Studio library as ${res.planId}.${audioNote(res.audio)}`);
       } catch (e) {
         if (e instanceof PublishConflictError) {
+          setPublishProgress(null);
           if (!confirm(`${e.message}\n\nOverwrite the library copy with this plan?`)) return;
-          const res = await publishPlan(plan.key, true);
+          track({ percent: 3, stage: "starting", message: "Overwriting the library copy…" });
+          const res = await publishPlan(plan.key, true, track);
           setNotice(`✓ “${plan.title}” is live in the Studio library as ${res.planId} (overwrote the previous copy).${audioNote(res.audio)}`);
         } else {
           throw e;
@@ -247,6 +257,7 @@ export default function PlansPage() {
       setError(e instanceof Error ? e.message : "Publishing failed — try again.");
     } finally {
       setPublishing("");
+      setPublishProgress(null);
     }
   };
 
@@ -274,6 +285,43 @@ export default function PlansPage() {
 
   return (
     <div className="plans-shell">
+      {publishProgress && (
+        <div className="publish-backdrop" role="dialog" aria-modal="true" aria-labelledby="publish-heading">
+          <div className="publish-panel">
+            <h3 id="publish-heading" style={{ fontSize: 18, marginBottom: 4 }}>
+              Publishing <span dir="auto">“{publishProgress.title}”</span>
+            </h3>
+            <p className="field-help" style={{ marginBottom: 16 }}>
+              Keep this tab open — narration is recorded lesson by lesson, which can take a
+              minute on a long plan.
+            </p>
+            <div
+              className="progress-track publish-track"
+              role="progressbar"
+              aria-valuenow={Math.round(publishProgress.percent)}
+              aria-valuemin={0}
+              aria-valuemax={100}
+            >
+              <div
+                className={`progress-fill${publishProgress.percent >= 100 ? " full" : ""}`}
+                style={{ width: `${Math.max(3, Math.min(100, publishProgress.percent))}%` }}
+              />
+            </div>
+            <div className="publish-status">
+              <span className="publish-percent">{Math.round(publishProgress.percent)}%</span>
+              <span>
+                <strong>{publishProgress.message}</strong>
+                {publishProgress.detail && (
+                  <div className="field-help" style={{ marginTop: 2 }}>
+                    {publishProgress.detail}
+                  </div>
+                )}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className="plans-header">
         <div>
           <div className="brand-kicker">Biblica · Scripture Studio</div>

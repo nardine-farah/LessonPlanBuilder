@@ -107,48 +107,142 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Render reflection narration automatically (LESSON_PLAN_PLAN.md §6, but
-  // hosted on Firebase Storage instead of the Studio's public/ folder — the
-  // player takes the URL as-is). Unchanged scripts on a republish reuse the
-  // already-rendered asset; failures never block the publish, since the
-  // runtime simply hides a missing player.
-  const audio = { rendered: 0, reused: 0, warnings: [] as string[] };
-  const previousLessons: any[] = existing.exists ? ((existing.data() as any)?.lessons ?? []) : [];
-  const voiceSig = audioSignature(parsed.data.language);
-  for (const lesson of parsed.data.lessons) {
-    if (!lesson.reflectionScript) continue;
-    const prev = previousLessons.find((l) => l?.n === lesson.n);
-    const prevAudio = prev?.media?.reflectionAudio;
-    if (
-      prev?.reflectionScript === lesson.reflectionScript &&
-      typeof prevAudio?.asset === "string" &&
-      prevAudio.asset.startsWith("http") &&
-      // Reuse only recordings made with the CURRENT voice setup — a voice
-      // upgrade re-renders everything on the next republish.
-      prevAudio.asset.includes(`-${voiceSig}.mp3`)
-    ) {
-      lesson.media = { ...(lesson.media ?? {}), reflectionAudio: prevAudio };
-      audio.reused++;
-      continue;
-    }
-    try {
-      const { mp3, durationSec } = await synthesize(lesson.reflectionScript, parsed.data.language);
-      const url = await uploadLessonAudio(parsed.data.planId, lesson.n, mp3, voiceSig);
-      lesson.media = { ...(lesson.media ?? {}), reflectionAudio: { asset: url, duration: durationSec } };
-      audio.rendered++;
-    } catch (e) {
-      audio.warnings.push(`Lesson ${lesson.n}: ${e instanceof Error ? e.message : String(e)}`);
-      if (audio.warnings.length >= 3) {
-        audio.warnings.push("Stopped rendering after repeated failures — the plan publishes without the remaining narration audio.");
-        break;
+  // Everything above is a fast gate answered with a normal JSON status code
+  // (401/403/404/422/409). From here the publish is committing and can take a
+  // while — narration is synthesized per lesson — so the rest streams NDJSON
+  // progress events, which the plans page renders as a live overlay.
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream<Uint8Array>({
+    async start(controller) {
+      const send = (event: Record<string, unknown>) => {
+        controller.enqueue(encoder.encode(JSON.stringify(event) + "\n"));
+      };
+
+      try {
+        const doc = parsed.data;
+        const scripted = doc.lessons.filter((l) => l.reflectionScript);
+        // Weighting: the gates are done (10%), narration owns the long middle
+        // (10→85%), and the two Firestore writes finish it off.
+        const AUDIO_FROM = 10;
+        const AUDIO_TO = 85;
+        const audioPercent = (done: number) =>
+          scripted.length ? AUDIO_FROM + ((AUDIO_TO - AUDIO_FROM) * done) / scripted.length : AUDIO_TO;
+
+        send({
+          type: "progress",
+          percent: AUDIO_FROM,
+          stage: "validated",
+          message: `“${doc.title}” passes the Studio schema`,
+          detail: `${doc.lessons.length} lesson${doc.lessons.length === 1 ? "" : "s"}${
+            scripted.length ? ` · ${scripted.length} with reflection narration` : " · no narration to render"
+          }`,
+        });
+
+        // Render reflection narration automatically (LESSON_PLAN_PLAN.md §6, but
+        // hosted on Firebase Storage instead of the Studio's public/ folder — the
+        // player takes the URL as-is). Unchanged scripts on a republish reuse the
+        // already-rendered asset; failures never block the publish, since the
+        // runtime simply hides a missing player.
+        const audio = { rendered: 0, reused: 0, warnings: [] as string[] };
+        const previousLessons: any[] = existing.exists ? ((existing.data() as any)?.lessons ?? []) : [];
+        const voiceSig = audioSignature(doc.language);
+        let handled = 0;
+        for (const lesson of doc.lessons) {
+          if (!lesson.reflectionScript) continue;
+          const prev = previousLessons.find((l) => l?.n === lesson.n);
+          const prevAudio = prev?.media?.reflectionAudio;
+          if (
+            prev?.reflectionScript === lesson.reflectionScript &&
+            typeof prevAudio?.asset === "string" &&
+            prevAudio.asset.startsWith("http") &&
+            // Reuse only recordings made with the CURRENT voice setup — a voice
+            // upgrade re-renders everything on the next republish.
+            prevAudio.asset.includes(`-${voiceSig}.mp3`)
+          ) {
+            lesson.media = { ...(lesson.media ?? {}), reflectionAudio: prevAudio };
+            audio.reused++;
+            handled++;
+            send({
+              type: "progress",
+              percent: audioPercent(handled),
+              stage: "audio",
+              message: `Reusing narration for lesson ${lesson.n} of ${doc.lessons.length}`,
+              detail: "Its reflection script hasn't changed since the last publish",
+            });
+            continue;
+          }
+          send({
+            type: "progress",
+            percent: audioPercent(handled),
+            stage: "audio",
+            message: `Recording narration for lesson ${lesson.n} of ${doc.lessons.length}`,
+            detail: `${handled} of ${scripted.length} narrations done`,
+          });
+          try {
+            const { mp3, durationSec } = await synthesize(lesson.reflectionScript, doc.language);
+            const url = await uploadLessonAudio(doc.planId, lesson.n, mp3, voiceSig);
+            lesson.media = { ...(lesson.media ?? {}), reflectionAudio: { asset: url, duration: durationSec } };
+            audio.rendered++;
+          } catch (e) {
+            audio.warnings.push(`Lesson ${lesson.n}: ${e instanceof Error ? e.message : String(e)}`);
+            if (audio.warnings.length >= 3) {
+              audio.warnings.push("Stopped rendering after repeated failures — the plan publishes without the remaining narration audio.");
+              send({
+                type: "progress",
+                percent: AUDIO_TO,
+                stage: "audio",
+                message: "Narration stopped after repeated failures",
+                detail: "The plan still publishes; missing narration players are simply hidden",
+              });
+              break;
+            }
+          }
+          handled++;
+        }
+
+        send({
+          type: "progress",
+          percent: 90,
+          stage: "library",
+          message: "Writing the plan into the Studio library",
+          detail: doc.planId,
+        });
+        await libraryRef.set(doc);
+
+        send({
+          type: "progress",
+          percent: 96,
+          stage: "marker",
+          message: "Marking the plan as published in your profile",
+        });
+        const publishedAt = new Date().toISOString();
+        await planSnap.ref.set({ publishedAt, publishedPlanId: doc.planId }, { merge: true });
+
+        send({
+          type: "done",
+          percent: 100,
+          stage: "done",
+          message: `“${doc.title}” is live in the Studio library`,
+          result: { ok: true, planId: doc.planId, publishedAt, audio },
+        });
+      } catch (e) {
+        // The stream already carries a 200, so failures are reported in-band.
+        send({
+          type: "error",
+          error: e instanceof Error ? e.message : "Publishing failed part-way through.",
+        });
+      } finally {
+        controller.close();
       }
-    }
-  }
+    },
+  });
 
-  await libraryRef.set(parsed.data);
-
-  const publishedAt = new Date().toISOString();
-  await planSnap.ref.set({ publishedAt, publishedPlanId: parsed.data.planId }, { merge: true });
-
-  return Response.json({ ok: true, planId: parsed.data.planId, publishedAt, audio });
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "application/x-ndjson; charset=utf-8",
+      "Cache-Control": "no-store, no-transform",
+      // Defeat any proxy buffering so events arrive as they happen.
+      "X-Accel-Buffering": "no",
+    },
+  });
 }

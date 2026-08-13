@@ -924,6 +924,44 @@ pre.json-preview {
 
 .rail-link:hover { text-decoration: underline; }
 
+/* ——— publish progress overlay ——— */
+
+.publish-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 20, 24, 0.5);
+  display: grid;
+  place-items: center;
+  z-index: 70;
+  padding: 24px;
+}
+
+.publish-panel {
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 26px 28px;
+  width: 100%;
+  max-width: 520px;
+}
+
+.publish-track { max-width: none; height: 8px; }
+
+.publish-status {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.publish-percent {
+  font-family: var(--font-display), serif;
+  font-size: 20px;
+  color: var(--garnet);
+  min-width: 52px;
+}
+
 /* ——— linked source PDF (builder step 1) ——— */
 
 .linked-source {

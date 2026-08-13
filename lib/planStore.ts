@@ -124,25 +124,93 @@ export interface PublishAudioSummary {
   warnings: string[];
 }
 
-/** Publish a completed, checklist-done plan into the Studio library. */
+export interface PublishProgress {
+  percent: number;
+  /** Machine-readable phase: validated | audio | library | marker | done. */
+  stage: string;
+  message: string;
+  detail?: string;
+}
+
+export type PublishResult = { planId: string; publishedAt: string; audio?: PublishAudioSummary };
+
+/**
+ * Publish a completed, checklist-done plan into the Studio library.
+ *
+ * The route answers its gates (401/403/404/422/409) with ordinary JSON, then
+ * streams NDJSON progress for the committing phase — narration synthesis can
+ * take a minute on a long plan, so `onProgress` drives a live overlay instead
+ * of a silent spinner. A pre-streaming server (or any non-NDJSON reply) still
+ * works: the single JSON object is returned as the result.
+ */
 export async function publishPlan(
   key: string,
   overwrite = false,
-): Promise<{ planId: string; publishedAt: string; audio?: PublishAudioSummary }> {
+  onProgress?: (p: PublishProgress) => void,
+): Promise<PublishResult> {
   const res = await authedFetch("/api/publish", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ key, overwrite }),
   });
-  const body = await res.json().catch(() => null);
-  if (res.status === 409 && body?.exists) {
-    throw new PublishConflictError(body.error ?? "A plan with this planId already exists in the library.");
+
+  const streaming = res.headers.get("content-type")?.includes("ndjson") && res.body;
+  if (!streaming) {
+    const body = await res.json().catch(() => null);
+    if (res.status === 409 && body?.exists) {
+      throw new PublishConflictError(body.error ?? "A plan with this planId already exists in the library.");
+    }
+    if (!res.ok) {
+      const issues = Array.isArray(body?.issues) ? ` ${body.issues.join("; ")}` : "";
+      throw new Error((body?.error ?? `Publish failed (HTTP ${res.status}).`) + issues);
+    }
+    return body as PublishResult;
   }
-  if (!res.ok) {
-    const issues = Array.isArray(body?.issues) ? ` ${body.issues.join("; ")}` : "";
-    throw new Error((body?.error ?? `Publish failed (HTTP ${res.status}).`) + issues);
+
+  const reader = res.body!.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let result: PublishResult | null = null;
+  let failure: string | null = null;
+
+  const handleLine = (line: string) => {
+    const trimmed = line.trim();
+    if (!trimmed) return;
+    let event: any;
+    try {
+      event = JSON.parse(trimmed);
+    } catch {
+      return; // ignore a partial/garbled line rather than failing the publish
+    }
+    if (event.type === "progress" || event.type === "done") {
+      onProgress?.({
+        percent: typeof event.percent === "number" ? event.percent : 0,
+        stage: event.stage ?? "",
+        message: event.message ?? "",
+        detail: event.detail,
+      });
+    }
+    if (event.type === "done") result = event.result as PublishResult;
+    if (event.type === "error") failure = event.error ?? "Publishing failed part-way through.";
+  };
+
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (value) {
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() ?? "";
+      for (const line of lines) handleLine(line);
+    }
+    if (done) break;
   }
-  return body as { planId: string; publishedAt: string; audio?: PublishAudioSummary };
+  handleLine(buffer);
+
+  if (failure) throw new Error(failure);
+  if (!result) {
+    throw new Error("The publish ended without confirming — check the library before retrying.");
+  }
+  return result;
 }
 
 export function parseStoredDraft(plan: StoredPlan): Draft | null {

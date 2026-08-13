@@ -152,6 +152,13 @@ TS 7 / native compiler otherwise, which breaks next.config.ts loading). Key modu
   `lessonPlans/{planId}` with status published (same write as Studio's
   `db:seed:plans`); **auto-renders reflection audio** (reuses unchanged narrations
   on republish; audio failures never block publish); returns `audio` summary.
+  **Two-phase response** (2026-08-13): the gates answer with ordinary JSON
+  status codes (401/403/404/422/409), then the committing phase streams
+  **NDJSON progress** (`{type: progress|done|error, percent, stage, message,
+  detail}`; stages validated → audio → library → marker → done; narration owns
+  10–85%) which `publishPlan(key, overwrite, onProgress)` parses into the
+  plans-page overlay. Falls back to a single JSON object if a response isn't
+  NDJSON, so the client tolerates either shape.
 - `GET /api/admin` (am-I-admin probe) / `GET /api/admin/overview` /
   `GET /api/admin/plan-json?uid&key` — **admin-only** (added 2026-08-10):
   `requireAdmin` gates on the `ADMIN_EMAILS` allowlist (comma-separated; code
