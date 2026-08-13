@@ -35,6 +35,7 @@ const fmtTokens = (n: number) =>
 
 export default function StepUpload(props: {
   draft: Draft | null;
+  update: (patch: Partial<Draft>) => void;
   onAnalyzed: (draft: Draft) => void;
 }) {
   const [language, setLanguage] = useState<"en" | "ar">("en");
@@ -49,7 +50,9 @@ export default function StepUpload(props: {
   // plans or after an explicit "Replace" — no accidental re-analysis.
   const [replacing, setReplacing] = useState(false);
   const [link, setLink] = useState<{ durable: boolean; cached: boolean } | null>(null);
+  const [attaching, setAttaching] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const attachRef = useRef<HTMLInputElement>(null);
   const activeJob = useRef<string | null>(null);
 
   const pick = (f: File | null | undefined) => {
@@ -206,6 +209,33 @@ export default function StepUpload(props: {
     }
   };
 
+  // Re-attach the original booklet (same content hash → same sourceId): brings
+  // page rendering back and stores the file permanently with the plan. No
+  // re-analysis, no AI cost, and every edit stays untouched.
+  const attachSource = async (f: File | null | undefined) => {
+    if (!f || !props.draft) return;
+    setAttaching(true);
+    setError("");
+    try {
+      const form = new FormData();
+      form.append("file", f);
+      form.append("language", props.draft.language);
+      const res = await authedFetch("/api/source", { method: "POST", body: form });
+      const body = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(body?.error ?? `Attaching failed (HTTP ${res.status}).`);
+      props.update({
+        sourceId: body.sourceId as string,
+        ...(props.draft.sourceFileName ? {} : { sourceFileName: f.name }),
+      });
+      setLink({ durable: body.durable !== false, cached: true });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Attaching failed — try again.");
+    } finally {
+      setAttaching(false);
+      if (attachRef.current) attachRef.current.value = "";
+    }
+  };
+
   const parsedPages = choice && pagesSpec.trim() ? parsePageSpec(pagesSpec, choice.pageCount) : null;
 
   if (busy) {
@@ -336,12 +366,15 @@ export default function StepUpload(props: {
   // An existing draft shows its linked source, not an upload zone.
   if (props.draft && !replacing) {
     const d = props.draft;
+    // Attach is offered whenever the pages can't be rendered reliably: no
+    // linked file at all, or a file that never reached permanent storage.
+    const needsAttach = !d.sourceId || (link !== null && !link.durable);
     return (
       <>
         {error && <div className="notice notice-error">{error}</div>}
         <Card
           title="1 · The source document"
-          note="The PDF this plan was analyzed from stays linked to the draft — lesson-image rendering uses it directly, nothing to re-attach."
+          note="The PDF this plan was analyzed from stays linked to the draft — choosing lesson artwork renders its pages directly, nothing to re-attach."
         >
           <div className="linked-source">
             <div className="linked-source-badge">PDF</div>
@@ -353,15 +386,33 @@ export default function StepUpload(props: {
                 {d.detectedLanguage && <>Source language: {d.detectedLanguage} · </>}
                 {d.lessons.length} lesson{d.lessons.length === 1 ? "" : "s"} drafted ·{" "}
                 {!d.sourceId
-                  ? "no file linked — attach it in the Lesson images step to render pages"
+                  ? "no file linked — attach the booklet PDF to pick lesson artwork from its pages"
                   : link === null
                     ? "checking the linked file…"
                     : link.durable
                       ? "stored with the plan — pages render after any update"
                       : link.cached
-                        ? "on this server for now — attach it once in the Lesson images step to store it permanently"
-                        : "the file isn’t on the server — attach it in the Lesson images step (no re-analysis, no AI cost)"}
+                        ? "on this server for now — attach it once below to store it permanently"
+                        : "the file isn’t on the server — attach it below to render pages again (no re-analysis, no AI cost)"}
               </div>
+              {needsAttach && (
+                <div style={{ marginTop: 10 }}>
+                  <button
+                    className="btn btn-small"
+                    disabled={attaching}
+                    onClick={() => attachRef.current?.click()}
+                  >
+                    {attaching ? "Attaching…" : "⤒ Attach source PDF"}
+                  </button>
+                  <input
+                    ref={attachRef}
+                    type="file"
+                    accept="application/pdf,.pdf"
+                    hidden
+                    onChange={(e) => attachSource(e.target.files?.[0])}
+                  />
+                </div>
+              )}
             </div>
             <button
               className="btn btn-small"

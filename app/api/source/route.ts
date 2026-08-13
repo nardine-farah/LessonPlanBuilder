@@ -1,10 +1,10 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { NextRequest } from "next/server";
-import { AnalysisError } from "@/lib/extraction";
+import { AnalysisError, getPageCount } from "@/lib/extraction";
 import { uidFromRequest } from "@/lib/firestore-server";
 import { storeSourcePdf } from "@/lib/jobs";
-import { hasDurableSourcePdf } from "@/lib/sourceStore";
+import { hasDurableSourcePdf, restoreSourcePdf } from "@/lib/sourceStore";
 
 export const runtime = "nodejs";
 
@@ -15,6 +15,10 @@ const MAX_PDF_BYTES = 30 * 1024 * 1024;
  * means a permanent copy exists in Storage (renders work after any rollout);
  * `cached` means only this instance's disk has it. Lets the builder tell the
  * curator the truth instead of assuming a sourceId implies a usable file.
+ *
+ * With `&pages=1` the response also carries `pageCount` (the artwork page
+ * browser needs it to lay out every page) — that requires the actual bytes,
+ * so a local cache miss self-heals from Storage exactly like /api/render.
  */
 export async function GET(req: NextRequest) {
   const uid = await uidFromRequest(req.headers.get("authorization"));
@@ -24,11 +28,26 @@ export async function GET(req: NextRequest) {
   if (!/^[a-zA-Z0-9_-]{8,128}$/.test(sourceId)) {
     return Response.json({ error: "Missing or malformed 'sourceId'." }, { status: 400 });
   }
-  const cached = await fs
-    .access(path.join(process.cwd(), ".analysis-cache", `${sourceId}.pdf`))
-    .then(() => true)
-    .catch(() => false);
-  return Response.json({ sourceId, cached, durable: await hasDurableSourcePdf(sourceId) });
+  const cachePath = path.join(process.cwd(), ".analysis-cache", `${sourceId}.pdf`);
+  const durable = await hasDurableSourcePdf(sourceId);
+
+  if (req.nextUrl.searchParams.get("pages") !== "1") {
+    const cached = await fs
+      .access(cachePath)
+      .then(() => true)
+      .catch(() => false);
+    return Response.json({ sourceId, cached, durable });
+  }
+
+  let bytes: Buffer | null = await fs.readFile(cachePath).catch(() => null);
+  if (!bytes && (await restoreSourcePdf(sourceId))) {
+    bytes = await fs.readFile(cachePath).catch(() => null);
+  }
+  if (!bytes) {
+    return Response.json({ sourceId, cached: false, durable, pageCount: null });
+  }
+  const pageCount = await getPageCount(bytes).catch(() => null);
+  return Response.json({ sourceId, cached: true, durable, pageCount });
 }
 
 /**

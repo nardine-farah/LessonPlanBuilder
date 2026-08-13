@@ -776,6 +776,51 @@ pre.json-preview {
   pointer-events: none;
 }
 
+/* ——— "Choose page" browser (every page of the source PDF) ——— */
+
+.crop-panel.page-browser {
+  max-width: 1080px;
+  height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* the grid scrolls, the header stays put */
+}
+
+.page-browser-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.page-browser-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.page-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 12px;
+}
+
+.page-thumb {
+  width: 100%;
+}
+
+.page-thumb img {
+  width: 100%;
+}
+
+.page-thumb .thumb-loading {
+  width: 100%;
+  height: 150px;
+}
+
 /* ——— welcome / sign-in ——— */
 
 .welcome {

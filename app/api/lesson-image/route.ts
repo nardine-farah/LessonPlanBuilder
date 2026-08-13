@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { randomUUID } from "crypto";
-import { storageBucket, uidFromRequest } from "@/lib/firestore-server";
+import { storageBucket, tokenDownloadUrl, uidFromRequest } from "@/lib/firestore-server";
 
 export const runtime = "nodejs";
 
@@ -44,8 +44,7 @@ export async function POST(req: NextRequest) {
       metadata: { metadata: { firebaseStorageDownloadTokens: token } },
       resumable: false,
     });
-    const url = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(objectPath)}?alt=media&token=${token}`;
-    return Response.json({ url });
+    return Response.json({ url: tokenDownloadUrl(bucket.name, objectPath, token) });
   } catch (err) {
     return Response.json(
       { error: `Couldn't store the image (${err instanceof Error ? err.message : String(err)}).` },

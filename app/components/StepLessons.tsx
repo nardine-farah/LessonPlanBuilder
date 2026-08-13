@@ -16,6 +16,7 @@ import {
   youTubeEmbedUrl,
   youTubeVideoId,
 } from "@/lib/videoUpload";
+import { ArtworkSection } from "./LessonArtwork";
 import { TextArea, TextField } from "./ui";
 
 export default function StepLessons(props: {
@@ -58,10 +59,22 @@ export default function StepLessons(props: {
           lesson={lesson}
           planId={draft.planId}
           language={draft.language}
+          sourceId={draft.sourceId}
+          lessonCount={draft.lessons.length}
           isOpen={open === lesson.n}
           onToggle={() => setOpen(open === lesson.n ? null : lesson.n)}
           onChange={(patch) => setLesson(lesson.n, patch)}
           onRemove={() => removeLesson(lesson.n)}
+          onApplyImageToAll={(image) => {
+            if (
+              draft.lessons.length < 2 ||
+              confirm(
+                `Use this image for all ${draft.lessons.length} lessons? It replaces any artwork already chosen on other lessons.`,
+              )
+            ) {
+              update({ lessons: draft.lessons.map((x) => ({ ...x, image: { ...image } })) });
+            }
+          }}
           onVideoAttached={() => {
             // A plan with real videos offers video — tick the matcher tag the
             // curator would otherwise have to remember (visible in "Who it's
@@ -84,11 +97,14 @@ function LessonEditor(props: {
   lesson: DraftLesson;
   planId: string;
   language: "en" | "ar";
+  sourceId: string;
+  lessonCount: number;
   isOpen: boolean;
   onToggle: () => void;
   onChange: (patch: Partial<DraftLesson>) => void;
   onRemove: () => void;
   onVideoAttached: () => void;
+  onApplyImageToAll: (image: NonNullable<DraftLesson["image"]>) => void;
 }) {
   const { lesson: l, onChange } = props;
   const usfmOk = isValidUsfm(l.verseUsfm);
@@ -235,6 +251,15 @@ function LessonEditor(props: {
               props.onVideoAttached();
             }}
             onRemove={() => onChange({ video: null })}
+          />
+
+          <hr className="divider" />
+          <ArtworkSection
+            lesson={l}
+            sourceId={props.sourceId}
+            lessonCount={props.lessonCount}
+            onChange={onChange}
+            onApplyToAll={props.onApplyImageToAll}
           />
 
           <hr className="divider" />

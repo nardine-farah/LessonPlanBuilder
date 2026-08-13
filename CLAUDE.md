@@ -8,12 +8,15 @@
 
 A curator tool for Biblica (user: Nardine, nardine.farah@biblica.com). It turns any
 ministry PDF (devotional/course/study guide, **any language**) into a lesson-plan JSON
-for the Scripture Studio library, via a 6-step wizard:
+for the Scripture Studio library, via a 5-step wizard:
 
 1. **Source PDF** — upload; measured with `count_tokens` (free); oversized docs get a
    choice screen (analyze specific pages `1-10,15,22-30` or all-in-parts). For an
    existing draft this step shows the **linked source** (file name, analysis notes,
-   no dropzone); analyzing a different PDF is behind an explicit "Replace PDF…".
+   no dropzone) with an inline **⤒ Attach source PDF** control whenever the link
+   probe says the file isn't durable (this is where re-attaching lives — same
+   content hash reconnects everything, no AI cost); analyzing a different PDF is
+   behind an explicit "Replace PDF…".
 2. **Plan details** — title/subtitle/summary/planId/span/translation/reviewedBy.
 3. **Who it's for** — match tags (exact enums the Studio matcher scores).
 4. **Lessons** — per-lesson editor (passage + USFM, teaching, key idea, quiz with
@@ -27,9 +30,9 @@ for the Scripture Studio library, via a 6-step wizard:
    auto-ticks the "video" resource tag; export = `media.video {asset, duration?}`,
    and the legacy `videoPoster` placeholder now stamps ONLY videoless lessons when
    the video resource is on — Studio player renders real video first, poster as
-   fallback).
-5. **Lesson images** — see "Image pipeline" below.
-6. **Review & export** — validates against the ported Studio schema; reviewer
+   fallback — and **artwork** [added 2026-08-13, replacing the dedicated images
+   step; see "Image pipeline" below]).
+5. **Review & export** — validates against the ported Studio schema; reviewer
    checklist (from Studio's LESSON_PLAN_AUTHORING.md §13); download/copy JSON
    (never blocked, even when invalid); **Finish** saves to profile.
 
@@ -223,17 +226,26 @@ swaps the working copy silently (no confirm — unmount flush makes it loss-free
 at step 0 (2026-08-11; previously it resumed the last draft at its last step). Legacy localStorage completed
 plans auto-import on first sign-in.
 
-### Image pipeline ("analysis notes pages → local render → human picks")
+### Image pipeline ("analysis notes pages → page browser → human picks")
 
-- Analysis fills `lesson.artPages` (clamped to real page count in jobs.ts).
-- StepImages renders candidate thumbs via authed blob URLs; ✕ removes candidates;
-  manual page add; **⤒ Upload image** (png/jpg/webp) goes through the same crop
-  modal; crop modal caps display at 58vh (whole page always visible), shows live
-  output px + ratio (wide 16:9–3:2 recommended), downscales output to ≤1600px PNG;
-  upload happens AT PICK TIME to Storage (survives cache expiry); "⧉ Use for all
-  lessons" copies one image everywhere. `draft.sourceId` links to the cached PDF;
-  when the cache is gone (`cache-miss` code) an **Attach source PDF** banner
-  appears (same content hash reconnects everything, no AI cost).
+- Reworked 2026-08-13: images have NO wizard step — each lesson carries an
+  **Artwork** section (`app/components/LessonArtwork.tsx`, rendered by
+  StepLessons after the video section), like narration and video.
+- Two ways in: **⊞ Choose page** opens a modal browser of EVERY page of the
+  linked PDF (`GET /api/source?sourceId&pages=1` supplies pageCount, restoring
+  from Storage on cache miss; thumbs lazy-render via IntersectionObserver,
+  w=220, so 500-page booklets don't stampede the 3-render semaphore;
+  analysis-suggested `artPages` are badged "suggested" and shown first;
+  jump-to-page input for long docs) → click a page → crop → save. **⤒ Upload
+  image** (png/jpg/webp) goes through the same crop modal. Picking a page also
+  records it into `lesson.artPages` (analysis fills these initially; clamped
+  to real page count in jobs.ts).
+- Crop modal: caps display at 58vh, shows live output px + ratio (wide
+  16:9–3:2 recommended), downscales to ≤1600px PNG; upload happens AT PICK
+  TIME to Storage (survives cache expiry); "⧉ Use for all lessons" copies one
+  image everywhere. "Choose page" is disabled (with a pointer to step 1) when
+  `draft.sourceId` is empty or the file is gone — re-attaching lives on the
+  Source PDF step now.
 - Export: `media.image {asset, alt}` per lesson.
 
 ## Source control
@@ -262,7 +274,7 @@ plans auto-import on first sign-in.
   Secret Manager secret; `maxInstances: 1`).
 - Every rollout wipes `.analysis-cache` (fresh Cloud Run disk), but since
   2026-08-11 the render path **self-heals from Storage** (`source-pdfs/…`) —
-  the attach-PDF banner only appears for plans analyzed before persistence
+  the step-1 attach control only appears for plans analyzed before persistence
   existed (one final attach makes them durable too).
 - Hosted domain is registered in Firebase Auth authorized domains (done via
   Identity Toolkit API with the SA).

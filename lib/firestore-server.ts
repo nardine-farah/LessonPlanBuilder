@@ -90,7 +90,7 @@ export async function storageBucket() {
  * demos against the Storage emulator get playable URLs; in production (no
  * emulator env) this is the standard firebasestorage.googleapis.com form.
  */
-function tokenDownloadUrl(bucketName: string, objectPath: string, token: string) {
+export function tokenDownloadUrl(bucketName: string, objectPath: string, token: string) {
   const emulator = process.env.FIREBASE_STORAGE_EMULATOR_HOST;
   const base = emulator ? `http://${emulator}` : "https://firebasestorage.googleapis.com";
   return `${base}/v0/b/${bucketName}/o/${encodeURIComponent(objectPath)}?alt=media&token=${token}`;

@@ -10,7 +10,6 @@ import StepUpload from "../components/StepUpload";
 import StepPlanDetails from "../components/StepPlanDetails";
 import StepTags from "../components/StepTags";
 import StepLessons from "../components/StepLessons";
-import StepImages from "../components/StepImages";
 import StepReview from "../components/StepReview";
 
 const STORAGE_KEY = "lpb-draft-v1";
@@ -21,7 +20,6 @@ const STEPS = [
   { name: "Plan details", hint: "Title, summary, provenance" },
   { name: "Who it's for", hint: "Matching tags" },
   { name: "Lessons", hint: "Review every session" },
-  { name: "Lesson images", hint: "Pick artwork per lesson" },
   { name: "Review & export", hint: "Validate, checklist, JSON" },
 ];
 
@@ -40,11 +38,7 @@ const TITLES: { title: string; lede: string }[] = [
   },
   {
     title: "Walk every lesson",
-    lede: "The heart of curation: check each session's passage, teaching, key idea, quiz, and prayer against the source.",
-  },
-  {
-    title: "Give lessons their artwork",
-    lede: "The analysis flagged pages with real illustrations. Crop the ones worth keeping — every image is optional and reviewed by you.",
+    lede: "The heart of curation: check each session's passage, teaching, key idea, quiz, and prayer against the source — then round it out with narration, video, and artwork.",
   },
   {
     title: "Review & export",
@@ -82,10 +76,12 @@ export default function BuilderPage() {
         const saved = JSON.parse(raw);
         if (saved?.draft) {
           setDraft(normalizeDraft(saved.draft));
-          // Clamp restored step — older saves used a 5-step wizard, and an
-          // out-of-range value must never render an empty page.
+          // Clamp restored step — older saves used a 6-step wizard (images had
+          // their own step), and an out-of-range value must never render an
+          // empty page. A save parked on the old images/review steps lands on
+          // Review, which links back to everything.
           const restored = Number(saved.step ?? 1);
-          setStep(Number.isInteger(restored) ? Math.min(Math.max(restored, 0), 5) : 1);
+          setStep(Number.isInteger(restored) ? Math.min(Math.max(restored, 0), 4) : 1);
           setPlanKey(saved.key ?? newPlanKey(saved.draft));
           setCreatedAt(saved.createdAt ?? new Date().toISOString());
           setChecklistCarried(!!saved.checklistDone);
@@ -261,6 +257,7 @@ export default function BuilderPage() {
         {step === 0 && (
           <StepUpload
             draft={draft}
+            update={update}
             onAnalyzed={(d) => {
               setDraft(d);
               setPlanKey(newPlanKey(d));
@@ -273,8 +270,7 @@ export default function BuilderPage() {
         {step === 1 && draft && <StepPlanDetails draft={draft} update={update} />}
         {step === 2 && draft && <StepTags draft={draft} update={update} />}
         {step === 3 && draft && <StepLessons draft={draft} update={update} />}
-        {step === 4 && draft && <StepImages draft={draft} update={update} />}
-        {step === 5 && draft && (
+        {step === 4 && draft && (
           <StepReview
             draft={draft}
             initialAllChecked={checklistCarried}
@@ -284,7 +280,7 @@ export default function BuilderPage() {
           />
         )}
 
-        {draft && step > 0 && step < 5 && (
+        {draft && step > 0 && step < 4 && (
           <div className="btn-row">
             <button className="btn" onClick={() => setStep(step - 1)}>
               ← Back
