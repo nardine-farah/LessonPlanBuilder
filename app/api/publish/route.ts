@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { planScreenIssues } from "@/lib/screens";
 import { lessonPlanDocSchema } from "@/lib/schema";
 import { buildPlanDoc, type Draft } from "@/lib/types";
 import { adminDb, identityFromRequest } from "@/lib/firestore-server";
@@ -20,7 +21,10 @@ export const runtime = "nodejs";
  *     product data, not per-user data.
  *  2. The plan must be status "completed" with the checklist fully checked.
  *  3. The exported doc must pass the Studio's own schema.
- *  4. An existing library plan with the same planId is never overwritten
+ *  4. Every lesson's four screens (Hear · Understand · Check · Respond) must
+ *     carry their required blocks (lib/screens.ts) — the schema keeps these
+ *     fields optional for legacy plans, so the screen rule is its own gate.
+ *  5. An existing library plan with the same planId is never overwritten
  *     unless the client explicitly re-sends with overwrite: true.
  */
 
@@ -89,6 +93,18 @@ export async function POST(req: NextRequest) {
       {
         error: "The plan doesn't pass the Studio schema.",
         issues: parsed.error.issues.map((i) => `${i.path.join(" › ") || "plan"} — ${i.message}`),
+      },
+      { status: 422 },
+    );
+  }
+
+  const screenIssues = planScreenIssues(draft);
+  if (screenIssues.length > 0) {
+    return Response.json(
+      {
+        error:
+          "Every lesson screen needs its required blocks — Hear (Scripture), Understand (main teaching), Check (quiz), Respond (reflection prompt + closing prayer). Reopen the plan, fill what's missing, and finish it again.",
+        issues: screenIssues,
       },
       { status: 422 },
     );

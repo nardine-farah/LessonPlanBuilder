@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { renderNarration } from "@/lib/narration";
+import { incompleteScreens } from "@/lib/screens";
 import type { Draft, DraftLesson, DraftLessonAudio, DraftLessonVideo } from "@/lib/types";
 import { emptyLesson, narrationFresh } from "@/lib/types";
 import { parseReference, isValidUsfm } from "@/lib/usfm";
@@ -47,10 +48,11 @@ export default function StepLessons(props: {
   return (
     <>
       <div className="notice notice-info">
-        Each session from the PDF became one lesson. Review everything — especially the{" "}
-        <strong>quiz answers</strong>: a wrong “correct” answer on Scripture is a trust
-        failure. Quizzes the analysis drafted (rather than found in the PDF) still need a
-        careful read against the passage.
+        Each session from the PDF became one lesson, edited here as the learner&rsquo;s four
+        screens — <strong>Hear · Understand · Check · Respond</strong>. Review everything,
+        especially the <strong>quiz answers</strong>: a wrong &ldquo;correct&rdquo; answer on
+        Scripture is a trust failure. Quizzes the analysis drafted (rather than found in the
+        PDF) still need a careful read against the passage.
       </div>
 
       {draft.lessons.map((lesson) => (
@@ -93,6 +95,22 @@ export default function StepLessons(props: {
   );
 }
 
+/** Section header naming one of the learner's four screens (same names the
+ *  Studio player shows), with what it holds and what's required. */
+function ScreenHead(props: { n: number; name: string; note: string }) {
+  return (
+    <div style={{ margin: "2px 0 12px" }}>
+      <h3 style={{ fontSize: 16, marginBottom: 3, display: "flex", alignItems: "center", gap: 8 }}>
+        {props.name}
+        <span className="badge badge-trust">screen {props.n}</span>
+      </h3>
+      <p className="field-help" style={{ marginTop: 0 }}>
+        {props.note}
+      </p>
+    </div>
+  );
+}
+
 function LessonEditor(props: {
   lesson: DraftLesson;
   planId: string;
@@ -108,6 +126,7 @@ function LessonEditor(props: {
 }) {
   const { lesson: l, onChange } = props;
   const usfmOk = isValidUsfm(l.verseUsfm);
+  const missingScreens = incompleteScreens(l);
 
   const deriveUsfm = () => {
     const parsed = parseReference(l.ref);
@@ -136,6 +155,15 @@ function LessonEditor(props: {
                 quiz answer
               </span>
             )}
+            {missingScreens.length > 0 && (
+              <span
+                className="badge badge-amber"
+                style={{ marginLeft: 8 }}
+                title="Screens still missing a required block"
+              >
+                to fill: {missingScreens.join(" · ")}
+              </span>
+            )}
           </div>
         </span>
         <span style={{ color: "var(--ink-faint)" }}>{props.isOpen ? "▴" : "▾"}</span>
@@ -143,7 +171,15 @@ function LessonEditor(props: {
 
       {props.isOpen && (
         <div className="lesson-body">
-          <div className="grid-2" style={{ marginTop: 14 }}>
+          {/* ================= Screen 1 · Hear ================= */}
+          <div style={{ marginTop: 14 }}>
+            <ScreenHead
+              n={1}
+              name="Hear"
+              note="What the learner receives first: the lesson's identity and artwork, the narrated reflection, then the Scripture itself. Scripture is required."
+            />
+          </div>
+          <div className="grid-2">
             <TextField label="Title" value={l.title} onChange={(v) => onChange({ title: v })} max={120} />
             <TextField
               label="Key verse (shown large)"
@@ -184,8 +220,46 @@ function LessonEditor(props: {
             </div>
           </div>
 
+          <TextArea
+            label="Reflection script (audio narration)"
+            value={l.reflectionScript}
+            onChange={(v) => onChange({ reflectionScript: v })}
+            max={2000}
+            rows={3}
+            help="Optional ~20–45s guided reflection a calm narrator reads — it opens the lesson (“Start here”). Your prose, never Scripture text."
+          />
+          <NarrationSection
+            lesson={l}
+            planId={props.planId}
+            language={props.language}
+            onRendered={(audio) => onChange({ reflectionAudio: audio })}
+          />
+
+          <ArtworkSection
+            lesson={l}
+            sourceId={props.sourceId}
+            lessonCount={props.lessonCount}
+            onChange={onChange}
+            onApplyToAll={props.onApplyImageToAll}
+          />
+
           <hr className="divider" />
-          <h3 style={{ fontSize: 16, marginBottom: 10 }}>Teaching paragraphs</h3>
+          {/* ================= Screen 2 · Understand ================= */}
+          <ScreenHead
+            n={2}
+            name="Understand"
+            note="The study itself: teaching video, the main teaching, the key idea, and scriptures to consider. The main teaching is required."
+          />
+          <VideoSection
+            video={l.video}
+            onAttach={(video) => {
+              onChange({ video });
+              props.onVideoAttached();
+            }}
+            onRemove={() => onChange({ video: null })}
+          />
+
+          <h4 style={{ fontSize: 14, margin: "16px 0 8px" }}>Main teaching</h4>
           {l.teaching.map((p, i) => (
             <div className="para-row" key={i}>
               <textarea
@@ -209,61 +283,76 @@ function LessonEditor(props: {
             + Paragraph
           </button>
           <div className="field-help" style={{ marginTop: 8 }}>
-            Paraphrase Scripture — never paste verse text verbatim. The Word itself is fetched
-            live via the reference.
+            Required — at least one paragraph. Paraphrase Scripture, never paste verse text
+            verbatim: the Word itself is fetched live via the reference.
           </div>
 
-          <hr className="divider" />
-          <TextArea
-            label="Key idea (“hold on to this”)"
-            value={l.keyIdea}
-            onChange={(v) => onChange({ keyIdea: v })}
-            max={400}
-            rows={2}
-          />
-          <TextArea
-            label="Prayer"
-            value={l.prayer}
-            onChange={(v) => onChange({ prayer: v })}
-            rows={2}
-            help="Optional closing prayer."
-          />
-          <TextArea
-            label="Reflection script (audio narration)"
-            value={l.reflectionScript}
-            onChange={(v) => onChange({ reflectionScript: v })}
-            max={2000}
-            rows={3}
-            help="Optional ~20–45s guided reflection a calm narrator reads. Your prose, never Scripture text."
-          />
-          <NarrationSection
-            lesson={l}
-            planId={props.planId}
-            language={props.language}
-            onRendered={(audio) => onChange({ reflectionAudio: audio })}
-          />
+          <div style={{ marginTop: 16 }}>
+            <TextArea
+              label="Key idea (“hold on to this”)"
+              value={l.keyIdea}
+              onChange={(v) => onChange({ keyIdea: v })}
+              max={400}
+              rows={2}
+              help="Seals the teaching; the Done screen repeats it as “carry this with you”."
+            />
+          </div>
+
+          <h4 style={{ fontSize: 14, margin: "4px 0 8px" }}>Scriptures to consider (“Read more”)</h4>
+          {l.supportingScriptures.map((s, i) => (
+            <div className="quiz-option" key={i}>
+              <input
+                type="text"
+                dir="auto"
+                placeholder="Isaiah 41:10"
+                value={s.ref}
+                onChange={(e) => {
+                  const next = l.supportingScriptures.map((x, j) =>
+                    j === i ? { ...x, ref: e.target.value } : x,
+                  );
+                  onChange({ supportingScriptures: next });
+                }}
+              />
+              <input
+                type="text"
+                className="mono"
+                placeholder="ISA.41.10"
+                style={{ maxWidth: 170 }}
+                value={s.usfm}
+                onChange={(e) => {
+                  const next = l.supportingScriptures.map((x, j) =>
+                    j === i ? { ...x, usfm: e.target.value.toUpperCase() } : x,
+                  );
+                  onChange({ supportingScriptures: next });
+                }}
+              />
+              <button
+                className="btn btn-small btn-ghost"
+                onClick={() =>
+                  onChange({ supportingScriptures: l.supportingScriptures.filter((_, j) => j !== i) })
+                }
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+          <button
+            className="btn btn-small"
+            onClick={() =>
+              onChange({ supportingScriptures: [...l.supportingScriptures, { ref: "", usfm: "" }] })
+            }
+          >
+            + Scripture
+          </button>
 
           <hr className="divider" />
-          <VideoSection
-            video={l.video}
-            onAttach={(video) => {
-              onChange({ video });
-              props.onVideoAttached();
-            }}
-            onRemove={() => onChange({ video: null })}
+          {/* ================= Screen 3 · Check ================= */}
+          <ScreenHead
+            n={3}
+            name="Check"
+            note="One comprehension question with instant feedback, right after the study. Required — and the marked answer must be verified against the passage."
           />
-
-          <hr className="divider" />
-          <ArtworkSection
-            lesson={l}
-            sourceId={props.sourceId}
-            lessonCount={props.lessonCount}
-            onChange={onChange}
-            onApplyToAll={props.onApplyImageToAll}
-          />
-
-          <hr className="divider" />
-          <h3 style={{ fontSize: 16, marginBottom: 4 }}>
+          <h4 style={{ fontSize: 14, margin: "0 0 4px" }}>
             Comprehension quiz{" "}
             <button
               className="btn btn-small"
@@ -272,7 +361,7 @@ function LessonEditor(props: {
             >
               {l.quiz.enabled ? "Remove quiz" : "Add quiz"}
             </button>
-          </h3>
+          </h4>
           {l.quiz.enabled ? (
             <>
               {correctCount !== 1 && (
@@ -369,68 +458,36 @@ function LessonEditor(props: {
                   rows={2}
                 />
               </div>
-              <TextArea
-                label="Reflection prompt (open, no wrong answer)"
-                value={l.quiz.reflectPrompt}
-                onChange={(v) => setQuiz({ reflectPrompt: v })}
-                max={400}
-                rows={2}
-                help="Private to the learner — never seen by the leader."
-              />
             </>
           ) : (
             <p className="field-help" style={{ marginTop: 6 }}>
-              No quiz — the learner simply skips the check step for this lesson.
+              Required — the Check screen is this quiz. Add it and mark the verified correct
+              answer; the plan can&rsquo;t be finished while any lesson has no check.
             </p>
           )}
 
           <hr className="divider" />
-          <h3 style={{ fontSize: 16, marginBottom: 10 }}>Scriptures to consider</h3>
-          {l.supportingScriptures.map((s, i) => (
-            <div className="quiz-option" key={i}>
-              <input
-                type="text"
-                dir="auto"
-                placeholder="Isaiah 41:10"
-                value={s.ref}
-                onChange={(e) => {
-                  const next = l.supportingScriptures.map((x, j) =>
-                    j === i ? { ...x, ref: e.target.value } : x,
-                  );
-                  onChange({ supportingScriptures: next });
-                }}
-              />
-              <input
-                type="text"
-                className="mono"
-                placeholder="ISA.41.10"
-                style={{ maxWidth: 170 }}
-                value={s.usfm}
-                onChange={(e) => {
-                  const next = l.supportingScriptures.map((x, j) =>
-                    j === i ? { ...x, usfm: e.target.value.toUpperCase() } : x,
-                  );
-                  onChange({ supportingScriptures: next });
-                }}
-              />
-              <button
-                className="btn btn-small btn-ghost"
-                onClick={() =>
-                  onChange({ supportingScriptures: l.supportingScriptures.filter((_, j) => j !== i) })
-                }
-              >
-                ✕
-              </button>
-            </div>
-          ))}
-          <button
-            className="btn btn-small"
-            onClick={() =>
-              onChange({ supportingScriptures: [...l.supportingScriptures, { ref: "", usfm: "" }] })
-            }
-          >
-            + Scripture
-          </button>
+          {/* ================= Screen 4 · Respond ================= */}
+          <ScreenHead
+            n={4}
+            name="Respond"
+            note="The learner makes it personal and closes the lesson: the reflection prompt opens their private journal, and the prayer has the last word. Every block here is required."
+          />
+          <TextArea
+            label="Reflection prompt (open, no wrong answer)"
+            value={l.quiz.reflectPrompt}
+            onChange={(v) => setQuiz({ reflectPrompt: v })}
+            max={400}
+            rows={2}
+            help="Required. Private to the learner — never seen by the leader."
+          />
+          <TextArea
+            label="Closing prayer"
+            value={l.prayer}
+            onChange={(v) => onChange({ prayer: v })}
+            rows={2}
+            help="Required — it closes the lesson on the Respond screen."
+          />
 
           <hr className="divider" />
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -525,8 +582,9 @@ function NarrationSection(props: {
 /**
  * Per-lesson teaching video: upload a file (chunked to Storage at attach
  * time, so it survives cache expiry like lesson images) or paste a hosted
- * URL. Exported as media.video; the Studio player renders it above the
- * lesson. Duration is read from the file's metadata when possible.
+ * URL. Exported as media.video; the Studio player renders it at the top of
+ * the Understand screen. Duration is read from the file's metadata when
+ * possible.
  */
 function VideoSection(props: {
   video: DraftLessonVideo | null;
@@ -587,7 +645,7 @@ function VideoSection(props: {
 
   return (
     <>
-      <h3 style={{ fontSize: 16, marginBottom: 4 }}>Teaching video</h3>
+      <h4 style={{ fontSize: 14, margin: "0 0 4px" }}>Teaching video</h4>
       {video ? (
         <div style={{ marginTop: 10 }}>
           {youTubeVideoId(video.url) ? (

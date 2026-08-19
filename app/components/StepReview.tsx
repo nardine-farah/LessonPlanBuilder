@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { planProgress, type LessonProgress } from "@/lib/adminData";
 import { renderNarration } from "@/lib/narration";
+import { planScreenIssues } from "@/lib/screens";
 import { lessonPlanDocSchema } from "@/lib/schema";
 import { buildPlanDoc, narrationFresh, type Draft } from "@/lib/types";
 import { Card } from "./ui";
@@ -107,6 +108,10 @@ export default function StepReview(props: {
 
   const json = useMemo(() => JSON.stringify(doc, null, 2), [doc]);
   const valid = errors.length === 0;
+  // Every lesson's four screens (Hear · Understand · Check · Respond) need
+  // their required blocks — checked alongside the schema, gating Finish.
+  const screenIssues = useMemo(() => planScreenIssues(draft), [draft]);
+  const screensOk = screenIssues.length === 0;
   const allChecked = checked.every(Boolean);
   const quizCount = draft.lessons.filter((l) => l.quiz.enabled).length;
 
@@ -166,6 +171,15 @@ export default function StepReview(props: {
             <li>○ Videos {progress.videosAdded}/{progress.lessonsTotal} <span className="detail-soft">(optional)</span></li>
             <li>{progress.quizzesOk > 0 ? "✓" : "○"} Quizzes ready: {progress.quizzesOk}</li>
             <li>
+              {screensOk ? (
+                <>✓ Every screen has its blocks (Hear · Understand · Check · Respond)</>
+              ) : (
+                <span style={{ color: "var(--error)" }}>
+                  ✗ Screens missing required blocks — {screenIssues.length} issue{screenIssues.length === 1 ? "" : "s"} (below)
+                </span>
+              )}
+            </li>
+            <li>
               {scripted.length === 0 ? (
                 <>○ Narration <span className="detail-soft">(no reflection scripts)</span></>
               ) : narrationMissing.length === 0 ? (
@@ -217,6 +231,19 @@ export default function StepReview(props: {
               ? `Recording ${Math.min(bulkRender.done + 1, bulkRender.total)} of ${bulkRender.total}…`
               : `🎙 Render ${narrationMissing.length} narration${narrationMissing.length === 1 ? "" : "s"}`}
           </button>
+        </Card>
+      )}
+
+      {!screensOk && (
+        <Card
+          title="Screens to complete"
+          note="Each lesson renders as four screens in Scripture Studio — Hear, Understand, Check, Respond — and each screen needs its required blocks: the Scripture passage, the main teaching, the quiz, and the reflection prompt with the closing prayer. Finishing and publishing wait until these are filled."
+        >
+          <ul className="error-list">
+            {screenIssues.map((e, i) => (
+              <li key={i}>{e}</li>
+            ))}
+          </ul>
         </Card>
       )}
 
@@ -316,7 +343,7 @@ export default function StepReview(props: {
         <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
           <button
             className="btn btn-primary"
-            disabled={!valid || narrationMissing.length > 0}
+            disabled={!valid || !screensOk || narrationMissing.length > 0}
             onClick={() => {
               if (
                 allChecked ||
@@ -333,7 +360,12 @@ export default function StepReview(props: {
           {!valid && (
             <span className="field-help">Fix the schema errors above before finishing.</span>
           )}
-          {valid && narrationMissing.length > 0 && (
+          {valid && !screensOk && (
+            <span className="field-help">
+              Complete the lesson screens above (Hear · Understand · Check · Respond) before finishing.
+            </span>
+          )}
+          {valid && screensOk && narrationMissing.length > 0 && (
             <span className="field-help">
               Render the {narrationMissing.length === 1 ? "missing narration" : `${narrationMissing.length} missing narrations`} above before finishing.
             </span>

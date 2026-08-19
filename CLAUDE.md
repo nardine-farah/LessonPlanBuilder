@@ -19,7 +19,11 @@ for the Scripture Studio library, via a 5-step wizard:
    behind an explicit "Replace PDF…".
 2. **Plan details** — title/subtitle/summary/planId/span/translation/reviewedBy.
 3. **Who it's for** — match tags (exact enums the Studio matcher scores).
-4. **Lessons** — per-lesson editor (passage + USFM, teaching, key idea, quiz with
+4. **Lessons** — per-lesson editor, grouped since 2026-08-19 into the learner's
+   four screens — **Hear** (title/passage + USFM, reflection script + narration,
+   artwork), **Understand** (teaching video, main teaching, key idea, supporting
+   scriptures), **Check** (the MC quiz), **Respond** (reflection prompt, prayer) —
+   the same names and order the Studio player renders. Editor detail: (passage + USFM, teaching, key idea, quiz with
    exactly-one-correct enforcement, prayer, reflectionScript **with in-editor
    narration** [🎙 render → listen → iterate; audio goes STALE when the script
    changes and must be re-rendered; draft stores {url, duration, script, voice};
@@ -32,7 +36,8 @@ for the Scripture Studio library, via a 5-step wizard:
    the video resource is on — Studio player renders real video first, poster as
    fallback — and **artwork** [added 2026-08-13, replacing the dedicated images
    step; see "Image pipeline" below]).
-5. **Review & export** — validates against the ported Studio schema; reviewer
+5. **Review & export** — validates against the ported Studio schema AND the
+   per-screen required blocks (see invariants); reviewer
    checklist (from Studio's LESSON_PLAN_AUTHORING.md §13); download/copy JSON
    (never blocked, even when invalid); **Finish** saves to profile.
 
@@ -45,6 +50,13 @@ for the Scripture Studio library, via a 5-step wizard:
   both 2026-07-15; `media.video {asset, duration?}` added to both 2026-08-10 —
   Studio side on branch `claude/lesson-video-support` until merged). Library cap:
   **max 40 lessons/plan** (advise splitting into volumes).
+- **Every lesson screen must carry its required blocks** (added 2026-08-19):
+  Hear → Scripture (ref + USFM); Understand → the main teaching; Check → the
+  quiz; Respond → reflection prompt AND closing prayer (all of Respond is
+  mandatory). Rules live in `lib/screens.ts` and gate **Finish** (StepReview)
+  and **`/api/publish`** (422 with per-screen issues). This is deliberately NOT
+  a change to `lib/schema.ts` — the ported schema keeps these fields optional
+  so legacy library plans still parse; download/copy JSON stays unblocked.
 - **Exports are always `status: "draft"`**; only `/api/publish` writes `"published"`.
 - **The browser NEVER touches Firestore.** Scripture Studio's `firestore.rules` are
   deliberately deny-all for clients; all data goes through API routes using
@@ -308,6 +320,11 @@ plans auto-import on first sign-in.
   auto-deploys the Studio.
 - Studio quirks: CSP blocks any origin not whitelisted (this caused the "audio
   won't play" bug); `getLessonPlan` casts Firestore data without schema parse.
+- **Studio branch `claude/lesson-plan-restructure-6hjp5x`** (pushed 2026-08-19):
+  LessonPlayer restructured into the same four-screen arc — hear → understand →
+  check → respond → complete (screens with no content are skipped; the Done
+  screen echoes the key idea as "carry this with you"). The builder's section
+  names above mirror it 1:1.
 
 ## Local demo without real credentials (Firebase emulators)
 

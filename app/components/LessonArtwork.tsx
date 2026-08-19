@@ -78,7 +78,7 @@ export function ArtworkSection(props: {
 
   return (
     <>
-      <h3 style={{ fontSize: 16, marginBottom: 4 }}>Artwork</h3>
+      <h4 style={{ fontSize: 14, margin: "16px 0 4px" }}>Artwork</h4>
       {l.image ? (
         <div className="img-chosen" style={{ marginTop: 10 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
