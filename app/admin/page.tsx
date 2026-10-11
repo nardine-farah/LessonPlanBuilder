@@ -364,77 +364,94 @@ function LibraryCard({
   onUnpublish: (plan: AdminLibraryPlan) => void;
   unpublishing: boolean;
 }) {
+  // Every card follows the same anatomy — badges, title, subtitle, id + facts,
+  // then tags and the footer pinned to the bottom — so a row of cards lines up
+  // whatever each plan happens to carry.
+  const published = plan.status === "published";
   const publisherName = plan.publishedBy
     ? plan.publishedBy.displayName || plan.publishedBy.email || plan.publishedBy.uid
     : "";
+  const facts = [
+    plan.lessonCount !== null ? `${plan.lessonCount} lesson${plan.lessonCount === 1 ? "" : "s"}` : "",
+    plan.translation,
+    plan.span,
+  ].filter(Boolean);
+  const when = !published
+    ? "not live"
+    : plan.publishedAt
+      ? `published ${fmtDate(plan.publishedAt)}`
+      : "live in the Studio";
   return (
     <div className="reviewer-card library-card">
-      <div className="plan-row-title">
-        <span dir="auto">{plan.title}</span>
-        <span className={`badge ${plan.status === "published" ? "badge-moss" : "badge-gold"}`}>{plan.status}</span>
+      <div className="library-card-badges">
+        <span className={`badge ${published ? "badge-moss" : "badge-gold"}`}>{plan.status}</span>
         {plan.language && <span className="badge badge-garnet">{plan.language.toUpperCase()}</span>}
+      </div>
+      <div className="library-card-title" dir="auto" title={plan.title}>
+        {plan.title}
       </div>
       {plan.subtitle && (
         <div className="library-card-sub" dir="auto">
           {plan.subtitle}
         </div>
       )}
-      <div className="plan-row-meta">
-        <span className="mono">{plan.planId}</span>
-        {plan.lessonCount !== null && <> · {plan.lessonCount} lessons</>}
-        {plan.translation && <> · {plan.translation}</>}
-        {plan.span && <> · {plan.span}</>}
+      <div className="library-card-meta">
+        <div className="mono library-card-id" title={plan.planId}>
+          {plan.planId}
+        </div>
+        {facts.length > 0 && <div>{facts.join(" · ")}</div>}
       </div>
-      {plan.audience.length > 0 && (
-        <div className="mini-tag-row">
-          <span className="mini-tag-label">audience</span>
-          {plan.audience.map((t) => (
-            <span key={t} className="mini-tag">
-              {prettyTag(t)}
-            </span>
-          ))}
-        </div>
-      )}
-      {plan.focus.length > 0 && (
-        <div className="mini-tag-row">
-          <span className="mini-tag-label">topic</span>
-          {plan.focus.map((t) => (
-            <span key={t} className="mini-tag">
-              {prettyTag(t)}
-            </span>
-          ))}
-        </div>
-      )}
-      <div className="reviewer-card-foot">
-        {plan.publishedBy ? (
-          <button
-            className="library-publisher"
-            title="Open this reviewer's plans"
-            onClick={() => onOpenReviewer(plan.publishedBy!.uid)}
-          >
-            by {publisherName} →
-          </button>
-        ) : (
-          <span title="Seeded outside the builder (or published before publisher tracking)">Studio seed</span>
+      <div className="library-card-bottom">
+        {(plan.audience.length > 0 || plan.focus.length > 0) && (
+          <div className="library-card-tags">
+            {plan.audience.length > 0 && <TagRow label="audience" tags={plan.audience} />}
+            {plan.focus.length > 0 && <TagRow label="topic" tags={plan.focus} />}
+          </div>
         )}
-        {plan.status === "published" ? (
-          <span style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            {plan.publishedAt && <span>{fmtDate(plan.publishedAt)}</span>}
+        <div className="library-card-foot">
+          <div className="library-card-who">
+            {plan.publishedBy ? (
+              <button
+                className="library-publisher"
+                title="Open this reviewer's plans"
+                onClick={() => onOpenReviewer(plan.publishedBy!.uid)}
+              >
+                by {publisherName} →
+              </button>
+            ) : (
+              <span title="Seeded outside the builder (or published before publisher tracking)">Studio seed</span>
+            )}
+            <span>{when}</span>
+          </div>
+          {published && (
             <button
-              className="btn btn-small"
-              style={{ color: "var(--error)", borderColor: "var(--error)" }}
+              className="btn btn-small library-unpublish"
               title="Hide this plan from leaders in the Studio — it stays here as a draft and can be republished"
               disabled={unpublishing}
               onClick={() => onUnpublish(plan)}
             >
               {unpublishing ? "Unpublishing…" : "⇩ Unpublish"}
             </button>
-          </span>
-        ) : (
-          <span>not live</span>
-        )}
+          )}
+        </div>
       </div>
     </div>
+  );
+}
+
+/** One labelled row of match-tag pills; the label sits in the grid's first column so wrapped pills stay aligned under each other. */
+function TagRow({ label, tags }: { label: string; tags: string[] }) {
+  return (
+    <>
+      <span className="mini-tag-label">{label}</span>
+      <span className="mini-tag-list">
+        {tags.map((t) => (
+          <span key={t} className="mini-tag">
+            {prettyTag(t)}
+          </span>
+        ))}
+      </span>
+    </>
   );
 }
 
