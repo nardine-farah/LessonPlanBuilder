@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { normalizeDraft, type Draft } from "@/lib/types";
 import { deletePlan, newPlanKey, planRecord, savePlan } from "@/lib/planStore";
 import { useAuth } from "../components/AuthProvider";
@@ -68,6 +68,20 @@ export default function BuilderPage() {
   useEffect(() => {
     if (!loading && !user) router.replace("/");
   }, [loading, user, router]);
+
+  // Every step is a new page to the curator, so land at its top. The wizard
+  // swaps step content in place while the window keeps its scroll offset, so
+  // "Continue →" clicked at the foot of a long step (Lessons, especially)
+  // used to open the next step scrolled to its very bottom. Skipped on the
+  // initial restore so a reload keeps the browser's own scroll position.
+  const prevStep = useRef<number | null>(null);
+  useLayoutEffect(() => {
+    if (!loaded) return;
+    if (prevStep.current !== null && prevStep.current !== step) {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }
+    prevStep.current = step;
+  }, [step, loaded]);
 
   useEffect(() => {
     try {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { renderNarration } from "@/lib/narration";
 import { incompleteScreens } from "@/lib/screens";
 import type { Draft, DraftLesson, DraftLessonAudio, DraftLessonVideo } from "@/lib/types";
@@ -137,8 +137,23 @@ function LessonEditor(props: {
 
   const correctCount = l.quiz.options.filter((o) => o.correct).length;
 
+  // Opening a lesson usually collapses the one above it, which shortens the
+  // page while the window keeps its scroll offset — so the curator who clicked
+  // lesson 2's head at the foot of lesson 1 landed at the far end of lesson 2.
+  // When a lesson opens and its head isn't comfortably in view, bring the head
+  // to the top of the viewport (instantly: the DOM just changed, so there's no
+  // sensible position to animate from).
+  const card = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    if (!props.isOpen || !card.current) return;
+    const top = card.current.getBoundingClientRect().top;
+    if (top < 0 || top > window.innerHeight - 200) {
+      window.scrollTo({ top: window.scrollY + top - 16, left: 0, behavior: "auto" });
+    }
+  }, [props.isOpen]);
+
   return (
-    <div className="lesson">
+    <div className="lesson" ref={card}>
       <button className="lesson-head" onClick={props.onToggle}>
         <span className="lesson-n">{l.n}</span>
         <span className="lesson-title" dir="auto">
