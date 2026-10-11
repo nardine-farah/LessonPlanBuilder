@@ -589,6 +589,65 @@ function LibrarySection({
   );
 }
 
+/**
+ * Headline numbers grouped the way the work flows: who is building → where
+ * their plans sit in the lifecycle → what is live in the Studio. The stage
+ * bar is a part-to-whole of the builder's plans in lifecycle order (deeper
+ * blue = further along; amber = live but stale); the legend beneath it
+ * carries every stage, zeros included, so the row reads the same each visit.
+ */
+function AdminStats({ overview }: { overview: AdminOverview }) {
+  const { totals, library } = overview;
+  const stages = stageCounts(overview.users.flatMap((u) => u.plans));
+  const fromTool = library.filter((p) => p.publishedBy).length;
+  const seeded = library.length - fromTool;
+  const barLabel = STAGE_ORDER.map((s) => `${stages[s]} ${STAGE_INFO[s].label.toLowerCase()}`).join(", ");
+  return (
+    <section className="card admin-stats" aria-label="At a glance">
+      <div className="admin-stat">
+        <div className="admin-stat-label">Reviewers</div>
+        <div className="admin-stat-value">{totals.reviewers}</div>
+        <div className="admin-stat-note">profiles with at least one plan</div>
+      </div>
+
+      <div className="admin-stat admin-stat-wide">
+        <div className="admin-stat-label">Plans in the builder</div>
+        <div className="admin-stat-value">{totals.plans}</div>
+        <div className="stage-bar" role="img" aria-label={`${totals.plans} plans: ${barLabel}`}>
+          {STAGE_ORDER.filter((s) => stages[s] > 0).map((s) => (
+            <span
+              key={s}
+              className={`stage-seg stage-${s}`}
+              style={{ flexGrow: stages[s] }}
+              title={`${stages[s]} ${STAGE_INFO[s].label.toLowerCase()} — ${STAGE_INFO[s].hint}`}
+            />
+          ))}
+        </div>
+        <ol className="stage-legend">
+          {STAGE_ORDER.map((s) => (
+            <li key={s} className={stages[s] === 0 ? "is-empty" : undefined} title={STAGE_INFO[s].hint}>
+              <span className={`stage-swatch stage-${s}`} />
+              <span className="stage-count">{stages[s]}</span>
+              <span className="stage-name">{STAGE_INFO[s].label}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div
+        className="admin-stat"
+        title="Everything in the Studio library — including Studio seeds and plans published before publisher tracking"
+      >
+        <div className="admin-stat-label">Studio library</div>
+        <div className="admin-stat-value">{totals.libraryPlans}</div>
+        <div className="admin-stat-note">
+          {fromTool} from this tool · {seeded} seeded in the Studio
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function AdminPage() {
   const router = useRouter();
   const { user, loading, signOutUser } = useAuth();
@@ -749,31 +808,7 @@ export default function AdminPage() {
               </section>
             ) : (
               <>
-                {totals && (
-                  <div className="summary-stats" style={{ marginTop: 18 }}>
-                    <div>
-                      <div className="stat-num">{totals.reviewers}</div>
-                      <div className="stat-label">Reviewers</div>
-                    </div>
-                    <div>
-                      <div className="stat-num">{totals.plans}</div>
-                      <div className="stat-label">Plans</div>
-                    </div>
-                    {(() => {
-                      const stages = stageCounts(overview.users.flatMap((u) => u.plans));
-                      return STAGE_ORDER.map((s) => (
-                        <div key={s} title={STAGE_INFO[s].hint}>
-                          <div className="stat-num">{stages[s]}</div>
-                          <div className="stat-label">{STAGE_INFO[s].label}</div>
-                        </div>
-                      ));
-                    })()}
-                    <div title="Everything in the Studio library — including Studio seeds and plans published before publisher tracking">
-                      <div className="stat-num">{totals.libraryPlans}</div>
-                      <div className="stat-label">Library plans</div>
-                    </div>
-                  </div>
-                )}
+                {totals && <AdminStats overview={overview} />}
 
                 <div className="tab-row">
                   <button

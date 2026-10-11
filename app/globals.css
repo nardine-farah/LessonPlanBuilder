@@ -623,6 +623,104 @@ pre.json-preview {
 .stat-num { font-family: var(--font-display), serif; font-size: 26px; color: var(--garnet); }
 .stat-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); }
 
+/* ——— admin "at a glance" strip: three tiles, hairline-separated ——— */
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: minmax(150px, auto) minmax(0, 1fr) minmax(190px, auto);
+  padding: 0;
+  margin: 18px 0 22px;
+}
+
+.admin-stat {
+  padding: 20px 26px 22px;
+  min-width: 0;
+}
+
+.admin-stat + .admin-stat { border-left: 1px solid var(--line); }
+
+.admin-stat-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  margin-bottom: 4px;
+}
+
+.admin-stat-value {
+  font-family: var(--font-display), serif;
+  font-size: 34px;
+  line-height: 1.1;
+  color: var(--garnet);
+}
+
+.admin-stat-note {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-top: 8px;
+}
+
+/* part-to-whole of the builder's plans in lifecycle order; the track shows
+   through when there are no plans; 2px surface gaps separate segments */
+.stage-bar {
+  display: flex;
+  gap: 2px;
+  height: 10px;
+  margin: 12px 0 10px;
+  background: var(--paper-deep);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.stage-seg {
+  display: block;
+  flex: 0 1 0;
+  min-width: 6px;
+}
+
+.stage-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 6px 14px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+.stage-legend li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.stage-legend li.is-empty { color: var(--ink-faint); }
+.stage-legend li.is-empty .stage-swatch { opacity: 0.35; }
+.stage-legend li.is-empty .stage-count { color: inherit; }
+
+.stage-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex: none;
+}
+
+.stage-count { font-weight: 700; color: var(--ink); }
+
+/* one blue ramp, light → dark = further along; amber = live but stale */
+.stage-in_progress { background: #7fb5d3; }
+.stage-awaiting_checklist { background: #4f97bd; }
+.stage-ready { background: #2a7da1; }
+.stage-published { background: #044f7a; }
+.stage-needs_republish { background: #c9811c; }
+
+@media (max-width: 820px) {
+  .admin-stats { grid-template-columns: 1fr; }
+  .admin-stat + .admin-stat { border-left: none; border-top: 1px solid var(--line); }
+}
+
 /* ——— lesson-image picker ——— */
 
 .img-lesson-head {
