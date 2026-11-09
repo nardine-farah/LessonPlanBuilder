@@ -61,8 +61,8 @@ env:
   # id here; until it is set, rendering narration for a Russian plan fails
   # with a clear "set ELEVENLABS_VOICE_ID_RU" message (no wrong-accent
   # fallback). The Google fallback voice is ru-RU-Wavenet-C (TTS_VOICE_RU).
-  # - variable: ELEVENLABS_VOICE_ID_RU
-  #   value: <voice id>
-  #   availability: [RUNTIME]
+   - variable: ELEVENLABS_VOICE_ID_RU
+     value: ELWVgJ5Mo9lF5Tha9ahW
+     availability: [RUNTIME]
   # GOOGLE_APPLICATION_CREDENTIALS is intentionally absent — the runtime's
   # Application Default Credentials cover Firestore, Storage, and TTS.
