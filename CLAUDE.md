@@ -100,14 +100,19 @@ TS 7 / native compiler otherwise, which breaks next.config.ts loading). Key modu
   (`cache-miss`/`bad-page`/`render`); `renderPdfFromBytes` powers the selftest.
 - `lib/tts.ts` — **ElevenLabs is the preferred provider** (added 2026-07-22):
   auto-selected when `ELEVENLABS_API_KEY` is set (secret in apphosting.yaml;
-  voice ids `ELEVENLABS_VOICE_ID` / `ELEVENLABS_VOICE_ID_AR` are plain env).
+  voice ids `ELEVENLABS_VOICE_ID` / `ELEVENLABS_VOICE_ID_AR` /
+  `ELEVENLABS_VOICE_ID_RU` are plain env — the RU one is still a commented
+  placeholder in apphosting.yaml until a Russian voice is chosen; rendering
+  Russian narration fails with a clear "set ELEVENLABS_VOICE_ID_RU" until
+  then, deliberately no other-language fallback).
   `eleven_multilingual_v2`, breath pacing via inline `<break/>` tags, voice ids
   folded into `audioSignature` (republish re-renders on voice change; the
   google/openai signature shape is unchanged so old recordings stay valid when
   ElevenLabs is off). Mirrors Scripture Studio `src/lib/providers/tts.ts`.
   Fallback: Google Cloud TTS **via the service account's OAuth** (no API key
   needed; the TTS API is enabled on the project). Natural-voice setup (2026-07-16):
-  en `en-US-Studio-O`, ar `ar-XA-Wavenet-B` (no Arabic Studio voice exists); plain
+  en `en-US-Studio-O`, ar `ar-XA-Wavenet-B` (no Arabic Studio voice exists),
+  ru `ru-RU-Wavenet-C` (`TTS_VOICE_RU`); plain
   text → SSML (`toSsml`: 300ms lead-in, 550ms between sentences incl. Arabic `؟۔`,
   400ms trailing); `speakingRate 0.92` (`TTS_SPEAKING_RATE`), effects profile
   `headphone-class-device`. `audioSignature(language)` fingerprints the voice
@@ -126,6 +131,14 @@ TS 7 / native compiler otherwise, which breaks next.config.ts loading). Key modu
 - `lib/importPlan.ts` — "Import plan JSON" (accepts Studio seed files OR wizard
   drafts; lenient — invalid plans import for fixing).
 - `lib/pages.ts` — page-spec parsing ("1-10, 15, 22-30"), shared client/server.
+- `lib/languages.ts` — **the plan-language registry** (added 2026-11-09 with
+  Russian): `LANGUAGES = ["en", "ar", "ru"]` mirrors the Studio's `LOCALES`
+  (`src/lib/i18n.ts`); `LANGUAGE_INFO` carries name / nativeName / default
+  translation label (NIV / NAV / NRT) / rtl; `coerceLanguage` narrows form +
+  JSON input. Every language touchpoint (schema enum, extraction prompt,
+  upload chips, plan-details select, import, API routes, TTS voices) reads
+  this list — adding a language = add it here + a voice per provider in
+  `lib/tts.ts` + the Studio side.
 
 ### API routes (all `runtime: nodejs`)
 

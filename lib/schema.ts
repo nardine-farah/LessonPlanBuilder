@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { LANGUAGES } from "./languages";
 
 /**
  * Exact port of Scripture Studio's lesson-plan library schema
@@ -74,7 +75,7 @@ export const lessonPlanDocSchema = z
     title: z.string().min(1).max(80),
     subtitle: z.string().min(1).max(120),
     summary: z.string().min(1).max(280),
-    language: z.enum(["en", "ar"]),
+    language: z.enum(LANGUAGES),
     translation: z.string().min(1).max(40),
     match: z.object({
       faithLevel: z.array(faithLevelTagSchema).min(1),

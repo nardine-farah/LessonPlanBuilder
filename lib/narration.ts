@@ -1,5 +1,6 @@
 import { authedFetch } from "./planStore";
 import type { DraftLesson, DraftLessonAudio } from "./types";
+import type { Language } from "./languages";
 
 /**
  * Client side of in-editor narration rendering (/api/lesson-audio): render a
@@ -11,7 +12,7 @@ import type { DraftLesson, DraftLessonAudio } from "./types";
 export async function renderNarration(
   lesson: DraftLesson,
   planId: string,
-  language: "en" | "ar",
+  language: Language,
 ): Promise<DraftLessonAudio> {
   const res = await authedFetch("/api/lesson-audio", {
     method: "POST",

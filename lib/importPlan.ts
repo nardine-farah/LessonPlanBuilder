@@ -1,4 +1,5 @@
 import { emptyQuiz, type Draft, type DraftLesson, type DraftQuiz } from "./types";
+import { coerceLanguage, defaultTranslation } from "./languages";
 
 /**
  * Import a plan JSON file back into an editable wizard draft. Accepts either
@@ -103,8 +104,8 @@ function draftFromDocShape(doc: any): Draft {
     title: str(doc.title),
     subtitle: str(doc.subtitle),
     summary: str(doc.summary),
-    language: doc.language === "ar" ? "ar" : "en",
-    translation: str(doc.translation) || (doc.language === "ar" ? "NAV" : "NIV"),
+    language: coerceLanguage(doc.language),
+    translation: str(doc.translation) || defaultTranslation(coerceLanguage(doc.language)),
     span: str(doc.span),
     reviewedBy: str(doc.reviewedBy),
     match: {
@@ -203,8 +204,8 @@ function draftFromDraftShape(obj: any): Draft {
     title: str(obj.title),
     subtitle: str(obj.subtitle),
     summary: str(obj.summary),
-    language: obj.language === "ar" ? "ar" : "en",
-    translation: str(obj.translation) || "NIV",
+    language: coerceLanguage(obj.language),
+    translation: str(obj.translation) || defaultTranslation(coerceLanguage(obj.language)),
     span: str(obj.span),
     reviewedBy: str(obj.reviewedBy),
     match: {

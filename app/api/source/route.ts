@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { AnalysisError, getPageCount } from "@/lib/extraction";
 import { uidFromRequest } from "@/lib/firestore-server";
 import { storeSourcePdf } from "@/lib/jobs";
+import { coerceLanguage, type Language } from "@/lib/languages";
 import { hasDurableSourcePdf, restoreSourcePdf } from "@/lib/sourceStore";
 
 export const runtime = "nodejs";
@@ -61,11 +62,11 @@ export async function POST(req: NextRequest) {
   if (!uid) return Response.json({ error: "Sign in to attach a source PDF." }, { status: 401 });
 
   let file: File | null = null;
-  let language = "en";
+  let language: Language = "en";
   try {
     const form = await req.formData();
     file = form.get("file") as File | null;
-    language = form.get("language") === "ar" ? "ar" : "en";
+    language = coerceLanguage(form.get("language"));
   } catch {
     return Response.json({ error: "Expected multipart form data with a 'file' field." }, { status: 400 });
   }

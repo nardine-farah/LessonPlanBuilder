@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { identityFromRequest, uploadLessonAudio } from "@/lib/firestore-server";
 import { audioSignature, synthesize } from "@/lib/tts";
+import { coerceLanguage } from "@/lib/languages";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
       { status: 422 },
     );
   }
-  const language = body.language === "ar" ? "ar" : "en";
+  const language = coerceLanguage(body.language);
   const n = Number.isInteger(body.n) && (body.n as number) >= 1 ? (body.n as number) : 0;
   if (!n) return Response.json({ error: "Missing lesson number." }, { status: 400 });
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Draft } from "@/lib/types";
+import { LANGUAGES, LANGUAGE_INFO, type Language } from "@/lib/languages";
 import { formatRanges, parsePageSpec } from "@/lib/pages";
 import { authedFetch } from "@/lib/planStore";
 import { Card } from "./ui";
@@ -38,7 +39,7 @@ export default function StepUpload(props: {
   update: (patch: Partial<Draft>) => void;
   onAnalyzed: (draft: Draft) => void;
 }) {
-  const [language, setLanguage] = useState<"en" | "ar">("en");
+  const [language, setLanguage] = useState<Language>("en");
   const [file, setFile] = useState<File | null>(null);
   const [dragging, setDragging] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -492,20 +493,16 @@ export default function StepUpload(props: {
         note="Which language should the finished lesson plan be written in? If the PDF is in another language, the content is translated and adapted during analysis."
       >
         <div className="chip-row">
-          <button
-            type="button"
-            className={`chip${language === "en" ? " on" : ""}`}
-            onClick={() => setLanguage("en")}
-          >
-            English · NIV
-          </button>
-          <button
-            type="button"
-            className={`chip${language === "ar" ? " on" : ""}`}
-            onClick={() => setLanguage("ar")}
-          >
-            العربية · NAV
-          </button>
+          {LANGUAGES.map((l) => (
+            <button
+              key={l}
+              type="button"
+              className={`chip${language === l ? " on" : ""}`}
+              onClick={() => setLanguage(l)}
+            >
+              {LANGUAGE_INFO[l].nativeName} · {LANGUAGE_INFO[l].translation}
+            </button>
+          ))}
         </div>
       </Card>
 

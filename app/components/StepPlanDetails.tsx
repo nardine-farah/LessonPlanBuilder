@@ -1,6 +1,7 @@
 "use client";
 
 import type { Draft } from "@/lib/types";
+import { LANGUAGES, LANGUAGE_INFO, coerceLanguage, defaultTranslation } from "@/lib/languages";
 import { Card, TextArea, TextField } from "./ui";
 
 export default function StepPlanDetails(props: {
@@ -67,10 +68,20 @@ export default function StepPlanDetails(props: {
             </label>
             <select
               value={draft.language}
-              onChange={(e) => update({ language: e.target.value as "en" | "ar" })}
+              onChange={(e) => {
+                const next = coerceLanguage(e.target.value);
+                // The translation follows the language unless the curator
+                // typed a custom one.
+                const custom =
+                  draft.translation.trim() !== "" && draft.translation !== defaultTranslation(draft.language);
+                update({ language: next, translation: custom ? draft.translation : defaultTranslation(next) });
+              }}
             >
-              <option value="en">English (en)</option>
-              <option value="ar">Arabic (ar)</option>
+              {LANGUAGES.map((l) => (
+                <option key={l} value={l}>
+                  {LANGUAGE_INFO[l].name} ({l})
+                </option>
+              ))}
             </select>
             <div className="field-help">
               Must match the language the content is actually written in.
@@ -81,7 +92,7 @@ export default function StepPlanDetails(props: {
             value={draft.translation}
             onChange={(v) => update({ translation: v })}
             max={40}
-            help="The Bible translation the runtime fetches, e.g. NIV (English) or NAV (Arabic)."
+            help={`The Bible translation the runtime fetches, e.g. ${LANGUAGES.map((l) => `${LANGUAGE_INFO[l].translation} (${LANGUAGE_INFO[l].name})`).join(", ")}.`}
           />
         </div>
         <TextField

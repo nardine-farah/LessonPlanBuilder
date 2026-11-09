@@ -1,4 +1,5 @@
 import type { LessonPlanDoc } from "./schema";
+import type { Language } from "./languages";
 
 /**
  * The working draft the wizard edits. Looser than the final schema — fields
@@ -87,7 +88,7 @@ export interface Draft {
   title: string;
   subtitle: string;
   summary: string;
-  language: "en" | "ar";
+  language: Language;
   translation: string;
   span: string;
   reviewedBy: string;

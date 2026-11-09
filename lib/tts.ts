@@ -1,6 +1,7 @@
 import { createHash } from "crypto";
 import { GoogleAuth } from "google-auth-library";
 import path from "path";
+import { LANGUAGE_INFO, type Language } from "./languages";
 
 /**
  * Text-to-Speech for reflection narration. Google Cloud TTS is called with
@@ -16,9 +17,13 @@ import path from "path";
  *
  * ElevenLabs (eleven_multilingual_v2) is the naturalness upgrade — Google has
  * no Arabic Studio voice, so Arabic stayed robotic on Wavenet. Voice ids come
- * from the ElevenLabs Voice Library: ELEVENLABS_VOICE_ID (English) and
- * ELEVENLABS_VOICE_ID_AR (Arabic). No SSML there — pacing is inline <break/>
- * tags, mirroring Scripture Studio's src/lib/providers/tts.ts.
+ * from the ElevenLabs Voice Library: ELEVENLABS_VOICE_ID (English),
+ * ELEVENLABS_VOICE_ID_AR (Arabic) and ELEVENLABS_VOICE_ID_RU (Russian, added
+ * 2026-11 alongside the Studio's Russian support). No SSML there — pacing is
+ * inline <break/> tags, mirroring Scripture Studio's src/lib/providers/tts.ts.
+ *
+ * Google fallback voices per language: en-US-Studio-O, ar-XA-Wavenet-B,
+ * ru-RU-Wavenet-C (TTS_VOICE / TTS_VOICE_AR / TTS_VOICE_RU override).
  */
 
 export interface TtsResult {
@@ -47,14 +52,18 @@ export function activeProvider(): TtsProvider {
   return "google"; // service-account OAuth path
 }
 
-function elevenVoiceFor(language: "en" | "ar"): string | undefined {
-  return language === "ar"
-    ? (process.env.ELEVENLABS_VOICE_ID_AR ?? undefined)
-    : (process.env.ELEVENLABS_VOICE_ID ?? undefined);
+/** Env var naming the ElevenLabs voice for a language (ELEVENLABS_VOICE_ID for English). */
+function elevenVoiceEnv(language: Language): string {
+  return language === "en" ? "ELEVENLABS_VOICE_ID" : `ELEVENLABS_VOICE_ID_${language.toUpperCase()}`;
 }
 
-function voiceFor(language: "en" | "ar"): string {
+function elevenVoiceFor(language: Language): string | undefined {
+  return process.env[elevenVoiceEnv(language)] || undefined;
+}
+
+function voiceFor(language: Language): string {
   if (language === "ar") return process.env.TTS_VOICE_AR ?? "ar-XA-Wavenet-B";
+  if (language === "ru") return process.env.TTS_VOICE_RU ?? "ru-RU-Wavenet-C";
   return process.env.TTS_VOICE ?? process.env.TTS_VOICE_EN ?? "en-US-Studio-O";
 }
 
@@ -63,7 +72,7 @@ function voiceFor(language: "en" | "ar"): string {
  * uploaded MP3's filename so a republish re-renders audio when the voice
  * setup changes, instead of reusing stale recordings.
  */
-export function audioSignature(language: "en" | "ar"): string {
+export function audioSignature(language: Language): string {
   const provider = activeProvider();
   const config =
     provider === "elevenlabs"
@@ -142,7 +151,7 @@ function googleAuth(): GoogleAuth {
   return cachedAuth;
 }
 
-async function googleTts(text: string, language: "en" | "ar"): Promise<Buffer> {
+async function googleTts(text: string, language: Language): Promise<Buffer> {
   const voice = voiceFor(language);
   const apiKey = process.env.GOOGLE_TTS_API_KEY;
 
@@ -202,15 +211,15 @@ async function openaiTts(text: string): Promise<Buffer> {
  * same breath-between-sentences treatment via inline <break/> tags (their
  * SSML equivalent), reusing the Arabic-aware sentence splitter.
  */
-async function elevenlabsTts(text: string, language: "en" | "ar"): Promise<Buffer> {
+async function elevenlabsTts(text: string, language: Language): Promise<Buffer> {
   const key = process.env.ELEVENLABS_API_KEY;
   if (!key) throw new TtsError("ELEVENLABS_API_KEY not set");
   const voiceId = elevenVoiceFor(language);
   if (!voiceId) {
+    // Deliberately no fallback to another language's voice: a wrong-accent
+    // narration would be baked into the plan until someone noticed.
     throw new TtsError(
-      language === "ar"
-        ? "No Arabic ElevenLabs voice configured — set ELEVENLABS_VOICE_ID_AR."
-        : "No English ElevenLabs voice configured — set ELEVENLABS_VOICE_ID.",
+      `No ${LANGUAGE_INFO[language].name} ElevenLabs voice configured — set ${elevenVoiceEnv(language)}.`,
     );
   }
   const paced = splitSentences(text).join(' <break time="0.6s" /> ');
@@ -231,7 +240,7 @@ async function elevenlabsTts(text: string, language: "en" | "ar"): Promise<Buffe
 }
 
 /** Synthesize narration MP3 for a reflection script. */
-export async function synthesize(text: string, language: "en" | "ar"): Promise<TtsResult> {
+export async function synthesize(text: string, language: Language): Promise<TtsResult> {
   const provider = activeProvider();
   const mp3 =
     provider === "elevenlabs"

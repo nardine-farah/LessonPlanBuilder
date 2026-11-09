@@ -3,6 +3,7 @@ import path from "path";
 import crypto from "crypto";
 import Anthropic from "@anthropic-ai/sdk";
 import type { Draft } from "./types";
+import type { Language } from "./languages";
 import {
   AnalysisError,
   MAX_PAGES_PER_REQUEST,
@@ -63,7 +64,7 @@ export interface JobState {
 interface JobMeta {
   baseId: string;
   fileName: string;
-  language: "en" | "ar";
+  language: Language;
   scope: Scope;
   chunkPlan?: ChunkPlan[]; // saved once computed so a resume splits identically
   createdAt: string;
@@ -208,7 +209,7 @@ export function fitsSinglePass(m: Measurement): boolean {
 export async function startJob(
   baseId: string,
   fileName: string,
-  language: "en" | "ar",
+  language: Language,
   scope: Scope,
 ): Promise<{ jobId: string; job: JobState }> {
   const jobId = jobIdFor(baseId, scope);

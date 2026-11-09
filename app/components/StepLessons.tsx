@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { renderNarration } from "@/lib/narration";
 import { incompleteScreens } from "@/lib/screens";
 import type { Draft, DraftLesson, DraftLessonAudio, DraftLessonVideo } from "@/lib/types";
+import type { Language } from "@/lib/languages";
 import { emptyLesson, narrationFresh } from "@/lib/types";
 import { parseReference, isValidUsfm } from "@/lib/usfm";
 import {
@@ -114,7 +115,7 @@ function ScreenHead(props: { n: number; name: string; note: string }) {
 function LessonEditor(props: {
   lesson: DraftLesson;
   planId: string;
-  language: "en" | "ar";
+  language: Language;
   sourceId: string;
   lessonCount: number;
   isOpen: boolean;
@@ -532,7 +533,7 @@ function LessonEditor(props: {
 function NarrationSection(props: {
   lesson: DraftLesson;
   planId: string;
-  language: "en" | "ar";
+  language: Language;
   onRendered: (audio: DraftLessonAudio) => void;
 }) {
   const { lesson } = props;

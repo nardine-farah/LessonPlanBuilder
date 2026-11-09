@@ -3,6 +3,7 @@ import { PDFDocument } from "pdf-lib";
 import { parseReference, isValidUsfm } from "./usfm";
 import { pagesToRanges, type PageRange } from "./pages";
 import { emptyQuiz, type Draft, type DraftLesson } from "./types";
+import { LANGUAGE_INFO, defaultTranslation, type Language } from "./languages";
 
 /**
  * Server-side extraction pipeline: token measuring, PDF splitting, the Claude
@@ -131,8 +132,8 @@ export interface ChunkInfo {
   pagesLabel: string;
 }
 
-function systemPrompt(targetLanguage: "en" | "ar", chunk: ChunkInfo | null) {
-  const langName = targetLanguage === "ar" ? "Arabic" : "English";
+function systemPrompt(targetLanguage: Language, chunk: ChunkInfo | null) {
+  const { name: langName, translationName } = LANGUAGE_INFO[targetLanguage];
   const chunkRules = chunk
     ? chunk.total > 1
       ? `
@@ -148,7 +149,7 @@ Follow Biblica's authoring rules exactly:
 
 1. SCRIPTURE IS REFERENCED, NEVER STORED. Do not copy verse text into teaching, keyIdea, prayer, or reflectionScript. Paraphrase Scripture in your own words; the verbatim text is fetched at runtime from the licensed verse pipeline via the reference. Short fragments a source author wove into their own prose are acceptable; long verbatim runs are not.
 2. TARGET LANGUAGE: write ALL content fields (title, subtitle, summary, teaching, keyIdea, quiz, prayer, reflectionScript, span) in ${langName}, faithfully translating/adapting the source if it is in another language. Preserve the author's meaning and pastoral tone; edit lightly for a phone screen (short paragraphs).
-3. REFERENCES: give every reference twice - 'ref' as the display form in ${langName}, and 'refEnglish' with the English book name and Western digits in 'Book C:V' or 'Book C:V-V' form (e.g. 'Judges 6:11-16', 'Psalm 56:11'). refEnglish must be verse-level: if the source cites a whole chapter or multi-chapter range, choose the most representative verse range within one chapter and note the narrowing in sourceNotes.
+3. REFERENCES: give every reference twice - 'ref' as the display form in ${langName} (book names and numbering as the ${translationName} prints them), and 'refEnglish' with the English book name and Western digits in 'Book C:V' or 'Book C:V-V' form (e.g. 'Judges 6:11-16', 'Psalm 56:11'). refEnglish must be verse-level: if the source cites a whole chapter or multi-chapter range, choose the most representative verse range within one chapter and note the narrowing in sourceNotes.
 4. STRUCTURE MAPPING: series/booklet title → title+subtitle; intro paragraph → summary; each session/day/week → one lesson; session anchor verse → keyVerse; full passage → passage; exposition → teaching[]; big idea → keyIdea; application question → reflectPrompt; 'scriptures to consider' → supportingScriptures; closing prayer → prayer.
 5. QUIZZES: many source PDFs have no multiple-choice check - draft one anyway for each lesson (the curator reviews every answer). The question must be answerable from the passage, exactly one option correct, distractors plausible, feedback accurate and kind.
 6. MATCH TAGS: pick every tag that genuinely applies; never invent values outside the allowed enums. lengthBand from lesson count: 5 or less=short, 6-10=full, more than 10=season; never 'open' (that is the leader-side wildcard). resources: only what the plan actually delivers ('reading' always for text; add 'audio' only because reflection narration can be rendered later - include it if the content suits calm narration).
@@ -160,7 +161,7 @@ Follow Biblica's authoring rules exactly:
 export async function extractChunk(
   client: Anthropic,
   pdfBase64: string,
-  targetLanguage: "en" | "ar",
+  targetLanguage: Language,
   fileName: string,
   chunk: ChunkInfo | null,
 ): Promise<any> {
@@ -181,7 +182,7 @@ export async function extractChunk(
           },
           {
             type: "text",
-            text: `Read this PDF ("${fileName}"${partLabel}) and extract a complete draft lesson plan in ${targetLanguage === "ar" ? "Arabic" : "English"}, following every rule in your instructions. Cover every session in the document.`,
+            text: `Read this PDF ("${fileName}"${partLabel}) and extract a complete draft lesson plan in ${LANGUAGE_INFO[targetLanguage].name}, following every rule in your instructions. Cover every session in the document.`,
           },
         ],
       },
@@ -313,7 +314,7 @@ export function mergeExtractions(parts: any[]): any {
 }
 
 /** Convert a merged extraction into the wizard's Draft shape. Throws on empty plans. */
-export function toDraft(extracted: any, fileName: string, targetLanguage: "en" | "ar"): Draft {
+export function toDraft(extracted: any, fileName: string, targetLanguage: Language): Draft {
   if (!extracted.lessons?.length) {
     const why = (extracted.sourceNotes ?? "").slice(0, 500);
     throw new AnalysisError(
@@ -375,7 +376,7 @@ export function toDraft(extracted: any, fileName: string, targetLanguage: "en" |
     subtitle: extracted.subtitle ?? "",
     summary: extracted.summary ?? "",
     language: targetLanguage,
-    translation: targetLanguage === "ar" ? "NAV" : "NIV",
+    translation: defaultTranslation(targetLanguage),
     span: extracted.span ?? "",
     reviewedBy: `Adapted from "${fileName}" via Lesson Plan Builder — pending review`,
     match: {

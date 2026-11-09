@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { AnalysisError, SINGLE_PASS_MAX_TOKENS, estimateParts } from "@/lib/extraction";
 import { parsePageSpec } from "@/lib/pages";
+import { coerceLanguage, type Language } from "@/lib/languages";
 import {
   JOB_ID_PATTERN,
   fitsSinglePass,
@@ -35,13 +36,13 @@ export async function POST(req: NextRequest) {
   }
 
   let file: File | null = null;
-  let targetLanguage: "en" | "ar" = "en";
+  let targetLanguage: Language = "en";
   let mode: string | null = null;
   let pagesSpec = "";
   try {
     const form = await req.formData();
     file = form.get("file") as File | null;
-    targetLanguage = form.get("language") === "ar" ? "ar" : "en";
+    targetLanguage = coerceLanguage(form.get("language"));
     mode = (form.get("mode") as string | null) ?? null;
     pagesSpec = (form.get("pages") as string | null) ?? "";
   } catch {
