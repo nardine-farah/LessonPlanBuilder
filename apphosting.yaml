@@ -57,12 +57,11 @@ env:
     value: xPcC3nehhziQaOrIeAwv
     availability: [RUNTIME]
   # Russian narration (plans in "ru", mirroring the Studio's Russian support).
-  # Pick a Russian-capable voice in the ElevenLabs Voice Library and paste its
-  # id here; until it is set, rendering narration for a Russian plan fails
-  # with a clear "set ELEVENLABS_VOICE_ID_RU" message (no wrong-accent
-  # fallback). The Google fallback voice is ru-RU-Wavenet-C (TTS_VOICE_RU).
-   - variable: ELEVENLABS_VOICE_ID_RU
-     value: ELWVgJ5Mo9lF5Tha9ahW
-     availability: [RUNTIME]
+  # If this is ever unset, rendering narration for a Russian plan fails with a
+  # clear "set ELEVENLABS_VOICE_ID_RU" message (no wrong-accent fallback). The
+  # Google fallback voice is ru-RU-Wavenet-C (TTS_VOICE_RU).
+  - variable: ELEVENLABS_VOICE_ID_RU
+    value: ELWVgJ5Mo9lF5Tha9ahW
+    availability: [RUNTIME]
   # GOOGLE_APPLICATION_CREDENTIALS is intentionally absent — the runtime's
   # Application Default Credentials cover Firestore, Storage, and TTS.

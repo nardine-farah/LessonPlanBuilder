@@ -101,10 +101,10 @@ TS 7 / native compiler otherwise, which breaks next.config.ts loading). Key modu
 - `lib/tts.ts` — **ElevenLabs is the preferred provider** (added 2026-07-22):
   auto-selected when `ELEVENLABS_API_KEY` is set (secret in apphosting.yaml;
   voice ids `ELEVENLABS_VOICE_ID` / `ELEVENLABS_VOICE_ID_AR` /
-  `ELEVENLABS_VOICE_ID_RU` are plain env — the RU one is still a commented
-  placeholder in apphosting.yaml until a Russian voice is chosen; rendering
-  Russian narration fails with a clear "set ELEVENLABS_VOICE_ID_RU" until
-  then, deliberately no other-language fallback).
+  `ELEVENLABS_VOICE_ID_RU` are plain env — the RU voice was set by the user
+  2026-11-09; if any per-language id is unset, rendering that language's
+  narration fails with a clear "set ELEVENLABS_VOICE_ID_XX" message,
+  deliberately no other-language fallback).
   `eleven_multilingual_v2`, breath pacing via inline `<break/>` tags, voice ids
   folded into `audioSignature` (republish re-renders on voice change; the
   google/openai signature shape is unchanged so old recordings stay valid when
